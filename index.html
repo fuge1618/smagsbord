@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Smagsbord</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{--papel:#F5F0E8;--lino:#E9E1D3;--tinta:#1D1D1B;--suave:#605A54;--linea:#CFC4B3;--surf:#FBF8F2;--arena:#DCC9A8;--papaya:#FF8000;--onacc:#1D1D1B}
+[data-ac="s"]{stroke:var(--papaya)}[data-ac="f"]{fill:var(--papaya)}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--papel);color:var(--tinta);font-family:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:16px;line-height:24px;-webkit-tap-highlight-color:transparent}
+button,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+a{color:inherit}
+h1,h2,p{margin:0}
+:focus-visible{outline:2px solid var(--papaya);outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.lbl{font-size:12px;line-height:16px;font-weight:600;letter-spacing:.06em;color:var(--suave);text-transform:uppercase}
+.sm{font-size:13px;line-height:18px;color:var(--suave)}
+.btn{min-height:48px;padding:0 20px;border-radius:12px;border:1px solid var(--tinta);background:transparent;font-weight:600;font-size:15px;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}
+.btn.pri{background:var(--papaya);border-color:var(--papaya);color:var(--onacc)}
+.btn.ghost{border-color:var(--linea)}
+.chip{min-height:44px;padding:0 16px;border-radius:12px;border:1px solid var(--linea);background:transparent;font-size:14px;white-space:nowrap}
+.chip.on{background:var(--tinta);border-color:var(--tinta);color:var(--papel)}
+.icb{width:44px;height:44px;border-radius:12px;border:0;background:transparent;display:inline-flex;align-items:center;justify-content:center;color:var(--suave);flex:none}
+.inp{min-height:48px;padding:0 14px;border-radius:12px;border:1px solid var(--linea);background:var(--surf);width:100%}
+svg.i{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.tk{fill:none;stroke:currentColor;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+/* layout */
+#app{min-height:100%;display:flex}
+.side{width:232px;flex:none;padding:28px 16px;border-right:1px solid var(--linea);display:flex;flex-direction:column;gap:22px;position:sticky;top:0;height:100vh;overflow:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:0 12px;font-size:23px;font-weight:600;letter-spacing:-.01em;background:none;border:0;text-align:left}
+.nav{display:flex;flex-direction:column;gap:2px}
+.nav button{display:flex;justify-content:space-between;align-items:center;min-height:44px;padding:0 12px;border-radius:12px;border:0;background:transparent;text-align:left}
+.nav button.on{background:var(--lino);font-weight:600;box-shadow:inset 4px 0 0 var(--papaya)}
+.nav button span:last-child{font-size:13px;color:var(--suave);font-weight:400}
+.main{flex:1;min-width:0;padding:28px 32px 48px;display:flex;flex-direction:column;gap:20px}
+.search{display:flex;align-items:center;gap:12px;min-height:52px;padding:0 16px;border:1px solid var(--linea);border-radius:12px;background:var(--surf);color:var(--suave)}
+.search input{flex:1;border:0;background:transparent;outline:none;min-height:44px;color:var(--tinta);min-width:0}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:28px 24px}
+.card{display:flex;flex-direction:column;gap:10px;background:none;border:0;padding:0;text-align:left}
+.ph{aspect-ratio:4/3;border-radius:12px;background:var(--lino);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.ph img,.hero img{width:100%;height:100%;object-fit:cover;display:block}
+.hero{position:relative;aspect-ratio:4/3;border-radius:12px;background:var(--lino);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.hero .hb{position:absolute;right:10px;bottom:10px;min-height:44px;font-size:14px;background:var(--papel);border-color:var(--linea);cursor:pointer}
+.card b{font-size:17px;line-height:22px;font-weight:600;display:block}
+.head{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.head h1{flex:1;min-width:200px;font-size:22px;line-height:28px;font-weight:600}
+.back{display:inline-flex;align-items:center;gap:4px;min-height:44px;background:none;border:0;color:var(--suave);font-size:15px;padding:0}
+.two{display:flex;gap:32px;align-items:flex-start;flex-wrap:wrap}
+.info{width:320px;flex:1 1 280px;max-width:380px;display:flex;flex-direction:column;gap:20px}
+.parts{flex:999 1 420px;min-width:0;display:flex;flex-direction:column;gap:12px}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}
+.part{background:var(--lino);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.part h2{font-size:18px;line-height:24px;font-weight:600;flex:1}
+.ing{display:flex;gap:12px;font-size:15px;line-height:22px}
+.ing b{width:78px;flex:none;font-weight:600}
+.step{width:48px;height:48px;border-radius:12px;border:1px solid var(--tinta);background:transparent;display:inline-flex;align-items:center;justify-content:center}
+.x{font-size:18px;font-weight:600;background:var(--papaya);color:var(--onacc);padding:5px 12px;border-radius:12px}
+.nut{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.nut b{display:block;font-size:20px;line-height:26px;font-weight:600}
+.lrow{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--linea)}
+.lrow>div{flex:1;min-width:0}
+.lrow b{display:block;font-weight:600}
+.slot{background:var(--papel);border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:10px}
+.slot>div{flex:1;min-width:0}
+.panel{background:var(--lino);border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:16px}
+.empty{padding:32px;border:1px dashed var(--linea);border-radius:12px;color:var(--suave);text-align:center}
+.toast{position:fixed;left:50%;top:18px;max-width:calc(100% - 32px);text-align:center;transform:translateX(-50%);background:var(--tinta);color:var(--papel);padding:12px 18px;border-radius:12px;font-size:15px;z-index:20}
+/* cocina */
+.co{position:fixed;inset:0;background:var(--papel);z-index:10;display:flex;flex-direction:column;overflow:auto}
+.co header{display:flex;align-items:center;gap:12px;padding:16px 24px 0;flex:none}
+.segs{flex:none}
+.co .tabs{display:flex;gap:8px;flex:none;overflow-x:auto}
+.tab{min-height:56px;padding:0 20px;border-radius:12px;border:1px solid var(--linea);background:transparent;font-size:16px;font-weight:600;display:flex;align-items:center;gap:10px;white-space:nowrap}
+.tab.on{background:var(--tinta);border-color:var(--tinta);color:var(--papel)}
+.tab span{font-size:13px;font-weight:400;opacity:.8}
+.segs{display:flex;gap:8px;padding:16px 24px 0}
+.segs i{flex:1;height:8px;border-radius:4px;background:var(--linea)}
+.segs i.d{background:var(--tinta)}.segs i.n{background:var(--papaya)}
+.cobody{flex:1 0 auto;display:flex;gap:28px;padding:20px 24px;flex-wrap:wrap}
+.media{flex:1 1 300px;max-width:500px;min-height:240px;background:var(--lino);border-radius:12px;padding:18px;display:flex;flex-direction:column}
+.media div{flex:1;display:flex;align-items:center;justify-content:center}
+.cotext{flex:2 1 340px;min-width:0;display:flex;flex-direction:column;gap:14px}
+.cotext .t{font-size:clamp(24px,3.2vw,36px);line-height:1.28;font-weight:600;letter-spacing:-.01em}
+.cotext .s{font-size:19px;line-height:28px;color:var(--suave)}
+.cofoot{display:flex;gap:14px;padding:12px 24px 22px;position:sticky;bottom:0;background:var(--papel);border-top:1px solid var(--linea);flex:none}
+.cofoot button{min-height:76px;border-radius:12px;font-size:20px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:10px;border:1px solid var(--tinta);background:transparent;flex:1}
+.cofoot .nx{flex:2;background:var(--papaya);border-color:var(--papaya);color:var(--onacc)}
+.cofoot button:disabled{opacity:.35}
+.q{font-weight:600;box-shadow:inset 0 -.32em 0 color-mix(in srgb,var(--papaya) 60%,transparent)}
+.need{background:var(--lino);border-radius:12px;padding:16px 18px;display:flex;flex-direction:column;gap:6px}
+.need .ing{font-size:21px;line-height:30px}.need .ing b{width:104px}
+.ck{display:flex;align-items:center;gap:14px;min-height:56px;padding:8px 14px;border-radius:12px;border:1px solid var(--linea);background:transparent;text-align:left;font-size:19px;line-height:26px;width:100%}
+.ck i{width:28px;height:28px;border-radius:8px;border:2px solid var(--tinta);flex:none;display:flex;align-items:center;justify-content:center;font-style:normal}
+.ck.on{background:var(--lino);border-color:var(--lino)}
+.ck.on i{background:var(--papaya);border-color:var(--papaya);color:var(--onacc)}
+.ck.on span,.ck.on b{color:var(--suave)}
+.stg{display:flex;gap:6px;flex:1;min-width:0;overflow-x:auto}
+.stg .chip{font-weight:600}
+.dest{background:var(--lino);border-radius:12px;padding:16px 18px;display:flex;flex-direction:column;gap:4px;box-shadow:inset 5px 0 0 var(--papaya)}
+.dest b{font-size:26px;line-height:32px;font-weight:600}
+.note{background:var(--lino);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:2px;box-shadow:inset 4px 0 0 var(--papaya);font-size:16px;line-height:23px}
+.finw{flex:1 0 auto;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:14px;padding:32px 20px}
+.finb{width:100%;max-width:820px;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;text-align:left;margin:10px 0}
+.cfg{display:flex;flex-direction:column;gap:16px;padding:22px 0;border-top:1px solid var(--linea)}
+.cfg h2{font-size:18px;line-height:24px;font-weight:600}
+.pgr{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.pc{display:flex;flex-direction:column;align-items:flex-start;gap:8px;padding:14px;border-radius:12px;border:1px solid;text-align:left;min-height:104px}
+.pc.on{box-shadow:inset 0 0 0 1px currentColor}
+.pc b{font-size:17px;font-weight:600}
+.pcs{display:flex;gap:6px}.pcs i{width:30px;height:30px;border-radius:8px;border:1px solid rgba(128,128,128,.35)}
+.sw{width:56px;height:32px;border-radius:16px;border:1px solid var(--linea);background:var(--lino);padding:3px;display:flex;flex:none}
+.sw i{width:24px;height:24px;border-radius:12px;background:var(--suave);transition:transform .15s}
+.sw.on{background:var(--papaya);border-color:var(--papaya)}.sw.on i{background:var(--onacc);transform:translateX(24px)}
+.tbox{background:var(--lino);border-radius:12px;padding:16px 18px;display:flex;flex-direction:column;gap:12px}
+.trow{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.tnum{font-size:46px;line-height:1;font-weight:600;font-variant-numeric:tabular-nums}
+.step.on{background:var(--tinta);color:var(--papel)}
+.tadjs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.tadj{min-height:48px;border-radius:12px;border:1px solid var(--linea);background:var(--papel);font-size:15px;font-weight:600;padding:0 4px}
+.trow2{display:flex;gap:10px}.trow2 .btn{flex:1;min-height:58px;font-size:18px}.trow2 .btn:disabled{opacity:.4}
+.tstrip{display:flex;gap:8px;flex-wrap:wrap;padding:12px 24px 0}
+.tstrip .chip{display:flex;align-items:center;gap:8px;border-color:var(--papaya)}
+/* splash */
+#splash{position:fixed;inset:0;background:var(--papel);z-index:30;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;transition:opacity .4s}
+#splash .n{font-size:clamp(48px,9vw,96px);line-height:1;font-weight:600;letter-spacing:-.02em;opacity:0;animation:sp-up .5s ease-out 1.7s forwards}
+#splash .g{font-size:20px;color:var(--suave);opacity:0;animation:sp-up .5s ease-out 1.9s forwards}
+#splash .by{position:absolute;bottom:40px;display:flex;align-items:center;gap:10px;font-size:15px;color:var(--suave);opacity:0;animation:sp-fade .5s ease-out 2.3s forwards}
+.sp-p,.sp-h,.sp-w{stroke-dasharray:1;stroke-dashoffset:1;opacity:0}
+.sp-p{animation:sp-draw .75s cubic-bezier(.6,0,.2,1) .15s forwards}
+.sp-h{animation:sp-draw .25s ease-out .8s forwards}
+.sp-w{animation:sp-draw .5s cubic-bezier(.4,0,.2,1) forwards,sp-float 2.6s ease-in-out infinite}
+.sp-w1{animation-delay:1s,1.6s}.sp-w2{animation-delay:1.15s,1.9s}.sp-w3{animation-delay:1.3s,2.2s}
+@keyframes sp-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes sp-draw{0%{stroke-dashoffset:1;opacity:1}100%{stroke-dashoffset:0;opacity:1}}
+.msw{position:relative;display:inline-grid;grid-template-columns:1fr 1fr;height:48px;border-radius:24px;border:1px solid var(--linea);background:var(--lino);padding:0;flex:none;margin-left:auto;font-size:15px;font-weight:600}
+.msw span{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;padding:0 18px;color:var(--suave);transition:color .18s}
+.msw i{position:absolute;top:3px;bottom:3px;left:3px;width:calc(50% - 3px);border-radius:21px;background:var(--tinta);transition:transform .18s}
+.msw.s i{transform:translateX(100%)}
+.msw:not(.s) span:first-of-type,.msw.s span:last-of-type{color:var(--papel)}
+.sbody{flex:1 0 auto;display:flex;gap:36px;padding:20px 24px 28px;flex-wrap:wrap;align-items:flex-start}
+.scol1{flex:1 1 300px;max-width:460px;display:flex;flex-direction:column;gap:22px}
+.scol2{flex:2 1 420px;min-width:0;display:flex;flex-direction:column;gap:28px}
+.scol1 section,.scol2 section{display:flex;flex-direction:column}
+.scol2 section{gap:20px}
+.si{display:flex;gap:12px;align-items:baseline;width:100%;text-align:left;background:transparent;border:0;border-bottom:1px solid var(--linea);padding:12px 4px;font-size:18px;line-height:26px;min-height:52px}
+.si b{font-weight:600;min-width:88px;flex:none}
+.si em{font-style:normal;color:var(--suave)}
+.si.on,.si.on em{color:var(--suave);text-decoration:line-through}
+.sst{display:flex;gap:16px;align-items:flex-start}
+.sst>div{display:flex;flex-direction:column;gap:12px;min-width:0;flex:1}
+.sx{width:48px;height:48px;border-radius:24px;border:2px solid var(--tinta);background:transparent;font-size:19px;font-weight:600;flex:none;display:flex;align-items:center;justify-content:center}
+.sst.on .sx{background:var(--papaya);border-color:var(--papaya);color:var(--onacc)}
+.sst p{font-size:21px;line-height:31px;cursor:pointer;padding-top:8px}
+.sst.on p{color:var(--suave);text-decoration:line-through}
+/* jerarquía: títulos fuertes y recuadros */
+.head h1{font-size:30px;line-height:36px;font-weight:700;letter-spacing:-.02em}
+.head h1::after{content:"";display:block;width:48px;height:4px;border-radius:2px;background:var(--papaya);margin-top:8px}
+.h{font-size:17px;line-height:22px;font-weight:700;color:var(--tinta);display:flex;align-items:center;gap:10px;margin:0}
+.h::before{content:"";width:4px;height:18px;border-radius:2px;background:var(--papaya);flex:none}
+.box{background:var(--surf);border:1px solid var(--linea);border-radius:12px;padding:16px 18px;display:flex;flex-direction:column;gap:12px}
+.side{background:var(--lino)}
+.nav button.on{background:var(--papel)}
+.card{background:var(--surf);border:1px solid var(--linea);border-radius:12px;overflow:hidden;gap:0}
+.card .ph{border-radius:0;border-bottom:1px solid var(--linea)}
+.card>div:last-child{padding:12px 14px 14px;display:flex;flex-direction:column;gap:3px}
+.card b{font-size:18px;line-height:23px;font-weight:700}
+.part{background:var(--surf);border:1px solid var(--linea);padding:0;gap:0;overflow:hidden}
+.part>div{padding:14px 16px}
+.part>div:first-child{background:var(--lino);border-bottom:1px solid var(--linea);padding:12px 8px 12px 16px}
+.part h2{font-size:19px;font-weight:700}
+.cfg{background:var(--surf);border:1px solid var(--linea);border-radius:12px;padding:20px 22px;border-top:1px solid var(--linea)}
+.cfg h2{font-size:20px;line-height:26px;font-weight:700;display:flex;align-items:center;gap:10px}
+.cfg h2::before{content:"";width:4px;height:20px;border-radius:2px;background:var(--papaya);flex:none}
+.box .lrow:last-child,.cfg .lrow:last-child{border-bottom:0;padding-bottom:0}
+.box .lrow:first-child{padding-top:0}
+.box input[type=url],.box textarea{width:100%;font:inherit;font-size:15px;line-height:22px;padding:12px 14px;border:1px solid var(--linea);border-radius:10px;background:var(--papel);color:var(--tinta)}
+.side .add{margin:0 0 4px;justify-content:flex-start}
+.gcol a.btn svg{width:18px;height:18px}
+.panel{border:1px solid var(--linea)}
+.co header{background:var(--lino);border-bottom:1px solid var(--linea);padding:14px 24px}
+.co header .chip:not(.on),.msw{background:var(--papel)}
+.cotext>.lbl{font-size:14px;line-height:18px;color:var(--tinta);font-weight:700;display:flex;align-items:center;gap:10px}
+.cotext>.lbl::before{content:"";width:4px;height:16px;border-radius:2px;background:var(--papaya);flex:none}
+.need,.dest,.tbox{border:1px solid var(--linea)}
+.scol1{background:var(--surf);border:1px solid var(--linea);border-radius:12px;padding:18px 18px 6px}
+.scol1 .si:last-child{border-bottom:0}
+.scol1 section{gap:4px}
+.scol2 section{background:var(--surf);border:1px solid var(--linea);border-radius:12px;padding:20px}
+.finb .box{background:var(--surf)}
+/* imágenes del modo cocina */
+.em{width:44px;height:44px;border-radius:12px;background:var(--lino);display:inline-flex;align-items:center;justify-content:center;font-size:26px;line-height:1;flex:none;font-family:"Noto Color Emoji","Apple Color Emoji","Segoe UI Emoji",sans-serif;font-style:normal}
+.em.l{width:88px;height:88px;font-size:52px;border-radius:16px}
+.rc{width:44px;height:44px;border-radius:12px;background:var(--lino);padding:7px;flex:none;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.rc.l{width:88px;height:88px;padding:16px;border-radius:16px}
+.ck.on .em,.ck.on .rc{background:var(--papel)}
+.flow{display:flex;align-items:center;gap:16px;flex-wrap:wrap;background:var(--surf);border:1px solid var(--linea);border-radius:12px;padding:16px}
+.tils{display:flex;gap:12px;flex-wrap:wrap}
+.til{display:flex;flex-direction:column;align-items:center;text-align:center;gap:2px;width:116px;font-size:15px;line-height:20px}
+.til b{font-weight:700;font-size:17px;line-height:22px;margin-top:6px}
+.til.dst{width:168px;border:2px solid var(--papaya);border-radius:14px;padding:12px 10px}
+.til.dst b{font-size:20px;line-height:25px}
+.fl-a svg{width:40px;height:40px;stroke:var(--papaya);stroke-width:2.6}
+.need .tils{margin-top:6px}
+.tks{display:flex;gap:10px;flex-wrap:wrap}
+.tkt{display:flex;flex-direction:column;align-items:center;gap:2px;background:var(--lino);border-radius:12px;padding:8px 6px 6px;width:104px;font-size:13px;line-height:17px;font-weight:600;text-align:center}
+.sst.on .tks{opacity:.4}
+.si{align-items:center}
+.ck .em+b,.ck .rc+span{margin-left:0}
+/* procesos gráficos */
+.strip{--z:84px;display:flex;align-items:flex-start;gap:8px;flex-wrap:wrap}
+.strip.g{--z:clamp(92px,min(21vw,26vh),216px);justify-content:center;gap:12px}
+.fg{margin:0;width:var(--z);display:flex;flex-direction:column;gap:5px;align-items:center;text-align:center;font-size:12px;line-height:15px}
+.fg b{font-weight:700}
+.strip.g .fg{font-size:clamp(13px,1.5vw,17px);line-height:1.3;gap:8px}
+.ar{height:var(--z);display:flex;align-items:center;color:var(--papaya)}
+.ar svg{width:18px;height:18px;stroke-width:3}
+.strip.g .ar svg{width:34px;height:34px}
+.pn{position:relative;width:var(--z);height:var(--z);font-size:calc(var(--z)/10);background:var(--lino);border-radius:12px;overflow:hidden;flex:none;display:flex;align-items:center;justify-content:center}
+.pn.to{box-shadow:inset 0 0 0 2px var(--papaya)}
+.pn .ae,.es span,.mini,.de,.shk,.bits i{font-family:"Noto Color Emoji","Apple Color Emoji","Segoe UI Emoji",sans-serif;line-height:1;font-style:normal}
+.pn .ae{font-size:4.6em;display:block}
+.es{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:.3em;padding:.6em}
+.es span{font-size:4.6em}.es.n2 span{font-size:3.3em}.es.n3 span,.es.n4 span{font-size:2.9em}
+.mini{position:absolute;top:.35em;left:0;right:0;text-align:center;font-size:2.1em;letter-spacing:.05em}
+.dc{position:absolute;left:1.5em;bottom:.3em;width:7em;height:7em;fill:none;stroke:currentColor;stroke-width:2.3;stroke-linecap:round;stroke-linejoin:round}
+.de{position:absolute;top:.1em;left:50%;margin-left:-.5em;font-size:2.7em;opacity:0;animation:dfall 1.9s ease-in infinite}
+@keyframes dfall{0%{transform:translateY(-.3em);opacity:0}15%{opacity:1}70%{transform:translateY(1.75em) scale(.75);opacity:1}100%{transform:translateY(2em) scale(.55);opacity:0}}
+.pn.ln .tk{width:8.4em;height:8.4em}
+.tl{position:absolute;overflow:visible;stroke:currentColor;stroke-width:2.5;stroke-linejoin:round;stroke-linecap:round;fill:none}
+.kn{width:2.4em;height:4.2em;right:1.4em;top:.4em;animation:chop .42s ease-in infinite alternate}
+@keyframes chop{from{transform:translateY(0)}to{transform:translateY(2.5em)}}
+.a-knife .ae{transform:translate(-.2em,-.14em)}
+.a-peel .kn{right:auto;left:.6em;top:.6em;animation:peel 1s ease-in-out infinite alternate}
+@keyframes peel{from{transform:translate(0,0) rotate(-65deg)}to{transform:translate(4.8em,2em) rotate(-65deg)}}
+.curl{position:absolute;left:4.6em;top:6.9em;width:.7em;height:2em;border-radius:.4em;background:var(--papaya);animation:fall 1s ease-in infinite}
+@keyframes fall{0%{transform:translateY(0);opacity:0}20%{opacity:1}100%{transform:translateY(2.3em);opacity:0}}
+.bits{position:absolute;left:0;right:0;bottom:.35em;display:flex;justify-content:center;gap:.5em}
+.bits i{font-size:1.6em;animation:pop 2.4s ease-out infinite;opacity:0}
+.bits i:nth-child(2){animation-delay:.42s}.bits i:nth-child(3){animation-delay:.84s}
+@keyframes pop{0%,8%{opacity:0;transform:scale(.3)}22%,88%{opacity:1;transform:none}100%{opacity:0}}
+.gr{width:5.2em;height:7em;left:2.4em;top:.5em;transform:rotate(16deg)}
+.a-grate .ae{font-size:2.9em;position:relative;z-index:1;animation:grt .4s ease-in-out infinite alternate}
+@keyframes grt{from{transform:translate(-.35em,-.75em)}to{transform:translate(.2em,.15em)}}
+.dp{position:absolute;width:.7em;height:.9em;border-radius:50%;animation:fall 1.1s ease-in infinite;opacity:0;z-index:2}
+.dp.d2{animation-delay:.36s}.dp.d3{animation-delay:.72s}
+.dp.y{background:#E8B800;top:6.9em}.dp.w{background:#3F9AD8;top:.3em}.dp.p{background:var(--papaya);top:6.6em}
+.dp.d1{left:3.3em}.dp.d2{left:4.65em}.dp.d3{left:6em}
+.dp.p.d1{left:1.3em}.dp.p.d2{left:2em}.dp.p.d3{left:2.7em}
+.dp.g{background:var(--suave);width:.42em;height:.42em;top:3em}.dp.g.d1{left:5.9em}.dp.g.d2{left:6.6em}.dp.g.d3{left:7.3em}
+.a-squeeze .ae{animation:sq .5s ease-in-out infinite alternate;transform-origin:50% 100%;margin-bottom:.3em}
+@keyframes sq{to{transform:scale(1.15,.76)}}
+.shk{position:absolute;right:.25em;top:.05em;font-size:3em;animation:shk .22s ease-in-out infinite alternate}
+@keyframes shk{from{transform:rotate(-135deg)}to{transform:rotate(-158deg)}}
+.a-shake .ae{transform:translate(-.22em,.2em)}
+.clk{width:3.4em;height:3.4em;right:.4em;top:.4em;stroke:var(--papaya);stroke-width:3.2}
+.clk .hd{transform-origin:20px 20px;animation:sgspin 3s linear infinite}
+@keyframes sgspin{to{transform:rotate(360deg)}}
+.sp{width:3.8em;height:3.8em;right:.4em;top:.8em;animation:stir 1.4s linear infinite}
+@keyframes stir{0%,100%{transform:translate(0,0)}25%{transform:translate(-1.7em,1em)}50%{transform:translate(-3.4em,0)}75%{transform:translate(-1.7em,-.7em)}}
+.a-pour .ae{animation:tilt .9s ease-in-out infinite alternate;transform-origin:50% 60%}
+@keyframes tilt{from{transform:rotate(0)}to{transform:rotate(-42deg)}}
+.sc{width:7.4em;height:3.2em;left:1.3em;bottom:.4em}
+.sc .nd{transform-origin:35px 20px;animation:nd .7s ease-in-out infinite alternate}
+@keyframes nd{from{transform:rotate(-28deg)}to{transform:rotate(28deg)}}
+.a-weigh .ae{font-size:3.6em;margin-bottom:.82em;animation:bob .7s ease-in-out infinite alternate}
+@keyframes bob{to{transform:translateY(.07em)}}
+.zg{width:4.2em;height:2.1em;left:2.9em;top:3.9em;stroke-width:3.4;animation:blink 1.1s steps(1) infinite}
+@keyframes blink{0%,45%{opacity:0}50%,100%{opacity:1}}
+.a-crack .ae{animation:shk2 .16s ease-in-out infinite alternate}
+@keyframes shk2{from{transform:rotate(-7deg)}to{transform:rotate(7deg)}}
+.gcol{flex-direction:column;align-items:center;text-align:center;gap:16px;flex-wrap:nowrap}
+.gcol .t{font-size:clamp(21px,2.7vw,31px);line-height:1.3;font-weight:600;letter-spacing:-.01em;max-width:960px}
+.gcol .s{font-size:18px;line-height:26px;color:var(--suave);max-width:820px}
+.glbl{font-size:14px;line-height:18px;color:var(--tinta);font-weight:700;display:flex;align-items:center;gap:10px}
+.glbl::before{content:"";width:4px;height:16px;border-radius:2px;background:var(--papaya);flex:none}
+.prow{display:flex;gap:14px;align-items:center;flex-wrap:wrap;padding:14px 0;border-bottom:1px solid var(--linea)}
+.prow:last-child{border-bottom:0;padding-bottom:0}
+.prow .sx{align-self:center}
+.ptx{flex:1 1 220px;min-width:0;display:flex;flex-direction:column;gap:8px}
+.ptx p{font-size:18px;line-height:26px;cursor:pointer}
+.prow.on .strip{opacity:.35}.prow.on .strip *{animation-play-state:paused}
+.prow.on .ptx p{color:var(--suave);text-decoration:line-through}
+.prow.on .sx{background:var(--papaya);border-color:var(--papaya);color:var(--onacc)}
+.scol2 section{gap:6px}
+.scol1{max-width:360px}
+@keyframes sp-up{0%{opacity:0;transform:translateY(14px)}100%{opacity:1;transform:none}}
+@keyframes sp-fade{0%{opacity:0}100%{opacity:1}}
+.tk-rock{animation:tk-rock .9s ease-in-out infinite}
+.tk-drop{animation:tk-drop 1.1s ease-in infinite}
+.tk-lift{animation:tk-lift 1.6s ease-in-out infinite}
+.tk-roll{animation:tk-roll 1.4s ease-in-out infinite}
+.tk-shake{animation:tk-shake .35s ease-in-out infinite}
+.tk-toss{animation:tk-toss 1.2s ease-in-out infinite}
+.tk-fill{animation:tk-fill 2s ease-in-out infinite alternate}
+.tk-melt{animation:tk-melt 2s ease-in-out infinite alternate}
+.tk-grow{animation:tk-grow 2.4s ease-in-out infinite}
+.tk-sway{animation:tk-sway .7s ease-in-out infinite}
+.tk-stir{animation:tk-stir 1.2s ease-in-out infinite}
+.tk-hop{animation:tk-hop .8s ease-in-out infinite}
+.tk-rise{animation:tk-rise 1.4s ease-in infinite}
+.tk-pulse{animation:tk-pulse 1.6s ease-in-out infinite}
+.tk-squish{animation:tk-squish 1.2s ease-in-out infinite}
+.tk-press{animation:tk-press 1.2s ease-in-out infinite}
+.tk-slide{animation:tk-slide 1s ease-in-out infinite alternate}
+.tk-spin{animation:tk-spin 4s linear infinite}
+.tk-dash{stroke-dasharray:8 8;animation:tk-dash 1s linear infinite}
+@keyframes tk-drop{0%{transform:translateY(0);opacity:0}20%{opacity:1}100%{transform:translateY(18px);opacity:0}}
+@keyframes tk-lift{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+@keyframes tk-roll{0%,100%{transform:translateX(-12px)}50%{transform:translateX(12px)}}
+@keyframes tk-shake{0%,100%{transform:translateX(-3px)}50%{transform:translateX(3px)}}
+@keyframes tk-toss{0%,100%{transform:translateY(12px) rotate(0deg)}50%{transform:translateY(-14px) rotate(180deg)}}
+@keyframes tk-fill{0%{transform:scaleX(.15)}100%{transform:scaleX(1)}}
+@keyframes tk-melt{0%{transform:scaleY(1)}100%{transform:scaleY(.3)}}
+@keyframes tk-grow{0%,100%{transform:scaleY(.6)}50%{transform:scaleY(1.15)}}
+@keyframes tk-rock{0%,100%{transform:rotate(-16deg)}50%{transform:rotate(0deg)}}
+@keyframes tk-sway{0%,100%{transform:translateX(-9px)}50%{transform:translateX(9px)}}
+@keyframes tk-stir{0%,100%{transform:rotate(-9deg)}50%{transform:rotate(9deg)}}
+@keyframes tk-hop{0%,100%{transform:translateY(8px)}50%{transform:translateY(-12px)}}
+@keyframes tk-rise{0%{transform:translateY(0);opacity:0}20%{opacity:1}100%{transform:translateY(-22px);opacity:0}}
+@keyframes tk-pulse{0%,100%{opacity:.25}50%{opacity:1}}
+@keyframes tk-squish{0%,100%{transform:scale(1,1)}50%{transform:scale(1.12,.78)}}
+@keyframes tk-press{0%,100%{transform:translateY(-6px)}50%{transform:translateY(6px)}}
+@keyframes tk-slide{0%{transform:translate(0,0)}100%{transform:translate(8px,58px)}}
+@keyframes tk-spin{to{transform:rotate(360deg)}}
+@keyframes tk-dash{to{stroke-dashoffset:-16}}
+@media (prefers-reduced-motion: reduce){[class^="tk-"]{animation:none}}
+@media (max-width:820px){
+#app{flex-direction:column}
+.side{width:auto;height:auto;position:static;border-right:0;border-bottom:1px solid var(--linea);padding:14px 16px;gap:10px}
+.nav{flex-direction:row;overflow-x:auto;gap:6px}
+.nav button{white-space:nowrap;gap:8px;border:1px solid var(--linea)}
+.nav button.on{box-shadow:none;background:var(--tinta);color:var(--papel);border-color:var(--tinta)}
+.nav button.on span:last-child{color:inherit;opacity:.7}
+.side .lbl,.side .foot .by{display:none!important}
+.side{flex-direction:row;flex-wrap:wrap;align-items:center}
+.brand{flex:1;padding:0}
+.side .foot{margin:0!important;order:2}
+
+.side .nav{order:3;flex-basis:100%}
+.co header{flex-wrap:wrap}
+.copad{padding-left:16px!important;padding-right:16px!important}
+.stg .chip{padding:0 10px;font-size:13px}
+.co header{gap:8px}
+.co header .step{width:48px!important;height:48px!important}
+.co header{padding:12px 16px!important}.head h1{font-size:26px;line-height:32px}.scol2 section{padding:16px}
+.strip{--z:76px;gap:5px}.strip.g{gap:6px}.strip.g .ar svg{width:22px;height:22px}.ar svg{width:14px;height:14px}.ptx p{font-size:17px;line-height:25px}
+.msw{height:44px;font-size:14px}.msw span{padding:0 14px}
+.co header .stg{order:3;flex-basis:100%}
+.co header h1{font-size:17px!important;line-height:22px!important;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.sst p{font-size:19px;line-height:28px}.sbody{padding-left:16px;padding-right:16px;gap:24px}
+.co header>.sm{flex-basis:100%}
+.tab{min-height:48px;padding:0 14px;font-size:15px}
+.cofoot button{min-height:64px;font-size:18px}
+.main{padding:18px 16px 40px}
+.info{max-width:none}
+.co header,.segs,.cobody,.cofoot{padding-left:16px;padding-right:16px}
+}
+@media (prefers-reduced-motion: reduce){*{animation:none!important}.bits i,.de{opacity:1}.sp-p,.sp-h,.sp-w,#splash .n,#splash .g,#splash .by{opacity:1;stroke-dashoffset:0}}
+</style>
+</head>
+<body>
+<div id="splash"><svg role="img" aria-label="Logo de Smagsbord" width="197" height="160" viewBox="0 0 180 146"><g fill="none" stroke-linecap="round" stroke-linejoin="round"><g stroke="currentColor" stroke-width="12.7"><path class="sp-p" pathLength="1" d="M44 76 V112 Q44 134 66 134 H114 Q136 134 136 112 V76"></path><path class="sp-h" pathLength="1" d="M44 90 H26"></path><path class="sp-h" pathLength="1" d="M136 90 H154"></path></g><g data-ac="s" stroke-width="7.85"><path class="sp-w sp-w1" pathLength="1" d="M68 58 q-8 -11 0 -22 q8 -11 0 -22"></path><path class="sp-w sp-w2" pathLength="1" d="M90 58 q-8 -11 0 -22 q8 -11 0 -22"></path><path class="sp-w sp-w3" pathLength="1" d="M112 58 q-8 -11 0 -22 q8 -11 0 -22"></path></g></g></svg><div class="n">Smagsbord</div><div class="g">Recetas de familia</div><div class="by">by <svg role="img" aria-label="fuge1618" width="121" height="22" viewBox="0 62 630 115"><g fill="none" stroke-width="12.7" stroke-linecap="round"><path stroke="currentColor" d="M26.35 143.65 A60.05 60.05 0 0 1 86.40 83.60 H135.64"></path><path stroke="#FF8000" d="M80.39 106.42 H115.22 A37.23 37.23 0 0 1 152.45 143.65"></path></g><path fill="currentColor" d="M219.72 95.41 L207.90 95.41 L207.90 91.16 C207.90 86.86 209.75 84.42 214.55 84.42 C216.64 84.42 218.30 84.86 219.37 85.20 L221.97 75.34 C220.30 74.75 216.69 73.83 212.20 73.83 C202.83 73.83 195.25 79.30 195.25 90.19 L195.25 95.41 L185.25 95.41 L185.25 105.38 L195.25 105.38 L195.25 150.00 L207.90 150.00 L207.90 105.38 L219.72 105.38 L219.72 95.41 Z M248.58 150.69 C256.48 150.69 262.20 146.88 265.47 139.06 L265.58 150.00 L277.64 150.00 L277.64 95.41 L264.89 95.41 L264.89 127.39 C264.89 135.30 260.00 139.89 253.26 139.89 C246.62 139.89 242.58 135.50 242.58 128.17 L242.58 95.41 L229.87 95.41 L229.87 130.12 C229.87 143.27 237.34 150.69 248.58 150.69 Z M314.65 171.58 C329.34 171.58 340.19 164.75 340.19 150.14 L340.19 95.41 L327.73 95.41 L327.73 104.44 L327.05 104.44 C325.09 100.58 320.95 94.72 311.28 94.72 C298.69 94.72 288.72 104.64 288.72 122.56 C288.72 140.33 298.64 149.17 311.19 149.17 C320.61 149.17 324.61 144.19 326.56 140.23 L327.64 140.23 L327.64 150.53 C327.64 158.34 322.47 161.92 314.59 161.92 C306.64 161.92 303.26 158.16 301.56 155.08 L290.83 158.94 C293.56 166.16 301.51 171.58 314.65 171.58 Z M314.75 139.16 C306.25 139.16 301.70 132.52 301.70 122.45 C301.70 112.55 306.15 105.17 314.75 105.17 C323.14 105.17 327.69 112.11 327.69 122.45 C327.69 132.91 323.05 139.16 314.75 139.16 Z M377.78 151.12 C389.94 151.12 398.44 145.31 401.08 136.47 L389.40 134.08 C387.69 138.72 383.50 141.16 377.92 141.16 C369.78 141.16 364.25 135.98 363.92 126.27 L401.90 126.27 L401.90 122.27 C401.90 103.12 390.28 94.72 376.95 94.72 C361.33 94.72 351.26 106.25 351.26 123.05 C351.26 140.14 361.33 151.12 377.78 151.12 Z M363.97 117.62 C364.55 110.34 369.23 104.69 377.00 104.69 C384.56 104.69 388.81 109.81 389.55 117.62 L363.97 117.62 Z M437.69 77.25 L423.23 77.25 L407.26 88.67 L407.26 101.08 L424.25 88.86 L424.75 88.86 L424.75 150.00 L437.69 150.00 L437.69 77.25 Z M477.72 150.98 C493.39 150.98 503.89 140.28 503.89 125.97 C503.89 112.16 494.08 102.25 481.33 102.25 C473.51 102.25 466.69 106.00 463.22 112.30 L462.67 112.30 C462.67 96.88 468.34 87.55 478.50 87.55 C484.80 87.55 489.05 91.27 490.40 96.83 L503.20 96.83 C501.64 85.02 492.08 76.27 478.50 76.27 C461.06 76.27 449.98 90.88 449.98 115.72 C449.98 142.38 463.84 150.98 477.72 150.98 Z M477.67 140.38 C469.90 140.38 464.14 133.94 464.14 126.27 C464.14 118.70 470.09 112.25 477.81 112.25 C485.58 112.25 491.25 118.36 491.25 126.22 C491.25 134.17 485.39 140.38 477.67 140.38 Z M543.94 77.25 L529.48 77.25 L513.51 88.67 L513.51 101.08 L530.50 88.86 L531.00 88.86 L531.00 150.00 L543.94 150.00 L543.94 77.25 Z M583.19 150.98 C598.90 150.98 610.19 142.33 610.19 130.52 C610.19 121.44 603.45 113.81 595.00 112.36 L595.00 111.91 C602.37 110.25 607.50 103.61 607.50 95.75 C607.50 84.56 597.15 76.27 583.19 76.27 C569.12 76.27 558.87 84.56 558.87 95.75 C558.87 103.61 563.90 110.25 571.42 111.91 L571.42 112.36 C562.78 113.81 556.23 121.44 556.23 130.52 C556.23 142.33 567.36 150.98 583.19 150.98 Z M583.19 140.92 C574.94 140.92 569.61 136.33 569.61 129.59 C569.61 122.61 575.33 117.62 583.19 117.62 C590.95 117.62 596.72 122.61 596.72 129.59 C596.72 136.38 591.34 140.92 583.19 140.92 Z M583.19 107.77 C576.40 107.77 571.61 103.38 571.61 97.02 C571.61 90.72 576.25 86.52 583.19 86.52 C590.01 86.52 594.76 90.72 594.76 97.02 C594.76 103.38 589.87 107.77 583.19 107.77 Z"></path></svg></div></div>
+<div id="app"></div>
+<script>
+const TK={"picar": "<path d=\"M18 96 H102\"></path><path data-ac=\"s\" d=\"M26 86 V90 M36 86 V90 M46 86 V90\"></path><g class=\"tk-rock\" style=\"transform-origin: 52px 84px\"><path d=\"M52 84 L96 80 L96 62 Q70 64 52 84 Z\"></path><path d=\"M96 71 H112\"></path></g>", "batir": "<path d=\"M22 62 A38 38 0 0 0 98 62\"></path><path d=\"M16 62 H104\"></path><path class=\"tk-pulse\" data-ac=\"s\" d=\"M40 78 Q62 92 84 78\"></path><g class=\"tk-sway\"><path d=\"M62 14 V52\"></path><path d=\"M62 52 C50 62 52 84 62 86 C72 84 74 62 62 52\"></path></g>", "mezclar": "<path d=\"M22 62 A38 38 0 0 0 98 62\"></path><path d=\"M16 62 H104\"></path><path class=\"tk-dash\" data-ac=\"s\" d=\"M44 76 A18 8 0 1 0 80 76\"></path><g class=\"tk-stir\" style=\"transform-origin: 86px 18px\"><path d=\"M86 18 L66 70\"></path></g>", "saltear": "<path d=\"M22 70 L30 86 H82 L90 70\"></path><path d=\"M88 76 L112 66\"></path><g data-ac=\"f\" stroke=\"none\"><circle class=\"tk-hop\" cx=\"42\" cy=\"62\" r=\"4.5\"></circle><circle class=\"tk-hop\" style=\"animation-delay: .15s\" cx=\"56\" cy=\"56\" r=\"4.5\"></circle><circle class=\"tk-hop\" style=\"animation-delay: .3s\" cx=\"70\" cy=\"62\" r=\"4.5\"></circle></g>", "hervir": "<path d=\"M30 52 V90 Q30 96 36 96 H84 Q90 96 90 90 V52\"></path><path d=\"M24 52 H96\"></path><path class=\"tk-pulse\" data-ac=\"s\" d=\"M50 40 Q46 32 50 24 M70 40 Q66 32 70 24\"></path><g data-ac=\"s\" stroke-width=\"3\"><circle class=\"tk-rise\" cx=\"46\" cy=\"84\" r=\"3.5\"></circle><circle class=\"tk-rise\" style=\"animation-delay: .45s\" cx=\"60\" cy=\"86\" r=\"3.5\"></circle><circle class=\"tk-rise\" style=\"animation-delay: .9s\" cx=\"74\" cy=\"82\" r=\"3.5\"></circle></g>", "hornear": "<rect x=\"22\" y=\"20\" width=\"76\" height=\"80\" rx=\"8\"></rect><path d=\"M22 40 H98\"></path><path d=\"M36 30 H36.01 M50 30 H50.01\"></path><rect x=\"34\" y=\"52\" width=\"52\" height=\"36\" rx=\"4\"></rect><path class=\"tk-pulse\" data-ac=\"s\" d=\"M46 80 Q42 72 46 64 M60 80 Q56 72 60 64 M74 80 Q70 72 74 64\"></path>", "amasar": "<path d=\"M14 100 H106\"></path><ellipse class=\"tk-squish\" style=\"transform-origin: 60px 98px\" cx=\"60\" cy=\"84\" rx=\"34\" ry=\"14\"></ellipse><g class=\"tk-press\" data-ac=\"s\"><path d=\"M60 22 V50 M50 40 L60 50 L70 40\"></path></g>", "rallar": "<path d=\"M44 18 H76 L88 98 H32 Z\"></path><path d=\"M52 44 H58 M64 56 H70 M50 68 H56 M64 80 H70\"></path><rect class=\"tk-slide\" data-ac=\"s\" x=\"78\" y=\"20\" width=\"18\" height=\"12\" rx=\"3\"></rect>", "dorar": "<path d=\"M22 70 L30 86 H82 L90 70\"></path><path d=\"M88 76 L112 66\"></path><ellipse cx=\"56\" cy=\"76\" rx=\"20\" ry=\"6\"></ellipse><path class=\"tk-pulse\" data-ac=\"s\" d=\"M40 50 A18 18 0 0 1 76 50 M68 43 L76 50 L84 44\"></path>", "reposar": "<path d=\"M22 66 A38 38 0 0 0 98 66\"></path><path d=\"M16 66 Q60 44 104 66\"></path><g data-ac=\"s\"><circle cx=\"92\" cy=\"26\" r=\"14\"></circle><path d=\"M92 26 H98\"></path><path class=\"tk-spin\" style=\"transform-origin: 92px 26px\" d=\"M92 26 V17\"></path></g>", "cortar": "<path d=\"M14 98 H106\"></path><path d=\"M24 96 V74 Q24 60 44 60 H70 Q84 60 84 74 V96\"></path><path class=\"tk-pulse\" data-ac=\"s\" d=\"M62 66 V92\"></path><g class=\"tk-press\"><path d=\"M44 34 H96 Q96 48 82 48 H44 Z\"></path><path d=\"M24 41 H44\"></path></g>", "pelar": "<ellipse cx=\"52\" cy=\"76\" rx=\"32\" ry=\"20\"></ellipse><path class=\"tk-pulse\" data-ac=\"s\" d=\"M60 56 Q46 48 50 36 Q54 28 62 32\"></path><g class=\"tk-stir\" style=\"transform-origin: 100px 20px\"><path d=\"M100 20 L82 46\"></path><path d=\"M82 46 L70 58 M88 50 L76 62\"></path></g>", "exprimir": "<path d=\"M22 86 H98\"></path><path d=\"M34 86 Q60 104 86 86\"></path><g class=\"tk-press\"><path d=\"M30 54 A30 30 0 0 1 90 54 Z\"></path></g><g data-ac=\"f\" stroke=\"none\"><circle class=\"tk-drop\" style=\"animation-delay: 0.0s\" cx=\"48\" cy=\"62\" r=\"3.5\"></circle><circle class=\"tk-drop\" style=\"animation-delay: 0.3s\" cx=\"60\" cy=\"64\" r=\"3.5\"></circle><circle class=\"tk-drop\" style=\"animation-delay: 0.6s\" cx=\"72\" cy=\"62\" r=\"3.5\"></circle></g>", "colar": "<path d=\"M22 46 A38 38 0 0 0 98 46\"></path><path d=\"M14 46 H106\"></path><path d=\"M46 58 H46.01 M60 64 H60.01 M74 58 H74.01 M53 73 H53.01 M67 73 H67.01\"></path><g data-ac=\"f\" stroke=\"none\"><circle class=\"tk-drop\" style=\"animation-delay: 0.0s\" cx=\"48\" cy=\"90\" r=\"3.5\"></circle><circle class=\"tk-drop\" style=\"animation-delay: 0.3s\" cx=\"60\" cy=\"92\" r=\"3.5\"></circle><circle class=\"tk-drop\" style=\"animation-delay: 0.6s\" cx=\"72\" cy=\"90\" r=\"3.5\"></circle></g>", "freir": "<path d=\"M22 70 L30 86 H82 L90 70\"></path><path d=\"M88 76 L112 66\"></path><rect x=\"44\" y=\"70\" width=\"26\" height=\"9\" rx=\"4.5\"></rect><g data-ac=\"s\" stroke-width=\"3\"><circle class=\"tk-rise\" cx=\"36\" cy=\"80\" r=\"3\"></circle><circle class=\"tk-rise\" style=\"animation-delay: .5s\" cx=\"78\" cy=\"80\" r=\"3\"></circle><circle class=\"tk-rise\" style=\"animation-delay: .9s\" cx=\"57\" cy=\"64\" r=\"3\"></circle></g>", "asar": "<path d=\"M18 60 H102\"></path><path d=\"M26 60 V100 M94 60 V100\"></path><ellipse cx=\"60\" cy=\"48\" rx=\"24\" ry=\"7\"></ellipse><path class=\"tk-pulse\" data-ac=\"s\" d=\"M42 94 Q38 86 42 78 M60 94 Q56 86 60 78 M78 94 Q74 86 78 78\"></path>", "vapor": "<path d=\"M30 52 V90 Q30 96 36 96 H84 Q90 96 90 90 V52\"></path><path d=\"M24 52 H96\"></path><path stroke-dasharray=\"2 8\" d=\"M36 72 H84\"></path><path d=\"M48 64 H48.01 M60 64 H60.01 M72 64 H72.01\" stroke-width=\"9\"></path><path class=\"tk-pulse\" data-ac=\"s\" d=\"M44 40 Q40 32 44 24 M60 40 Q56 32 60 24 M76 40 Q72 32 76 24\"></path>", "tapar": "<path d=\"M30 62 V92 Q30 98 36 98 H84 Q90 98 90 92 V62\"></path><path d=\"M24 62 H96\"></path><g class=\"tk-lift\" data-ac=\"s\"><path d=\"M28 52 H92\"></path><path d=\"M36 52 Q60 30 84 52\"></path><path d=\"M60 40 V34\"></path></g>", "licuar": "<path d=\"M40 18 H80 L74 72 H46 Z\"></path><path d=\"M42 72 H78 L84 100 H36 Z\"></path><path d=\"M60 84 H60.01\"></path><path class=\"tk-dash\" data-ac=\"s\" d=\"M48 40 Q60 50 72 40\"></path><path class=\"tk-pulse\" data-ac=\"s\" d=\"M52 58 Q60 64 68 58\"></path>", "pesar": "<path d=\"M30 76 H90 L96 102 H24 Z\"></path><path d=\"M60 66 V76\"></path><path d=\"M22 66 H98\"></path><circle cx=\"60\" cy=\"50\" r=\"13\"></circle><g class=\"tk-stir\" style=\"transform-origin: 60px 96px\" data-ac=\"s\"><path d=\"M60 96 V84\"></path></g>", "condimentar": "<path d=\"M22 102 H98\"></path><ellipse cx=\"60\" cy=\"94\" rx=\"28\" ry=\"6\"></ellipse><g class=\"tk-shake\"><path d=\"M70 16 L96 30 L82 56 L56 42 Z\"></path><path d=\"M63 29 L89 43\"></path></g><g data-ac=\"f\" stroke=\"none\"><circle class=\"tk-drop\" style=\"animation-delay: 0.0s\" cx=\"58\" cy=\"56\" r=\"3\"></circle><circle class=\"tk-drop\" style=\"animation-delay: 0.3s\" cx=\"66\" cy=\"62\" r=\"3\"></circle><circle class=\"tk-drop\" style=\"animation-delay: 0.6s\" cx=\"52\" cy=\"64\" r=\"3\"></circle></g>", "verter": "<path d=\"M12 82 H84\"></path><path d=\"M18 82 Q48 112 78 82\"></path><path d=\"M58 30 L92 18 L102 50 L74 60 Z\"></path><path class=\"tk-dash\" data-ac=\"s\" d=\"M56 32 Q44 50 46 76\"></path>", "enfriar": "<rect x=\"30\" y=\"14\" width=\"60\" height=\"92\" rx=\"8\"></rect><path d=\"M30 46 H90\"></path><path d=\"M40 26 V36 M40 58 V70\"></path><path class=\"tk-pulse\" data-ac=\"s\" d=\"M66 66 V90 M56 72 L76 84 M76 72 L56 84\"></path>", "estirar": "<path d=\"M10 102 H110\"></path><ellipse cx=\"60\" cy=\"93\" rx=\"42\" ry=\"7\"></ellipse><g class=\"tk-roll\"><rect x=\"38\" y=\"62\" width=\"44\" height=\"18\" rx=\"9\"></rect><path d=\"M26 71 H38 M82 71 H94\"></path></g><path class=\"tk-pulse\" data-ac=\"s\" d=\"M40 44 H80 M48 38 L40 44 L48 50 M72 38 L80 44 L72 50\"></path>", "pincelar": "<ellipse cx=\"54\" cy=\"94\" rx=\"40\" ry=\"10\"></ellipse><path class=\"tk-dash\" data-ac=\"s\" d=\"M26 88 Q52 78 80 88\"></path><g class=\"tk-sway\"><path d=\"M98 18 L72 48\"></path><path d=\"M66 42 L78 54 L62 72 L50 60 Z\"></path></g>", "darvuelta": "<path d=\"M22 70 L30 86 H82 L90 70\"></path><path d=\"M88 76 L112 66\"></path><ellipse class=\"tk-toss\" style=\"transform-box: fill-box; transform-origin: center\" cx=\"56\" cy=\"62\" rx=\"18\" ry=\"5\"></ellipse><path class=\"tk-pulse\" data-ac=\"s\" d=\"M40 36 A18 18 0 0 1 76 36 M68 29 L76 36 L84 30\"></path>", "precalentar": "<rect x=\"22\" y=\"20\" width=\"76\" height=\"80\" rx=\"8\"></rect><path d=\"M22 40 H98\"></path><path d=\"M36 30 H36.01 M50 30 H50.01\"></path><rect x=\"34\" y=\"52\" width=\"52\" height=\"36\" rx=\"4\"></rect><rect class=\"tk-fill\" style=\"transform-origin: 42px 70px\" data-ac=\"f\" stroke=\"none\" x=\"42\" y=\"65\" width=\"36\" height=\"10\" rx=\"5\"></rect>", "machacar": "<path d=\"M24 58 A36 36 0 0 0 96 58\"></path><path d=\"M18 58 H102\"></path><path d=\"M46 100 H74\"></path><path d=\"M48 74 H48.01 M60 80 H60.01 M72 74 H72.01\" data-ac=\"s\" stroke-width=\"7\"></path><g class=\"tk-press\"><path d=\"M82 12 L64 56\" stroke-width=\"9\"></path></g>", "derretir": "<path d=\"M22 70 L30 86 H82 L90 70\"></path><path d=\"M88 76 L112 66\"></path><rect class=\"tk-melt\" style=\"transform-origin: 57px 80px\" x=\"46\" y=\"62\" width=\"22\" height=\"18\" rx=\"3\"></rect><path class=\"tk-pulse\" data-ac=\"s\" d=\"M36 80 H44 M70 80 H78\"></path>", "tamizar": "<path d=\"M36 106 Q60 90 84 106\"></path><g class=\"tk-shake\"><path d=\"M24 40 H96\"></path><path d=\"M28 40 Q60 66 92 40\"></path><path d=\"M96 40 H114\"></path></g><g data-ac=\"f\" stroke=\"none\"><circle class=\"tk-drop\" style=\"animation-delay: 0.0s\" cx=\"48\" cy=\"66\" r=\"3\"></circle><circle class=\"tk-drop\" style=\"animation-delay: 0.3s\" cx=\"60\" cy=\"70\" r=\"3\"></circle><circle class=\"tk-drop\" style=\"animation-delay: 0.6s\" cx=\"72\" cy=\"66\" r=\"3\"></circle></g>", "marinar": "<path d=\"M20 68 L26 96 H94 L100 68\"></path><ellipse cx=\"60\" cy=\"80\" rx=\"24\" ry=\"8\"></ellipse><g data-ac=\"f\" stroke=\"none\"><circle class=\"tk-drop\" style=\"animation-delay: 0.0s\" cx=\"46\" cy=\"36\" r=\"3.5\"></circle><circle class=\"tk-drop\" style=\"animation-delay: 0.3s\" cx=\"60\" cy=\"32\" r=\"3.5\"></circle><circle class=\"tk-drop\" style=\"animation-delay: 0.6s\" cx=\"74\" cy=\"36\" r=\"3.5\"></circle></g>", "servir": "<path d=\"M14 94 H106\"></path><path d=\"M30 94 Q60 106 90 94\"></path><path data-ac=\"s\" d=\"M50 86 Q60 74 70 86\"></path><g class=\"tk-lift\"><path d=\"M26 84 A34 34 0 0 1 94 84\"></path><path d=\"M60 50 V44\"></path></g>", "revolver": "<path d=\"M30 52 V90 Q30 96 36 96 H84 Q90 96 90 90 V52\"></path><path d=\"M24 52 H96\"></path><path class=\"tk-dash\" data-ac=\"s\" d=\"M44 76 A16 6 0 1 0 76 76\"></path><g class=\"tk-stir\" style=\"transform-origin: 80px 12px\"><path d=\"M80 12 L62 70\"></path></g>", "lavar": "<path d=\"M26 14 V28\"></path><path d=\"M26 20 H62 Q74 20 74 32 V40\"></path><path d=\"M40 108 H108\"></path><circle cx=\"74\" cy=\"90\" r=\"14\"></circle><path d=\"M74 76 Q80 66 90 70\"></path><g data-ac=\"f\" stroke=\"none\"><circle class=\"tk-drop\" style=\"animation-delay: 0.0s\" cx=\"74\" cy=\"48\" r=\"3.5\"></circle><circle class=\"tk-drop\" style=\"animation-delay: 0.3s\" cx=\"74\" cy=\"48\" r=\"3.5\"></circle></g>", "gratinar": "<rect x=\"22\" y=\"20\" width=\"76\" height=\"80\" rx=\"8\"></rect><path d=\"M22 40 H98\"></path><path d=\"M36 30 H36.01 M50 30 H50.01\"></path><rect x=\"34\" y=\"52\" width=\"52\" height=\"36\" rx=\"4\"></rect><path d=\"M42 84 H78\"></path><path class=\"tk-pulse\" data-ac=\"s\" d=\"M44 60 H76 M48 66 V72 M60 66 V74 M72 66 V72\"></path>", "leudar": "<path d=\"M22 70 A38 38 0 0 0 98 70\"></path><path d=\"M16 70 H104\"></path><path class=\"tk-grow\" style=\"transform-origin: 60px 70px\" d=\"M30 70 Q60 34 90 70\"></path><path class=\"tk-pulse\" data-ac=\"s\" d=\"M60 34 V14 M52 22 L60 14 L68 22\"></path>", "cascar": "<path d=\"M16 84 H104\"></path><path d=\"M22 84 Q60 116 98 84\"></path><ellipse cx=\"60\" cy=\"42\" rx=\"18\" ry=\"24\"></ellipse><path class=\"tk-pulse\" data-ac=\"s\" d=\"M44 44 L52 38 L60 46 L68 38 L76 44\"></path><circle class=\"tk-drop\" data-ac=\"f\" stroke=\"none\" cx=\"60\" cy=\"72\" r=\"5\"></circle>"};
+const TKN={picar:"Picar",batir:"Batir",mezclar:"Mezclar",saltear:"Saltear",hervir:"Hervir",hornear:"Hornear",amasar:"Amasar",rallar:"Rallar",dorar:"Dorar",reposar:"Reposar",cortar:"Cortar",pelar:"Pelar",exprimir:"Exprimir",colar:"Colar",freir:"Freír",asar:"Asar",vapor:"Al vapor",tapar:"Tapar",licuar:"Licuar",pesar:"Pesar",condimentar:"Condimentar",verter:"Verter",enfriar:"Enfriar",estirar:"Estirar",pincelar:"Pincelar",darvuelta:"Dar vuelta",precalentar:"Precalentar",machacar:"Machacar",derretir:"Derretir",tamizar:"Tamizar",marinar:"Marinar",servir:"Servir",revolver:"Revolver",lavar:"Lavar",gratinar:"Gratinar",leudar:"Leudar",cascar:"Cascar huevos"};
+const CATS=[["principal","Principales","Principal"],["acomp","Acompañamientos","Acompañamiento"],["ensalada","Ensaladas","Ensalada"],["salsa","Salsas","Salsa"],["dulce","Dulces","Dulce"],["otro","Otros","Otro"]];
+const CATN=Object.fromEntries(CATS.map(c=>[c[0],c[2]]));
+const I=(q,u,n)=>({q,u,n});
+const S=(t,tec,timer,sub)=>({t,tec,timer:timer||0,sub:sub||""});
+const P=(t,tec,dest)=>({t,tec,dest:dest||""});
+// Recetas de ejemplo. Los valores nutricionales son estimaciones de muestra.
+// {n} es el ingrediente número n de esa parte: se muestra con su cantidad.
+// prep = preparación de ingredientes (cada paso dice en qué recipiente queda). pasos = cocción.
+// rec = recipientes que se usan solo al cocinar. ut = herramientas.
+const PARTES={
+bondiola:{receta:"bondiola",cat:"principal",nombre:"Bondiola al horno",n:[430,36,2,30],rec:["Sartén grande","Fuente para horno"],ut:["Cuchillo","Tabla","Papel aluminio"],ings:[I(1,"kg","bondiola de cerdo"),I(2,"dientes","ajo"),I(1,"rama","romero"),I(30,"ml","aceite de oliva"),I(null,"","sal y pimienta")],
+prep:[P("Sacá {0} de la heladera para que pierda el frío.","reposar","Plato grande"),P("Pelá {1} y picalo bien chiquito.","picar","Bol chico"),P("Deshojá {2} y picá las hojas.","picar","Bol chico"),P("Medí {3}.","verter","Taza"),P("Dejá a mano {4}.","condimentar","")],
+pasos:[S("Precalentá el horno a 160 °C.","precalentar"),S("Frotá la bondiola con el ajo y el romero del bol chico, y condimentala con sal y pimienta.","condimentar"),S("Calentá el aceite de la taza en la sartén grande y dorá la bondiola de todos lados.","dorar",12,"Unos 3 minutos por lado, hasta que tome color."),S("Pasala a la fuente para horno, tapala con papel aluminio y llevala al horno.","hornear",120,"A mitad de cocción, bañala con el jugo de la fuente."),S("Sacala del horno y dejala reposar tapada antes de cortar.","reposar",15)]},
+mostaza:{receta:"bondiola",cat:"salsa",nombre:"Salsa de mostaza y miel",n:[110,1,7,9],rec:[],ut:["Cuchara de madera"],ings:[I(2,"cdas","mostaza de Dijon"),I(1,"cda","miel"),I(100,"ml","crema de leche"),I(50,"ml","caldo")],
+prep:[P("Poné {0} y {1} directo en la ollita, sin prender el fuego.","mezclar","Ollita"),P("Medí {2} y {3}, los dos juntos.","verter","Taza medidora")],
+pasos:[S("Mezclá la mostaza con la miel en la ollita.","mezclar"),S("Volcá la crema y el caldo de la taza medidora y llevá a fuego bajo.","verter"),S("Revolvé hasta que espese un poco.","revolver",5)]},
+papas:{receta:"bondiola",cat:"acomp",nombre:"Papas rústicas",n:[240,4,36,9],rec:["Placa para horno"],ut:["Cuchillo","Tabla"],ings:[I(800,"g","papas"),I(2,"cdas","aceite de oliva"),I(1,"cdita","pimentón"),I(null,"","sal gruesa")],
+prep:[P("Lavá bien {0}, sin pelarlas, y secalas.","lavar","Tabla"),P("Cortalas en gajos gruesos, de unos 2 cm.","cortar","Bol grande"),P("Sumá {1}, {2} y {3} encima de las papas.","condimentar","Bol grande")],
+pasos:[S("Precalentá el horno a 200 °C.","precalentar"),S("Mezclá bien las papas en el bol grande para que se impregnen.","mezclar"),S("Distribuilas en la placa para horno, sin encimarlas.","verter"),S("Horneá hasta que estén doradas.","hornear",40,"Dalas vuelta una vez a mitad de cocción.")]},
+coleslaw:{receta:"coleslaw",cat:"ensalada",nombre:"Ensalada coleslaw",n:[180,2,12,14],rec:[],ut:["Cuchillo","Tabla","Rallador"],ings:[I(0.5,"","repollo blanco"),I(2,"","zanahorias"),I(4,"cdas","mayonesa"),I(1,"cda","vinagre de manzana"),I(1,"cdita","azúcar"),I(null,"","sal")],
+prep:[P("Cortá {0} en tiras bien finas.","cortar","Bol grande"),P("Pelá {1} y rallalas con el lado grueso del rallador.","rallar","Bol grande"),P("Medí {2}, {3} y {4}, y sumá {5}.","mezclar","Bol chico")],
+pasos:[S("Mezclá el aderezo del bol chico hasta que quede liso.","mezclar"),S("Volcalo sobre las verduras del bol grande y uní todo.","verter"),S("Llevá a la heladera antes de servir.","enfriar",30)]},
+tarta:{receta:"tarta",cat:"principal",nombre:"Tarta de zapallitos",n:[310,13,26,17],rec:["Sartén"],ut:["Cuchillo","Tabla","Batidor"],ings:[I(1,"","tapa de tarta"),I(4,"","zapallitos"),I(1,"","cebolla"),I(3,"","huevos"),I(100,"g","queso rallado"),I(null,"","sal, pimienta y nuez moscada")],
+prep:[P("Forrá la tartera con {0} y pinchá la base con un tenedor.","estirar","Tartera"),P("Pelá {2} y picala en cubitos.","picar","Bol mediano"),P("Cortá {1} en cubos de 1 cm, con cáscara.","cortar","Bol mediano"),P("Cascá {3}.","cascar","Bol grande"),P("Sumá {4} y {5} a los huevos.","condimentar","Bol grande")],
+pasos:[S("Precalentá el horno a 180 °C.","precalentar"),S("Salteá en la sartén la cebolla y los zapallitos del bol mediano, hasta que se evapore el líquido.","saltear",12),S("Batí los huevos con el queso en el bol grande.","batir"),S("Sumá las verduras al batido, mezclá y volcá todo en la tartera.","verter"),S("Horneá hasta que esté firme y dorada.","hornear",35)]},
+chimi:{receta:"chimi",cat:"salsa",nombre:"Chimichurri",n:[90,0,2,9],rec:[],ut:["Cuchillo","Tabla"],ings:[I(1,"taza","perejil"),I(4,"dientes","ajo"),I(1,"cda","orégano"),I(1,"cdita","ají molido"),I(120,"ml","aceite"),I(60,"ml","vinagre"),I(null,"","sal")],
+prep:[P("Lavá, secá y picá bien fino {0}.","picar","Frasco con tapa"),P("Pelá {1} y picalo bien chiquito.","picar","Frasco con tapa"),P("Sumá {2}, {3} y {6}.","condimentar","Frasco con tapa"),P("Medí {4} y {5}, los dos juntos.","verter","Taza medidora")],
+pasos:[S("Volcá el aceite y el vinagre de la taza medidora en el frasco.","verter"),S("Tapá y agitá bien.","mezclar"),S("Dejalo reposar para que tome sabor.","reposar",60)]},
+budin:{receta:"budin",cat:"dulce",nombre:"Budín de limón",n:[250,4,34,11],rec:[],ut:["Batidor","Tamiz","Rallador","Exprimidor","Balanza"],ings:[I(200,"g","harina leudante"),I(180,"g","azúcar"),I(2,"","huevos"),I(100,"ml","aceite"),I(100,"ml","leche"),I(2,"","limones")],
+prep:[P("Enmantecá y enhariná el molde.","pincelar","Molde de budín"),P("Pesá {0}.","pesar","Bol mediano"),P("Pesá {1}.","pesar","Bol grande"),P("Cascá {2} sobre el azúcar.","cascar","Bol grande"),P("Rallá la cáscara de {5}, solo la parte amarilla.","rallar","Platito"),P("Exprimí el jugo de uno de los limones.","exprimir","Taza medidora"),P("Medí {3} y {4} y sumalos al jugo.","verter","Taza medidora")],
+pasos:[S("Precalentá el horno a 180 °C.","precalentar"),S("Batí los huevos con el azúcar en el bol grande hasta que estén claros y espumosos.","batir"),S("Sumá los líquidos de la taza medidora y la ralladura del platito.","verter"),S("Tamizá la harina del bol mediano sobre la mezcla e incorporala de a poco.","tamizar"),S("Volcá en el molde y horneá.","hornear",45,"Está listo cuando pinchás el centro con un palillo y sale seco."),S("Dejalo enfriar antes de desmoldar.","enfriar",20)]},
+glase:{receta:"budin",cat:"dulce",nombre:"Glaseado de limón",n:[60,0,15,0],rec:[],ut:["Cuchara","Balanza"],ings:[I(120,"g","azúcar impalpable"),I(2,"cdas","jugo de limón")],
+prep:[P("Pesá {0}.","pesar","Bol chico"),P("Medí {1}.","exprimir","Vasito")],
+pasos:[S("Sumá el jugo de a poco al azúcar y mezclá hasta que quede liso.","mezclar"),S("Volcalo sobre el budín ya frío.","verter")]},
+pollo:{receta:"pollo",cat:"principal",nombre:"Pollo al limón",n:[290,34,3,15],rec:["Sartén","Fuente para horno"],ut:["Exprimidor","Cuchillo","Tabla"],ings:[I(4,"","patas muslo de pollo"),I(2,"","limones"),I(3,"dientes","ajo"),I(2,"cdas","aceite de oliva"),I(null,"","tomillo, sal y pimienta")],
+prep:[P("Exprimí {1}.","exprimir","Bol grande"),P("Pelá {2}, picalo y sumalo al jugo.","picar","Bol grande"),P("Agregá {3} y {4}, y mezclá.","condimentar","Bol grande"),P("Sumá {0} y dalas vuelta para que se impregnen.","marinar","Bol grande")],
+pasos:[S("Dejá marinar el pollo en la heladera.","marinar",30),S("Precalentá el horno a 190 °C.","precalentar"),S("Dorá el pollo del lado de la piel en la sartén caliente.","dorar",8),S("Pasalo a la fuente para horno y terminá la cocción.","hornear",35)]},
+verduras:{receta:"pollo",cat:"acomp",nombre:"Verduras asadas",n:[130,3,18,6],rec:[],ut:["Cuchillo","Tabla","Pelapapas"],ings:[I(2,"","zanahorias"),I(1,"","morrón"),I(2,"","cebollas"),I(1,"","zapallito"),I(2,"cdas","aceite de oliva"),I(null,"","sal")],
+prep:[P("Pelá {0} y cortalas en bastones.","cortar","Placa para horno"),P("Sacale las semillas a {1} y cortalo en tiras anchas.","cortar","Placa para horno"),P("Pelá {2} y cortalas en cuartos.","cortar","Placa para horno"),P("Cortá {3} en rodajas gruesas.","cortar","Placa para horno"),P("Rociá todo con {4} y condimentá con {5}.","condimentar","Placa para horno")],
+pasos:[S("Mezclá las verduras en la placa y distribuilas en una sola capa.","mezclar"),S("Asalas en el horno a 190 °C hasta que estén tiernas y doradas.","hornear",35)]},
+pure:{receta:"pure",cat:"acomp",nombre:"Puré de calabaza",n:[150,3,22,6],rec:["Colador"],ut:["Pelapapas","Cuchillo","Pisapapas","Balanza"],ings:[I(1,"kg","calabaza"),I(30,"g","manteca"),I(50,"ml","leche"),I(null,"","sal y nuez moscada")],
+prep:[P("Pelá {0} y sacale las semillas.","pelar","Tabla"),P("Cortala en cubos de 3 cm.","cortar","Olla"),P("Pesá {1} y medí {2}, juntas.","pesar","Taza medidora"),P("Dejá a mano {3}.","condimentar","")],
+pasos:[S("Cubrí la calabaza con agua en la olla y hervila hasta que esté bien tierna.","hervir",20),S("Colala y devolvela a la olla.","colar"),S("Pisala con la manteca y la leche, y condimentá con sal y nuez moscada.","machacar")]}
+};
+const refs=s=>[...new Set([...((s.t||"")+" "+(s.sub||"")).matchAll(/\{(\d+)(?:[*:x][\d.]+)?\}/g)].map(m=>+m[1]))];
+Object.values(PARTES).forEach(p=>{p.pasos.forEach(s=>s.ings=refs(s));p.prep.forEach(s=>s.ings=refs(s))});
+// Modo simple: pn = nota de preparación por ingrediente; st = pasos largos [texto, último paso guiado que cubre].
+const SIMPLE={
+bondiola:{pn:["a temperatura ambiente","picado bien chiquito","las hojas picadas","",""],st:[["Precalentá el horno a 160 °C. Frotá la bondiola con el ajo y el romero, y condimentala con sal y pimienta.",1],["Calentá el aceite en una sartén grande y dorá la bondiola de todos lados, unos 3 minutos por lado, hasta que tome color.",2],["Pasala a una fuente para horno, tapala con papel aluminio y horneala. A mitad de cocción, bañala con el jugo de la fuente.",3],["Sacala del horno y dejala reposar tapada antes de cortar.",4]]},
+mostaza:{pn:[],st:[["Mezclá la mostaza con la miel en una ollita. Sumá la crema y el caldo, y llevá a fuego bajo.",1],["Revolvé hasta que espese un poco.",2]]},
+papas:{pn:["lavadas, con cáscara, en gajos de 2 cm"],st:[["Precalentá el horno a 200 °C. Mezclá las papas con el aceite, el pimentón y la sal gruesa hasta que se impregnen.",1],["Distribuilas en una placa, sin encimarlas, y horneá hasta que estén doradas. Dalas vuelta una vez a mitad de cocción.",3]]},
+coleslaw:{pn:["en tiras bien finas","peladas y ralladas gruesas"],st:[["Mezclá la mayonesa, el vinagre, el azúcar y la sal hasta que quede un aderezo liso.",0],["Volcalo sobre el repollo y la zanahoria, y uní todo.",1],["Llevá a la heladera antes de servir.",2]]},
+tarta:{pn:["","en cubos de 1 cm, con cáscara","picada en cubitos"],st:[["Precalentá el horno a 180 °C. Forrá una tartera con la tapa de tarta y pinchá la base con un tenedor.",0],["Salteá la cebolla y los zapallitos en una sartén, hasta que se evapore el líquido.",1],["Batí los huevos con el queso, la sal, la pimienta y la nuez moscada. Sumá las verduras, mezclá y volcá todo en la tartera.",3],["Horneá hasta que esté firme y dorada.",4]]},
+chimi:{pn:["lavado y picado bien fino","picado bien chiquito"],st:[["Poné en un frasco el perejil, el ajo, el orégano, el ají molido y la sal. Sumá el aceite y el vinagre, tapá y agitá bien.",1],["Dejalo reposar para que tome sabor.",2]]},
+budin:{pn:["","","","","","la ralladura de los dos y el jugo de uno"],st:[["Precalentá el horno a 180 °C. Enmantecá y enhariná un molde de budín.",0],["Batí los huevos con el azúcar hasta que estén claros y espumosos. Sumá el aceite, la leche, el jugo y la ralladura de limón.",2],["Tamizá la harina sobre la mezcla e incorporala de a poco.",3],["Volcá en el molde y horneá. Está listo cuando pinchás el centro con un palillo y sale seco.",4],["Dejalo enfriar antes de desmoldar.",5]]},
+glase:{pn:[],st:[["Sumá el jugo de limón de a poco al azúcar impalpable y mezclá hasta que quede liso. Volcalo sobre el budín ya frío.",1]]},
+pollo:{pn:["","exprimidos","picado"],st:[["Mezclá el jugo de limón con el ajo, el aceite, el tomillo, la sal y la pimienta. Sumá el pollo y dejalo marinar en la heladera.",0],["Precalentá el horno a 190 °C. Dorá el pollo del lado de la piel en una sartén caliente.",2],["Pasalo a una fuente para horno y terminá la cocción.",3]]},
+verduras:{pn:["peladas, en bastones","sin semillas, en tiras anchas","peladas, en cuartos","en rodajas gruesas"],st:[["Poné las verduras en una placa para horno, rocialas con el aceite, condimentá con sal y distribuilas en una sola capa.",0],["Asalas en el horno a 190 °C hasta que estén tiernas y doradas.",1]]},
+pure:{pn:["pelada, sin semillas, en cubos de 3 cm"],st:[["Cubrí la calabaza con agua en una olla y hervila hasta que esté bien tierna.",0],["Colala, devolvela a la olla y pisala con la manteca y la leche. Condimentá con sal y nuez moscada.",2]]}
+};
+Object.entries(PARTES).forEach(([id,p])=>{const x=SIMPLE[id]||{pn:[],st:p.pasos.map((q,i)=>[q.t.replace(/\{(\d+)\}/g,(_,k)=>p.ings[+k].n),i])};p.pn=x.pn;let a=0;p.simple=x.st.map(([t,u])=>{const r={t,upto:u,tm:[],tec:[]};for(let i=a;i<=u;i++){if(p.pasos[i].timer)r.tm.push(i);if(!r.tec.includes(p.pasos[i].tec))r.tec.push(p.pasos[i].tec)}a=u+1;return r})});
+const RECETAS=[
+{id:"bondiola",nombre:"Bondiola al horno con salsa de mostaza y papas rústicas",desc:"Para un domingo en familia. Larga cocción, poco trabajo.",porciones:4,fuente:"YouTube",partes:["bondiola","mostaza","papas"]},
+{id:"coleslaw",nombre:"Ensalada coleslaw",desc:"Fresca y crocante, va con cualquier carne.",porciones:4,fuente:"Web",partes:["coleslaw"]},
+{id:"pollo",nombre:"Pollo al limón con verduras asadas",desc:"Liviano y simple, todo al horno.",porciones:4,fuente:"Instagram",partes:["pollo","verduras"]},
+{id:"tarta",nombre:"Tarta de zapallitos",desc:"Clásica de entre semana.",porciones:6,fuente:"Libro",partes:["tarta"]},
+{id:"budin",nombre:"Budín de limón con glaseado",desc:"Para la merienda. Húmedo y bien cítrico.",porciones:10,fuente:"Libro",partes:["budin","glase"]},
+{id:"chimi",nombre:"Chimichurri",desc:"El de siempre, para el asado.",porciones:8,fuente:"Familia",partes:["chimi"]},
+{id:"pure",nombre:"Puré de calabaza",desc:"Suave y dulce, para acompañar carnes.",porciones:4,fuente:"Familia",partes:["pure"]}
+];
+Object.keys(PARTES).forEach(k=>PARTES[k].id=k);
+const R=id=>RECETAS.find(r=>r.id===id);
+const DAY=864e5,now=Date.now();
+const DEF={imp:[],uliq:"ml",usec:"orig",theme:"auto",pal:"firma",modo:"guiado",sonido:true,despierta:true,hist:{},fotos:{},hechas:{bondiola:[now-14*DAY],coleslaw:[now-5*DAY],tarta:[now-95*DAY],chimi:[now-30*DAY],pollo:[now-130*DAY]},nombres:{},
+platos:[{id:"p1",nombre:"Bondiola con chimichurri y coleslaw",partes:["bondiola","chimi","coleslaw"],auto:false}],
+listas:[{id:"fav",nombre:"Favoritos",items:[]},{id:"desp",nombre:"Hacer después",items:[]},{id:"l1",nombre:"Comidas familiares",items:["r:bondiola","r:coleslaw","c:p1"]},{id:"l2",nombre:"Navidad",items:["r:budin","r:coleslaw"]}]};
+let DB=JSON.parse(JSON.stringify(DEF));
+try{const s=localStorage.getItem("smagsbord1");if(s)DB=Object.assign(DB,JSON.parse(s))}catch(e){}
+const FIJAS=[["fav","Favoritos"],["desp","Hacer después"]];
+function fijas(){FIJAS.slice().reverse().forEach(([id,n])=>{const i=DB.listas.findIndex(l=>l.id===id);const l=i>=0?DB.listas.splice(i,1)[0]:{id,nombre:n,items:[]};l.nombre=n;DB.listas.unshift(l)})}
+fijas();
+const esFija=id=>FIJAS.some(f=>f[0]===id);
+const save=()=>{try{localStorage.setItem("smagsbord1",JSON.stringify(DB))}catch(e){}};
+let ST={view:"home",nav:"todas",q:"",f:"",porc:{},edit:null,armar:null,co:null,newlist:false};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const ic=d=>`<svg class="i" viewBox="0 0 24 24" aria-hidden="true">${d}</svg>`;
+const IC={search:ic('<circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>'),back:ic('<path d="M15 5l-7 7 7 7"/>'),pen:ic('<path d="M4 20h4L19 9l-4-4L4 16v4z"/>'),plus:ic('<path d="M12 5v14M5 12h14"/>'),minus:ic('<path d="M5 12h14"/>'),check:ic('<path d="M5 12l5 5 9-10"/>'),x:ic('<path d="M6 6l12 12M18 6L6 18"/>'),clock:ic('<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>'),next:ic('<path d="M9 5l7 7-7 7"/>'),gear:ic('<circle cx="12" cy="12" r="3"/><path d="M12 3v2.5M12 18.5V21M3 12h2.5M18.5 12H21M5.6 5.6l1.8 1.8M16.6 16.6l1.8 1.8M5.6 18.4l1.8-1.8M16.6 7.4l1.8-1.8"/>'),adj:ic('<path d="M4 7h9M19 7h1M4 17h3M13 17h7"/><circle cx="16" cy="7" r="2.5"/><circle cx="10" cy="17" r="2.5"/>'),sun:ic('<circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4L7 17M17 7l1.4-1.4"/>')};
+const logo=h=>`<svg role="img" aria-label="Logo de Smagsbord" width="${Math.round(h*180/146)}" height="${h}" viewBox="0 0 180 146"><g fill="none" stroke-linecap="round" stroke-linejoin="round"><g stroke="currentColor" stroke-width="12.7"><path d="M44 76 V112 Q44 134 66 134 H114 Q136 134 136 112 V76"></path><path d="M44 90 H26"></path><path d="M136 90 H154"></path></g><g data-ac="s" stroke-width="7.85"><path d="M68 58 q-8 -11 0 -22 q8 -11 0 -22"></path><path d="M90 58 q-8 -11 0 -22 q8 -11 0 -22"></path><path d="M112 58 q-8 -11 0 -22 q8 -11 0 -22"></path></g></g></svg>`;
+const FIRMA='<svg role="img" aria-label="fuge1618" width="88" height="16" viewBox="0 62 630 115"><g fill="none" stroke-width="12.7" stroke-linecap="round"><path stroke="currentColor" d="M26.35 143.65 A60.05 60.05 0 0 1 86.40 83.60 H135.64"></path><path stroke="#FF8000" d="M80.39 106.42 H115.22 A37.23 37.23 0 0 1 152.45 143.65"></path></g><path fill="currentColor" d="M219.72 95.41 L207.90 95.41 L207.90 91.16 C207.90 86.86 209.75 84.42 214.55 84.42 C216.64 84.42 218.30 84.86 219.37 85.20 L221.97 75.34 C220.30 74.75 216.69 73.83 212.20 73.83 C202.83 73.83 195.25 79.30 195.25 90.19 L195.25 95.41 L185.25 95.41 L185.25 105.38 L195.25 105.38 L195.25 150.00 L207.90 150.00 L207.90 105.38 L219.72 105.38 L219.72 95.41 Z M248.58 150.69 C256.48 150.69 262.20 146.88 265.47 139.06 L265.58 150.00 L277.64 150.00 L277.64 95.41 L264.89 95.41 L264.89 127.39 C264.89 135.30 260.00 139.89 253.26 139.89 C246.62 139.89 242.58 135.50 242.58 128.17 L242.58 95.41 L229.87 95.41 L229.87 130.12 C229.87 143.27 237.34 150.69 248.58 150.69 Z M314.65 171.58 C329.34 171.58 340.19 164.75 340.19 150.14 L340.19 95.41 L327.73 95.41 L327.73 104.44 L327.05 104.44 C325.09 100.58 320.95 94.72 311.28 94.72 C298.69 94.72 288.72 104.64 288.72 122.56 C288.72 140.33 298.64 149.17 311.19 149.17 C320.61 149.17 324.61 144.19 326.56 140.23 L327.64 140.23 L327.64 150.53 C327.64 158.34 322.47 161.92 314.59 161.92 C306.64 161.92 303.26 158.16 301.56 155.08 L290.83 158.94 C293.56 166.16 301.51 171.58 314.65 171.58 Z M314.75 139.16 C306.25 139.16 301.70 132.52 301.70 122.45 C301.70 112.55 306.15 105.17 314.75 105.17 C323.14 105.17 327.69 112.11 327.69 122.45 C327.69 132.91 323.05 139.16 314.75 139.16 Z M377.78 151.12 C389.94 151.12 398.44 145.31 401.08 136.47 L389.40 134.08 C387.69 138.72 383.50 141.16 377.92 141.16 C369.78 141.16 364.25 135.98 363.92 126.27 L401.90 126.27 L401.90 122.27 C401.90 103.12 390.28 94.72 376.95 94.72 C361.33 94.72 351.26 106.25 351.26 123.05 C351.26 140.14 361.33 151.12 377.78 151.12 Z M363.97 117.62 C364.55 110.34 369.23 104.69 377.00 104.69 C384.56 104.69 388.81 109.81 389.55 117.62 L363.97 117.62 Z M437.69 77.25 L423.23 77.25 L407.26 88.67 L407.26 101.08 L424.25 88.86 L424.75 88.86 L424.75 150.00 L437.69 150.00 L437.69 77.25 Z M477.72 150.98 C493.39 150.98 503.89 140.28 503.89 125.97 C503.89 112.16 494.08 102.25 481.33 102.25 C473.51 102.25 466.69 106.00 463.22 112.30 L462.67 112.30 C462.67 96.88 468.34 87.55 478.50 87.55 C484.80 87.55 489.05 91.27 490.40 96.83 L503.20 96.83 C501.64 85.02 492.08 76.27 478.50 76.27 C461.06 76.27 449.98 90.88 449.98 115.72 C449.98 142.38 463.84 150.98 477.72 150.98 Z M477.67 140.38 C469.90 140.38 464.14 133.94 464.14 126.27 C464.14 118.70 470.09 112.25 477.81 112.25 C485.58 112.25 491.25 118.36 491.25 126.22 C491.25 134.17 485.39 140.38 477.67 140.38 Z M543.94 77.25 L529.48 77.25 L513.51 88.67 L513.51 101.08 L530.50 88.86 L531.00 88.86 L531.00 150.00 L543.94 150.00 L543.94 77.25 Z M583.19 150.98 C598.90 150.98 610.19 142.33 610.19 130.52 C610.19 121.44 603.45 113.81 595.00 112.36 L595.00 111.91 C602.37 110.25 607.50 103.61 607.50 95.75 C607.50 84.56 597.15 76.27 583.19 76.27 C569.12 76.27 558.87 84.56 558.87 95.75 C558.87 103.61 563.90 110.25 571.42 111.91 L571.42 112.36 C562.78 113.81 556.23 121.44 556.23 130.52 C556.23 142.33 567.36 150.98 583.19 150.98 Z M583.19 140.92 C574.94 140.92 569.61 136.33 569.61 129.59 C569.61 122.61 575.33 117.62 583.19 117.62 C590.95 117.62 596.72 122.61 596.72 129.59 C596.72 136.38 591.34 140.92 583.19 140.92 Z M583.19 107.77 C576.40 107.77 571.61 103.38 571.61 97.02 C571.61 90.72 576.25 86.52 583.19 86.52 C590.01 86.52 594.76 90.72 594.76 97.02 C594.76 103.38 589.87 107.77 583.19 107.77 Z"></path></svg>';
+const tk=(n,s)=>`<svg class="tk" role="img" aria-label="Animación: ${esc(TKN[n]||n)}" width="${s}" height="${s}" viewBox="0 0 120 120">${TK[n]||TK.mezclar}</svg>`;
+const pnom=p=>DB.nombres[p.id]||p.nombre;
+const nutOf=ids=>ids.reduce((a,id)=>PARTES[id].n.map((v,i)=>a[i]+v),[0,0,0,0]);
+const fmtq=(q,f,whole)=>{if(q==null)return"a gusto";let v=q*f;if(whole)v=Math.max(.5,Math.round(v*2)/2);else if(v>=100)v=Math.round(v/5)*5;else if(v>=10)v=Math.round(v);else v=Math.round(v*4)/4;const w=Math.floor(v),fr=v-w;const m={0.25:"¼",0.5:"½",0.75:"¾"}[fr];return m?(w?w+" "+m:m):String(v).replace(".",",")};
+const PL={rama:"ramas",diente:"dientes",cda:"cdas",cdita:"cditas",taza:"tazas"},SG=Object.fromEntries(Object.entries(PL).map(([a,b])=>[b,a]));
+const unit=(u,v)=>{const s=SG[u]||u;return v>1?(PL[s]||s):s};
+// Unidades: cada ingrediente tiene tipo (liquido, polvo, solido, unidad), densidad y peso aproximado.
+// Si la receta no los trae, se estiman por el nombre. Con eso se convierte a la unidad elegida en Configuración.
+const VOL={ml:1,l:1000,cdita:5,cda:15,taza:240,pizca:.3},MAS={g:1,kg:1000};
+const TIP=[[/aceite/,"liquido",.92],[/leche|crema/,"liquido",1.02],[/miel/,"liquido",1.4],[/mostaza|mayonesa|ketchup/,"liquido",1.05],[/caldo|agua|vino|vinagre|jugo|salsa de soja/,"liquido",1],[/az[uú]car impalpable/,"polvo",.5],[/az[uú]car/,"polvo",.85],[/harina|f[eé]cula|maicena|cacao/,"polvo",.55],[/sal gruesa/,"polvo",1.1],[/piment[oó]n|pimienta|comino|aj[ií] molido|canela|nuez moscada/,"polvo",.45],[/or[eé]gano|tomillo|seco|hierbas/,"polvo",.15],[/rallado|parmesano/,"polvo",.4],[/arroz|lenteja/,"polvo",.85],[/\bsal\b/,"polvo",1.2]];
+const UW=[[/diente/,5],[/rama|hoja/,2],[/huevo/,55],[/cebolla/,150],[/lim[oó]n/,120],[/zanahoria/,100],[/papa/,170],[/morr[oó]n/,180],[/zapallito/,160],[/tapa de tarta/,250],[/pata|muslo/,280],[/puerro/,150],[/tomate/,130]];
+function meta(i){if(i._m)return i._m;const n=i.n.toLowerCase(),su=SG[i.u]||i.u,t=TIP.find(x=>x[0].test(n));const isV=VOL[su]!=null,isM=MAS[su]!=null;
+const tipo=["liquido","polvo","solido","unidad"].includes(i.tipo)?i.tipo:(t?t[1]:isV&&(su==="ml"||su==="l")?"liquido":isM?"solido":isV?"polvo":"unidad");const dens=i.dens>0?i.dens:(t?t[2]:1);
+const g=i.g>0?i.g:i.q==null?5:isM?i.q*MAS[su]:isV?i.q*VOL[su]*dens:i.q*((UW.find(x=>x[0].test(n+" "+su))||[0,100])[1]);
+return i._m={tipo,dens,g,ml:g/(tipo==="liquido"||tipo==="polvo"?dens:.65)}}
+const masa=g=>g>=1000?{q:g/1000,u:"kg"}:{q:g,u:"g"};
+function conv(i,f){const su=SG[i.u]||i.u,q=i.q*f,isV=VOL[su]!=null,isM=MAS[su]!=null;if(!isV&&!isM)return{q,u:i.u};const m=meta(i);
+if(m.tipo!=="liquido"&&m.tipo!=="polvo")return isM?masa(q*MAS[su]):{q,u:su};
+const pref=m.tipo==="liquido"?(DB.uliq||"ml"):(DB.usec||"orig");const ml=isV?q*VOL[su]:q*MAS[su]/m.dens,g=isM?q*MAS[su]:q*VOL[su]*m.dens;
+if(pref==="ml")return ml>=1000?{q:ml/1000,u:"l"}:{q:ml,u:"ml"};if(pref==="g"&&g>=5)return masa(g);if(pref==="g"&&isV&&su!=="ml"&&su!=="l")return{q,u:su};
+if(pref==="cuch"||pref==="g")return ml>=60?{q:ml/240,u:"taza"}:ml>=11?{q:ml/15,u:"cda"}:{q:ml/5,u:"cdita"};
+return isM?masa(q*MAS[su]):su==="ml"||su==="l"?(ml>=1000?{q:ml/1000,u:"l"}:{q:ml,u:"ml"}):{q,u:su}}
+const qtyTxt=(i,f)=>{if(i.q==null)return"a gusto";const c=conv(i,f);return fmtq(c.q,1,!c.u)+(c.u?" "+esc(unit(c.u,c.q)):"")};
+// Recipientes: se agrandan según lo que tienen que contener con las porciones elegidas.
+const RCAP={bol:[["Bol chico",400],["Bol mediano",1200],["Bol grande",3000]],sarten:[["Sartén chica",700],["Sartén",1600],["Sartén grande",2800]],olla:[["Ollita",1000],["Olla",3000],["Olla grande",6000]],medida:[["Vasito",100],["Taza",250],["Taza medidora",1000],["Jarra",2000]],plato:[["Platito",150],["Plato",800],["Plato grande",1500],["Fuente",3500]]};
+const RC1=[[/taza medidora/,1000],[/taza/,250],[/vasito/,100],[/vaso/,300],[/platito/,150],[/plato grande/,1500],[/plato/,800],[/frasco/,600],[/fuente/,3500],[/placa/,3000],[/tartera|molde/,1800]];
+function rsc(p,name,f){const idx=(p.contI||{})[name]||[];const v0=idx.reduce((a,j)=>a+meta(p.ings[j]).ml,0)*1.2;if(f<=1.05||!v0)return{n:name,c:1};const need=v0*f,low=name.toLowerCase();const m=RCM.find(e=>e[0].test(low)),cl=Object.values(RCAP).find(c=>c.some(x=>x[0].toLowerCase()===low))||RCAP[m?m[1]:""];
+if(cl){const L=cl.length-1;let b=cl.findIndex(c=>c[0].toLowerCase()===low);if(b<0)b=/chic|ollita/.test(low)?0:/grande/.test(low)?L:1;let k=cl.findIndex(c=>c[1]>=need);if(k<0)return{n:cl[L][0],c:Math.min(4,Math.ceil(need/Math.max(cl[L][1],v0)-.15))};k=Math.max(k,b);return{n:k===b?name:cl[k][0],c:1}}
+const one=RC1.find(x=>x[0].test(low));if(!one)return{n:name,c:1};return{n:name,c:Math.min(4,Math.ceil(need/Math.max(one[1],v0)-.05))}}
+const rnm=(p,name,f)=>{const r=rsc(p,name,f);return(r.c>1?r.c+" × ":"")+r.n};
+const rnote=(p,names,f)=>[...new Set(names.filter(Boolean))].map(n=>[n,rsc(p,n,f)]).filter(x=>x[1].c>1).map(([n,r])=>`Con estas porciones no entra en ${/^(sartén|olla|ollita|fuente|placa|tartera|taza)/i.test(r.n)?"una sola":"un solo"} ${r.n.toLowerCase()}: usá ${r.c}${/sartén|olla|fuente|placa|tartera|molde/i.test(r.n)?", o hacelo en "+r.c+" tandas":""}.`);
+function rtx(h,p,f){if(f<=1.05||!p.contI)return h;const ns=Object.keys(p.contI).filter(n=>rsc(p,n,f).n!==n).sort((a,b)=>b.length-a.length);if(!ns.length)return h;const esc2=x=>x.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
+return h.replace(new RegExp("("+ns.map(esc2).join("|")+")(?![\\wáéíóúñ])","gi"),m=>{const n=ns.find(x=>x.toLowerCase()===m.toLowerCase()),r=rsc(p,n,f).n;return m[0]===m[0].toUpperCase()?r:r.toLowerCase()})}
+const ingTxt=(i,f)=>`<div class="ing"><b>${qtyTxt(i,f)}</b><span>${esc(i.n)}</span></div>`;
+const ingIn=(i,f)=>i.q==null?esc(i.n):qtyTxt(i,f)+(conv(i,f).u?" de ":" ")+esc(i.n);
+const stepTxt=(t,p,f)=>rtx(esc(t),p,f).replace(/\{(\d+)(?:[*:x]([\d.]+))?\}/g,(_,k,m)=>p.ings[+k]?`<b class="q">${ingIn(p.ings[+k],f*(+m>0?+m:1))}</b>`:"");
+const last=id=>{const h=DB.hechas[id];return h&&h.length?Math.max(...h):0};
+const ago=t=>{if(!t)return"Todavía sin hacer";const d=Math.round((Date.now()-t)/DAY);if(d<1)return"Hecha hoy";if(d<2)return"Hecha ayer";if(d<14)return`Hecha hace ${d} días`;if(d<60)return`Hecha hace ${Math.round(d/7)} semanas`;return`Hecha hace ${Math.round(d/30)} meses`};
+let toastT;const toast=m=>{let t=document.querySelector(".toast");if(!t){t=document.createElement("div");t.className="toast";t.setAttribute("role","status");document.body.appendChild(t)}t.textContent=m;clearTimeout(toastT);toastT=setTimeout(()=>t.remove(),2200)};
+const PALS={
+firma:{n:"Firma",l:["#F5F0E8","#E9E1D3","#1D1D1B","#605A54","#CFC4B3","#FBF8F2","#FF8000","#1D1D1B"],d:["#1B1917","#262320","#F2ECE3","#ADA398","#3A3530","#211E1B","#FF8000","#1D1D1B"]},
+terraA:{n:"Terracota",l:["#F6EFE7","#EADCCD","#2B1D16","#6B574B","#D8C6B4","#FBF6F0","#B5492B","#FFFFFF"],d:["#1E1612","#2B201A","#F3E8DD","#B7A596","#44352B","#241A15","#B5492B","#FFFFFF"]},
+hoja:{n:"Oliva",l:["#F5F3EA","#E9E5D6","#22241C","#5E5F50","#D0CCBA","#FBFAF3","#3F7D20","#FFFFFF"],d:["#191A15","#24261E","#EEEDE0","#ABAB99","#3A3C30","#1F211A","#3F7D20","#FFFFFF"]},
+nautA:{n:"Náutico",l:["#F3F0E8","#DCE3EA","#10223E","#4A5C78","#C3CAD3","#FAF8F3","#C8281E","#FFFFFF"],d:["#0C1728","#152642","#EEF2F7","#9FB0C8","#2A3F60","#101E33","#C8281E","#FFFFFF"]},
+vino:{n:"Vino",l:["#F7F2EE","#ECE2DC","#2A1519","#6B5357","#D8C8C4","#FCF8F6","#B0203F","#FFFFFF"],d:["#1F0D12","#30141C","#F5E9E6","#C2A6A9","#4F2A33","#261017","#B0203F","#FFFFFF"]},
+hortensia:{n:"Hortensia",l:["#F6F4F3","#E3E6F0","#1F2747","#555F82","#C9CCDB","#FBFAFA","#C2457A","#FFFFFF"],d:["#121628","#1C2340","#F0F0F6","#A9B0CC","#303A60","#161B33","#C2457A","#FFFFFF"]},
+cielo:{n:"Cielo",l:["#F5F5F2","#E0EAF1","#1C2B3A","#4F6274","#C4D0D9","#FAFBFA","#2A76AE","#FFFFFF"],d:["#0F1820","#18252F","#EDF2F5","#A2B4C2","#2C3D4B","#131E27","#2A76AE","#FFFFFF"]}};
+const PV=["--papel","--lino","--tinta","--suave","--linea","--surf","--papaya","--onacc"];
+const mq=window.matchMedia?window.matchMedia("(prefers-color-scheme: dark)"):{matches:false};
+const isDark=()=>DB.theme==="dark"||(DB.theme==="auto"&&mq.matches);
+function applyTheme(){const r=document.documentElement,pl=PALS[DB.pal]||PALS.firma,v=pl[isDark()?"d":"l"];PV.forEach((k,i)=>r.style.setProperty(k,v[i]));r.style.colorScheme=isDark()?"dark":"light"}
+try{mq.addEventListener&&mq.addEventListener("change",()=>{applyTheme();render(true)})}catch(e){}
+// entidad: receta o plato armado
+function ent(key){const[t,id]=key.split(":");if(t==="r"){const r=R(id);return r&&{key,tipo:"r",id,nombre:r.nombre,desc:r.desc,partes:r.partes,base:r.porciones,fuente:r.fuente}}const p=DB.platos.find(x=>x.id===id);return p&&{key,tipo:"c",id,nombre:p.nombre,desc:"Plato armado con partes de varias recetas.",partes:p.partes,base:4}}
+const porc=e=>ST.porc[e.key]||e.base;
+const pfac=(e,pid)=>porc(e)/(e.tipo==="r"?e.base:R(PARTES[pid].receta).porciones);
+function matches(r){const q=ST.q.trim().toLowerCase();if(q){const hay=[r.nombre,r.desc,...r.partes.flatMap(p=>[pnom(PARTES[p]),...PARTES[p].ings.map(i=>i.n)])].join(" ").toLowerCase();if(!q.split(/\s+/).every(w=>hay.includes(w)))return false}
+const n=nutOf(r.partes),l=last(r.id),d=l?(Date.now()-l)/DAY:1e9;
+if(ST.f==="reciente"&&d>30)return false;if(ST.f==="olvidada"&&d<60)return false;if(ST.f==="liviana"&&n[0]>350)return false;if(ST.f==="proteina"&&n[1]<25)return false;return true}
+function side(){const cnt=c=>Object.values(PARTES).filter(p=>p.cat===c).length;const b=(k,t,n)=>`<button data-a="nav" data-v="${k}" class="${ST.nav===k&&["home","platos","listas"].includes(ST.view)?"on":""}"><span>${t}</span><span>${n}</span></button>`;
+const th={auto:"Automático",light:"Claro",dark:"Oscuro"}[DB.theme];
+return`<nav class="side" aria-label="Secciones"><button class="brand" data-a="nav" data-v="todas">${logo(30)}<span>Smagsbord</span></button>
+<button class="btn pri add" data-a="nav" data-v="importar">${IC.plus}Agregar receta</button>
+<div class="nav">${b("todas","Todas las recetas",RECETAS.length)}${b("platos","Mis platos",DB.platos.length)}${b("listas","Listas",DB.listas.length)}</div>
+<div class="nav"><div class="lbl" style="padding:0 12px 6px">Categorías</div>${CATS.map(c=>b(c[0],c[1],cnt(c[0]))).join("")}</div>
+<div class="foot" style="margin-top:auto;display:flex;flex-direction:column;gap:12px"><button class="chip ${ST.view==="config"?"on":""}" data-a="nav" data-v="config" style="display:flex;align-items:center;gap:8px">${IC.gear}Configuración</button>
+<div class="by sm" style="display:flex;align-items:center;gap:8px;padding:0 12px">by ${FIRMA}</div></div></nav>`}
+// Fotos de ejemplo (Wikimedia Commons). Las reemplaza la foto que suba cada uno.
+const EJ=Object.fromEntries(["bondiola","coleslaw","pollo","tarta","chimi","budin","pure"].map(k=>["r:"+k,"fotos/"+k+".jpg"]));
+const CRED=[["Bondiola", "VANOCE2022", "CC0", "https://commons.wikimedia.org/wiki/File:Juicy_sliced_pork_neck_marinated_in_Jack_Daniel%E2%80%99s_sauce,_served_with_roasted_potatoes.jpg"], ["Pollo", "Willis Lam", "CC BY-SA 2.0", "https://commons.wikimedia.org/wiki/File:Roast_Chicken_Legs_and_Thighs_(31196736704).jpg"], ["Budín", "Acabashi", "CC BY-SA 4.0", "https://commons.wikimedia.org/wiki/File:Lemon_drizzle_and_coconut_and_lime_cake_Copped_Hall_rackets_court_Epping_Essex_England.jpg"], ["Puré", "USDAgov", "Public domain", "https://commons.wikimedia.org/wiki/File:Pumpkin_Curry_Soup_(20161021-AMS-LSC-9001).jpg"], ["Tarta", "Michele Frazier from USA", "CC BY 2.0", "https://commons.wikimedia.org/wiki/File:Squash_%26_Roasted_Poblano_Quiche_Whole_(8104790878).jpg"], ["Coleslaw", "autor en la página del archivo", "CC BY-SA 2.0", "https://commons.wikimedia.org/wiki/File:Bowl%27o%27Coleslaw.jpg"], ["Chimichurri", "Dominic Lockyer", "CC BY 2.0", "https://commons.wikimedia.org/wiki/File:Chimichurri_Sauce_Recipe_(13294346123).jpg"]];
+const fotoDe=key=>{if(DB.fotos[key])return DB.fotos[key];const h=(DB.hist[key]||[]).slice().reverse().find(x=>x.foto);if(h)return h.foto;if(EJ[key])return EJ[key];if(key[0]==="c"){const pl=DB.platos.find(x=>"c:"+x.id===key);if(pl&&pl.partes[0])return EJ["r:"+PARTES[pl.partes[0]].receta]||""}return""};
+const phBox=(key,alt)=>{const ft=fotoDe(key);return`<div class="ph">${ft?`<img src="${ft}" alt="${esc(alt||"")}">`:`<span class="sm">Sin foto todavía</span>`}</div>`};
+function cardR(r){const n=nutOf(r.partes);const p0=PARTES[r.partes[0]];return`<button class="card" data-a="open" data-v="r:${r.id}">${phBox("r:"+r.id)}<div><span class="lbl">${CATN[p0.cat]}${r.partes.length>1?" · "+r.partes.length+" partes":""}</span><b>${esc(r.nombre)}</b><span class="sm">${ago(last(r.id))} · ${n[0]} kcal aprox.</span></div></button>`}
+function cardP(p){const r=R(p.receta);return`<button class="card" data-a="open" data-v="r:${r.id}">${phBox("r:"+r.id)}<div><span class="lbl">${CATN[p.cat]}</span><b>${esc(pnom(p))}</b><span class="sm">${r.partes.length>1?"Parte de «"+esc(r.nombre)+"»":"Receta completa"} · ${p.n[0]} kcal aprox.</span></div></button>`}
+function home(){const F=[["","Todas"],["reciente","Hechas hace poco"],["olvidada","Hace mucho que no hago"],["liviana","Livianas"],["proteina","Alta en proteína"]];
+let body;if(ST.nav==="todas"){const rs=RECETAS.filter(matches);body=rs.length?`<div class="grid">${rs.map(cardR).join("")}</div>`:`<div class="empty">Ninguna receta coincide con esa búsqueda.</div>`}
+else{const q=ST.q.trim().toLowerCase();const ps=Object.values(PARTES).filter(p=>p.cat===ST.nav&&(!q||(pnom(p)+" "+p.ings.map(i=>i.n).join(" ")).toLowerCase().includes(q)));body=ps.length?`<div class="grid">${ps.map(cardP).join("")}</div>`:`<div class="empty">No hay nada en esta categoría con esa búsqueda.</div>`}
+return`<main class="main"><div class="head"><h1>${ST.nav==="todas"?"Todas las recetas":CATS.find(c=>c[0]===ST.nav)[1]}</h1></div><div class="search">${IC.search}<label class="sr" for="q">Buscar recetas</label><input id="q" type="search" placeholder="Buscar por nombre, ingrediente o descripción" value="${esc(ST.q)}"></div>
+${ST.nav==="todas"?`<div class="row">${F.map(f=>`<button class="chip ${ST.f===f[0]?"on":""}" data-a="f" data-v="${f[0]}">${f[1]}</button>`).join("")}</div>`:""}
+<div id="res">${body}</div></main>`}
+function ficha(){const e=ent(ST.id);if(!e){ST.view="home";return home()}const n=nutOf(e.partes),po=porc(e),f=po/e.base;
+const inL=l=>l.items.includes(e.key);
+const parts=e.partes.map(pid=>{const p=PARTES[pid],pf=pfac(e,pid),ed=ST.edit===pid;return`<section class="part"><div><span class="lbl">${CATN[p.cat]}</span><div style="display:flex;align-items:center;gap:4px">${ed?`<label class="sr" for="ren">Nombre de la parte</label><input id="ren" class="inp" value="${esc(pnom(p))}" data-pid="${pid}">`:`<h2>${esc(pnom(p))}</h2><button class="icb" data-a="edit" data-v="${pid}" aria-label="Cambiar el nombre de ${esc(pnom(p))}">${IC.pen}</button>`}</div>${e.tipo==="c"?`<span class="sm">de «${esc(R(p.receta).nombre)}»</span>`:""}</div>
+<div style="display:flex;flex-direction:column;gap:4px">${p.ings.map(i=>ingTxt(i,pf)).join("")}</div>
+<div style="margin-top:auto;display:flex;flex-direction:column;gap:10px"><span class="sm">${p.prep.length} de preparación y ${p.pasos.length} de cocina · ${p.n[0]} kcal aprox.</span><button class="btn" data-a="usar" data-v="${pid}" style="min-height:44px;font-size:14px">Usar en un plato</button></div></section>`}).join("");
+return`<main class="main"><div class="head"><button class="back" data-a="nav" data-v="${e.tipo==="r"?"todas":"platos"}">${IC.back}${e.tipo==="r"?"Recetas":"Mis platos"}</button><h1>${esc(e.nombre)}</h1>
+${e.tipo==="r"?`<button class="btn" data-a="hice">${IC.check}La hice hoy</button>`:`<button class="btn ghost" data-a="delplato">Borrar plato</button>`}<button class="btn pri" data-a="cocina">Modo cocina</button></div>
+<div class="two"><div class="info"><div class="hero">${fotoDe(e.key)?`<img src="${fotoDe(e.key)}" alt="Foto de ${esc(e.nombre)}">`:`<span class="sm">Esta receta todavía no tiene foto</span>`}<label class="btn hb">${fotoDe(e.key)?"Cambiar foto":"Agregar foto"}<input id="rfoto" type="file" accept="image/*" class="sr"></label></div><p class="sm" style="font-size:15px;line-height:22px">${esc(e.desc)}${e.fuente?" · Origen: "+esc(e.fuente):""}${e.tipo==="r"?" · "+ago(last(e.id)):""}</p>
+<div class="box"><span class="h">Porciones</span><div class="row" style="gap:12px"><button class="step" data-a="porc" data-v="-1" aria-label="Una porción menos">${IC.minus}</button><span style="font-size:32px;line-height:38px;font-weight:600;min-width:44px;text-align:center">${po}</span><button class="step" data-a="porc" data-v="1" aria-label="Una porción más">${IC.plus}</button>${f!==1?`<span class="x">×${fmtq(f,1)}</span>`:""}<span class="sm">${e.tipo==="r"?"la original es para "+e.base:""}</span></div></div>
+<div class="box"><span class="h">Por porción, aproximado</span><div class="nut"><div><b>${n[0]}</b><span class="sm">kcal</span></div><div><b>${n[1]} g</b><span class="sm">proteínas</span></div><div><b>${n[2]} g</b><span class="sm">carbos</span></div><div><b>${n[3]} g</b><span class="sm">grasas</span></div></div></div>
+${(()=>{const h=(DB.hist[e.key]||[]).slice().reverse().filter(x=>x.nota);if(!h.length)return"";return`<div class="box"><span class="h">Notas de veces anteriores</span>${h.slice(0,4).map(x=>`<div class="note"><span class="sm">${fdate(x.t)}</span><span>${esc(x.nota)}</span></div>`).join("")}</div>`})()}
+<div class="box"><span class="h">Listas</span><div class="row">${DB.listas.map(l=>`<button class="chip ${inL(l)?"on":""}" data-a="tlist" data-v="${l.id}" aria-pressed="${inL(l)}">${esc(l.nombre)}</button>`).join("")}${ST.newlist?`<label class="sr" for="nl">Nombre de la lista nueva</label><input id="nl" class="inp" style="width:170px" placeholder="Nombre de la lista">`:`<button class="chip" data-a="newlist">${"+ Nueva lista"}</button>`}</div></div></div>
+<div class="parts"><div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px">${e.tipo==="r"&&R(e.id).imp?(r=>`<div class="box"><span class="h">Receta importada de un video</span>${r.dudas.length?`<span class="sm">Para revisar:</span><ul style="margin:0;padding-left:20px">${r.dudas.map(d=>`<li>${esc(d)}</li>`).join("")}</ul>`:`<span class="sm">Gemini no marcó dudas.</span>`}<div class="row">${ytId(r.url)?`<a class="btn ghost" href="${esc(r.url)}" target="_blank" rel="noopener">Ver el video${r.canal?" · "+esc(r.canal):""}</a>`:""}${r.pre?"":`<button class="btn ghost" data-a="delrec" data-v="${r.id}">Borrar receta</button>`}</div></div>`)(R(e.id)):""}<h2 class="h" style="font-size:20px;line-height:26px">${e.partes.length>1?"Partes de la receta":"Ingredientes"}</h2>${f!==1?`<span class="sm">Cantidades para ${po} porciones</span>`:""}</div><div class="pgrid">${parts}</div></div></div></main>`}
+function platos(){return`<main class="main"><div class="head"><h1>Mis platos</h1><button class="btn pri" data-a="armar">${IC.plus}Armar un plato</button></div>
+${DB.platos.length?`<div class="grid">${DB.platos.map(p=>{const n=nutOf(p.partes);return`<button class="card" data-a="open" data-v="c:${p.id}">${phBox("c:"+p.id)}<div><span class="lbl">${p.partes.length} partes</span><b>${esc(p.nombre)}</b><span class="sm">${p.partes.map(x=>esc(pnom(PARTES[x]))).join(" · ")} · ${n[0]} kcal aprox.</span></div></button>`}).join("")}</div>`:`<div class="empty">Todavía no armaste ningún plato. Combiná partes de distintas recetas y guardalas acá.</div>`}</main>`}
+const autoName=ids=>{const n=ids.map(i=>pnom(PARTES[i]));if(!n.length)return"";if(n.length===1)return n[0];const low=s=>s.charAt(0).toLowerCase()+s.slice(1);return n[0]+" con "+n.slice(1,-1).map(low).concat(low(n[n.length-1])).join(n.length>2?", ":" ").replace(/, ([^,]*)$/," y $1")};
+function armar(){const A=ST.armar,q=(A.q||"").toLowerCase();const ps=Object.values(PARTES).filter(p=>(!A.cat||p.cat===A.cat)&&(!q||pnom(p).toLowerCase().includes(q)));const n=nutOf(A.partes);const nm=A.custom!=null?A.custom:autoName(A.partes);
+return`<main class="main"><div class="head"><button class="back" data-a="nav" data-v="platos">${IC.back}Mis platos</button><h1>Armar un plato</h1></div>
+<div class="two"><div class="parts" style="flex:999 1 360px"><div class="search">${IC.search}<label class="sr" for="aq">Buscar partes</label><input id="aq" type="search" placeholder="Buscar entre todas las partes guardadas" value="${esc(A.q||"")}"></div>
+<div class="row"><button class="chip ${!A.cat?"on":""}" data-a="acat" data-v="">Todas</button>${CATS.map(c=>`<button class="chip ${A.cat===c[0]?"on":""}" data-a="acat" data-v="${c[0]}">${c[1]}</button>`).join("")}</div>
+<div id="alist" class="box" style="gap:0">${ps.map(p=>{const on=A.partes.includes(p.id);return`<div class="lrow"><div><b>${esc(pnom(p))}</b><span class="sm">${CATN[p.cat]} · de «${esc(R(p.receta).nombre)}»</span></div>${on?`<span class="sm" style="display:flex;align-items:center;gap:6px;font-weight:600">${IC.check}En el plato</span>`:`<button class="step" style="width:44px;height:44px" data-a="aadd" data-v="${p.id}" aria-label="Agregar ${esc(pnom(p))} al plato">${IC.plus}</button>`}</div>`}).join("")||`<div class="empty">Nada coincide.</div>`}</div></div>
+<aside class="panel" style="flex:1 1 320px;max-width:460px" aria-label="Mi plato"><span class="h">Mi plato</span><div style="display:flex;flex-direction:column;gap:6px"><label class="lbl" for="an">Nombre del plato</label><input id="an" class="inp" style="font-size:18px;font-weight:600;background:var(--papel)" value="${esc(nm)}" placeholder="Se arma solo con las partes"><span class="sm">Se arma solo con las partes. Lo podés cambiar.</span></div>
+<div style="display:flex;flex-direction:column;gap:8px">${A.partes.map(id=>{const p=PARTES[id];return`<div class="slot"><div><span class="lbl">${CATN[p.cat]}</span><b style="display:block;font-size:17px;line-height:22px;font-weight:600">${esc(pnom(p))}</b><span class="sm">de «${esc(R(p.receta).nombre)}»</span></div><button class="icb" data-a="adel" data-v="${id}" aria-label="Quitar ${esc(pnom(p))}">${IC.x}</button></div>`}).join("")||`<div class="empty" style="background:var(--papel)">Agregá partes desde la lista.</div>`}</div>
+${A.partes.length?`<div><span class="lbl">Por porción, aproximado</span><div style="font-size:15px;line-height:22px">${n[0]} kcal · ${n[1]} g proteínas · ${n[2]} g carbos · ${n[3]} g grasas</div></div>`:""}
+<button class="btn pri" data-a="asave" ${A.partes.length<2?"disabled style=\"opacity:.4\"":""}>Guardar plato</button>${A.partes.length<2?`<span class="sm">Elegí al menos dos partes.</span>`:""}</aside></div></main>`}
+function listas(){if(ST.lid){const l=DB.listas.find(x=>x.id===ST.lid);if(l){const items=l.items.map(ent).filter(Boolean);return`<main class="main"><div class="head"><button class="back" data-a="nav" data-v="listas">${IC.back}Listas</button><h1>${esc(l.nombre)}</h1>${esFija(l.id)?`<span class="sm">Lista fija</span>`:`<button class="btn ghost" data-a="dellist">Borrar lista</button>`}</div>
+${items.length?`<div class="grid">${items.map(e=>e.tipo==="r"?cardR(R(e.id)):`<button class="card" data-a="open" data-v="${e.key}">${phBox(e.key)}<div><span class="lbl">Mi plato</span><b>${esc(e.nombre)}</b><span class="sm">${nutOf(e.partes)[0]} kcal aprox.</span></div></button>`).join("")}</div>`:`<div class="empty">Esta lista está vacía. Sumale recetas desde la ficha de cada una.</div>`}</main>`}}
+return`<main class="main"><div class="head"><h1>Listas</h1></div><div class="box" style="gap:0">${DB.listas.map(l=>`<div class="lrow"><div><b>${esc(l.nombre)}</b><span class="sm">${l.items.length} ${l.items.length===1?"elemento":"elementos"}${esFija(l.id)?" · lista fija":""}</span></div><button class="btn" style="min-height:44px" data-a="olist" data-v="${l.id}">Abrir</button></div>`).join("")}</div>
+<div class="box" style="max-width:520px"><span class="h">Crear una lista</span><div class="row" style="flex-wrap:nowrap"><label class="sr" for="nl2">Nombre de la lista nueva</label><input id="nl2" class="inp" placeholder="Nombre de una lista nueva"><button class="btn" data-a="addlist">Crear</button></div></div>
+<p class="sm">Una misma receta puede estar en varias listas. Se guarda una sola vez.</p></main>`}
+function config(){const dk=isDark();const sw=(on,k,t,d)=>`<div class="lrow"><div><b>${t}</b><span class="sm">${d}</span></div><button class="sw ${on?"on":""}" role="switch" aria-checked="${on}" aria-label="${t}" data-a="tog" data-v="${k}"><i></i></button></div>`;
+return`<main class="main" style="max-width:920px"><div class="head"><h1>Configuración</h1></div>
+<section class="cfg"><h2>Apariencia</h2>
+<div style="display:flex;flex-direction:column;gap:8px"><span class="lbl">Tema</span><div class="row">${[["auto","Automático"],["light","Claro"],["dark","Oscuro"]].map(t=>`<button class="chip ${DB.theme===t[0]?"on":""}" data-a="theme" data-v="${t[0]}" aria-pressed="${DB.theme===t[0]}">${t[1]}</button>`).join("")}</div><span class="sm">En automático sigue el modo claro u oscuro del dispositivo.</span></div>
+<div style="display:flex;flex-direction:column;gap:8px"><span class="lbl">Paleta de colores</span><div class="pgr">${Object.entries(PALS).map(([k,pl])=>{const v=pl[dk?"d":"l"],on=(DB.pal===k)||(!PALS[DB.pal]&&k==="firma");return`<button class="pc ${on?"on":""}" data-a="pal" data-v="${k}" aria-pressed="${on}" style="background:${v[0]};color:${v[2]};border-color:${on?v[2]:v[4]}"><span class="pcs"><i style="background:${v[1]}"></i><i style="background:${v[2]}"></i><i style="background:${v[6]}"></i></span><b>${pl.n}</b>${on?`<span style="font-size:13px;color:${v[3]}">En uso</span>`:""}</button>`}).join("")}</div></div></section>
+<section class="cfg"><h2>Unidades</h2>${[["uliq","Líquidos",[["ml","Mililitros"],["g","Gramos"],["cuch","Tazas y cucharadas"],["orig","Como en la receta"]],"ml"],["usec","Secos que se miden: harina, azúcar, especias",[["g","Gramos"],["cuch","Tazas y cucharadas"],["orig","Como en la receta"]],"orig"]].map(u=>`<div style="display:flex;flex-direction:column;gap:8px"><span class="lbl">${u[1]}</span><div class="row">${u[2].map(o=>`<button class="chip ${(DB[u[0]]||u[3])===o[0]?"on":""}" data-a="uni" data-v="${u[0]}|${o[0]}" aria-pressed="${(DB[u[0]]||u[3])===o[0]}">${o[1]}</button>`).join("")}</div></div>`).join("")}<span class="sm">${(()=>{const a=I(2,"cda","aceite de oliva"),b=I(200,"g","harina");return`Ejemplo: 2 cdas de aceite se muestran como <b>${qtyTxt(a,1)}</b>, y 200 g de harina como <b>${qtyTxt(b,1)}</b>.`})()} Menos de 5 g se muestra siempre en cucharaditas, porque una balanza de cocina no lo mide. La carne, las verduras y lo que se cuenta por unidades quedan como están. Las conversiones son aproximadas: dependen del peso de cada ingrediente.</span></section>
+<section class="cfg"><h2>Modo cocina</h2><div style="display:flex;flex-direction:column;gap:8px"><span class="lbl">Modo por defecto</span><div class="row">${[["guiado","Guiado"],["simple","Simple"]].map(t=>`<button class="chip ${(DB.modo||"guiado")===t[0]?"on":""}" data-a="modo" data-v="${t[0]}" aria-pressed="${(DB.modo||"guiado")===t[0]}">${t[1]}</button>`).join("")}</div><span class="sm">${(DB.modo||"guiado")==="simple"?"Simple: los ingredientes y los pasos en una sola pantalla, para ir tachando.":"Guiado: de a un paso por vez. Primero reunís todo, después preparás los ingredientes y al final cocinás."} Dentro del modo cocina se puede cambiar con el interruptor de arriba.</span></div><div>${sw(DB.despierta,"despierta","Mantener la pantalla encendida","Evita que la tablet se apague mientras cocinás.")}${sw(DB.sonido,"sonido","Sonido del temporizador","Suena tres veces cuando termina el tiempo.")}</div></section>
+<section class="cfg"><h2>Datos de este dispositivo</h2><p class="sm" style="font-size:15px;line-height:22px">En este prototipo, las fotos, las notas, los platos armados y las listas se guardan solo en este navegador.</p>
+<div class="row">${ST.rs?`<span style="font-weight:600">¿Borrar todo lo guardado acá? No se puede deshacer.</span><button class="btn pri" data-a="reset2">Sí, borrar</button><button class="btn ghost" data-a="reset0">Cancelar</button>`:`<button class="btn" data-a="reset1">Borrar lo guardado y volver a los ejemplos</button>`}</div></section>
+<section class="cfg"><h2>Acerca de</h2><div style="display:flex;align-items:center;gap:14px">${logo(44)}<div><b style="font-size:20px;font-weight:600;display:block">Smagsbord</b><span class="sm" style="display:flex;align-items:center;gap:8px;font-size:14px">Recetas de familia · by ${FIRMA}</span></div></div><span class="sm">Prototipo de la etapa 1, con recetas de ejemplo.</span><span class="sm">Fotos de ejemplo de Wikimedia Commons: ${CRED.map(c=>`<a href="${c[3]}" target="_blank" rel="noopener">${c[0]}</a> (${esc(c[1])}, ${c[2]})`).join(" · ")}.</span></section></main>`}
+// modo cocina
+let timers={},tint=null,wl=null;
+const fmtT=s=>{s=Math.max(0,Math.ceil(s));const h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;return(h?h+":"+String(m).padStart(2,"0"):m)+":"+String(x).padStart(2,"0")};
+const durT=m=>m>=60?(m%60?Math.floor(m/60)+" h "+m%60+" min":m/60+" h"):m+" min";
+const tmin=key=>{const[pid,i]=key.split(":");return PARTES[pid].pasos[+i].timer};
+const tget=key=>timers[key]||(timers[key]={rem:tmin(key)*60000,base:tmin(key)*60000,end:0,run:false,started:false,done:false});
+const tleft=t=>t.run?Math.max(0,t.end-Date.now()):t.rem;
+const ttxt=t=>t.done?"Listo":fmtT(tleft(t)/1000);
+const tlabel=(t,key)=>{const sug=tmin(key)*60000;return t.done?"Listo":t.run?fmtT(tleft(t)/1000):t.started?fmtT(t.rem/1000)+" · en pausa":"Iniciar "+(sug&&t.rem===sug?durT(tmin(key)):fmtT(t.rem/1000))};
+// Imágenes de apoyo: ingredientes (provisorio, con emoji) y recipientes (íconos de línea).
+const EMO=[[/bondiola|cerdo/,"🥩"],[/pollo/,"🍗"],[/ají/,"🌶️"],[/\bajo\b/,"🧄"],[/romero|perejil|orégano|tomillo/,"🌿"],[/aceite/,"🫒"],[/mostaza|mayonesa/,"🫙"],[/miel/,"🍯"],[/crema|leche/,"🥛"],[/caldo/,"🍲"],[/papa/,"🥔"],[/pimentón/,"🌶️"],[/repollo/,"🥬"],[/zanahoria/,"🥕"],[/vinagre/,"🍶"],[/azúcar/,"🥄"],[/tapa de tarta/,"🥧"],[/zapallito/,"🥒"],[/cebolla/,"🧅"],[/huevo/,"🥚"],[/queso/,"🧀"],[/harina/,"🌾"],[/lim[oó]n/,"🍋"],[/morrón/,"🫑"],[/calabaza/,"🎃"],[/manteca/,"🧈"],[/champi|hongo/,"🍄"],[/puerro|lechuga|espinaca|acelga/,"🥬"],[/vino/,"🍷"],[/pimienta|comino|canela|especia/,"🧂"],[/ceboll[íi]n|albahaca|cilantro|laurel|menta/,"🌿"],[/tomate/,"🍅"],[/arroz/,"🍚"],[/fideo|pasta|espagueti|tallar/,"🍝"],[/pan rallado|\bpan\b/,"🍞"],[/carne|bife|lomo|picada/,"🥩"],[/pescado|merluza|salm[oó]n|at[uú]n/,"🐟"],[/agua/,"💧"],[/chocolate|cacao/,"🍫"],[/banana/,"🍌"],[/manzana/,"🍎"],[/palta/,"🥑"],[/choclo|ma[ií]z/,"🌽"],[/br[oó]coli/,"🥦"],[/berenjena/,"🍆"],[/jam[oó]n|panceta|tocino/,"🥓"],[/nuez|almendra|man[ií]/,"🥜"],[/\bsal\b/,"🧂"]];
+const emo=(n,l)=>{const m=EMO.find(e=>e[0].test(n.toLowerCase()));return`<span class="em${l?" l":""}" aria-hidden="true">${m?m[1]:"🍽️"}</span>`};
+const RCS={bol:'<path d="M5 20h38a19 19 0 0 1-38 0z"/><path d="M17 41h14"/>',plato:'<ellipse cx="24" cy="26" rx="20" ry="9"/><ellipse cx="24" cy="25" rx="11" ry="4"/>',taza:'<path d="M9 13h23v14a11.5 11.5 0 0 1-23 0z"/><path d="M32 17h4a5 5 0 0 1 0 10h-4"/>',olla:'<path d="M10 19h28v15a4 4 0 0 1-4 4H14a4 4 0 0 1-4-4z"/><path d="M8 14h32M5 23h5M38 23h5M21 10h6"/>',sarten:'<path d="M4 21h28v5a9 9 0 0 1-9 9H13a9 9 0 0 1-9-9z"/><path d="M32 23l13-5"/>',fuente:'<path d="M7 19h34l-4 15H11z"/><path d="M3 19h42"/>',tabla:'<rect x="5" y="13" width="32" height="24" rx="4"/><path d="M37 25h6"/>',frasco:'<path d="M16 7h16v6H16z"/><path d="M14 13h20a3 3 0 0 1 3 3v22a3 3 0 0 1-3 3H14a3 3 0 0 1-3-3V16a3 3 0 0 1 3-3z"/>',vaso:'<path d="M13 9h22l-3 31H16z"/>',colador:'<path d="M5 18h32a16 16 0 0 1-32 0z"/><path d="M37 18h8M14 24h.1M21 24h.1M28 24h.1M17.500 29h.1M24.500 29h.1"/>',cuchillo:'<path d="M7 41l13-13"/><path d="M20 28L41 7c2 11-4 21-15 25z"/>',cuchara:'<path d="M28 23L8 43"/><ellipse cx="34" cy="15" rx="7" ry="10" transform="rotate(40 34 15)"/>',horno:'<rect x="7" y="7" width="34" height="34" rx="4"/><path d="M7 16h34M13 11.5h.1M19 11.5h.1"/><rect x="13" y="21" width="22" height="14" rx="2"/>',heladera:'<rect x="12" y="4" width="24" height="40" rx="4"/><path d="M12 18h24M17 9v5M17 23v7"/>',util:'<rect x="12" y="8" width="24" height="32" rx="4"/><path d="M19 17h.1M24 17h.1M29 17h.1M19 24h.1M24 24h.1M29 24h.1M19 31h.1M24 31h.1M29 31h.1"/>'};
+const RCM=[[/^horno/,"horno"],[/heladera/,"heladera"],[/bol/,"bol"],[/plat/,"plato"],[/taza/,"taza"],[/olla|ollita/,"olla"],[/sartén/,"sarten"],[/fuente|placa|tartera|molde/,"fuente"],[/tabla/,"tabla"],[/frasco/,"frasco"],[/vas/,"vaso"],[/colador|tamiz/,"colador"],[/cuchillo|pelapapas/,"cuchillo"],[/cuchara|pisapapas|batidor/,"cuchara"]];
+const rcIc=(n,l)=>{const m=RCM.find(e=>e[0].test(n.toLowerCase()));return`<svg class="rc${l?" l":""}" viewBox="0 0 48 48" aria-hidden="true">${RCS[m?m[1]:"util"]}</svg>`};
+// Procesos gráficos: de dónde sale, qué se hace y dónde queda.
+const emoC=n=>{const m=EMO.find(e=>e[0].test(n.toLowerCase()));return m?m[1]:"🍽️"};
+// Para cada paso de cocción: recipientes de los que sale y recipiente o lugar donde queda.
+const FL={bondiola:[[[],"Horno"],[["Bol chico"],"Plato grande"],[["Taza","Plato grande"],"Sartén grande"],[["Sartén grande"],"Fuente para horno"],[[],"Fuente para horno"]],
+mostaza:[[[],"Ollita"],[["Taza medidora"],"Ollita"],[[],"Ollita"]],
+papas:[[[],"Horno"],[[],"Bol grande"],[["Bol grande"],"Placa para horno"],[["Placa para horno"],"Horno"]],
+coleslaw:[[[],"Bol chico"],[["Bol chico"],"Bol grande"],[["Bol grande"],"Heladera"]],
+tarta:[[[],"Horno"],[["Bol mediano"],"Sartén"],[[],"Bol grande"],[["Sartén","Bol grande"],"Tartera"],[["Tartera"],"Horno"]],
+chimi:[[["Taza medidora"],"Frasco con tapa"],[[],"Frasco con tapa"],[[],"Frasco con tapa"]],
+budin:[[[],"Horno"],[[],"Bol grande"],[["Taza medidora","Platito"],"Bol grande"],[["Bol mediano"],"Bol grande"],[["Bol grande"],"Molde de budín"],[[],"Molde de budín"]],
+glase:[[["Vasito"],"Bol chico"],[["Bol chico"],""]],
+pollo:[[["Bol grande"],"Heladera"],[[],"Horno"],[["Bol grande"],"Sartén"],[["Sartén"],"Fuente para horno"]],
+verduras:[[[],"Placa para horno"],[["Placa para horno"],"Horno"]],
+pure:[[[],"Olla"],[["Olla"],"Colador"],[["Taza medidora"],"Olla"]]};
+const normP=(id,p)=>{let last=[];const cont={},ci={};const put=(d,js)=>{const c=cont[d]=cont[d]||[],x=ci[d]=ci[d]||[];js.forEach(j=>{if(!p.ings[j])return;if(!x.includes(j))x.push(j);const e=emoC(p.ings[j].n);if(!c.includes(e))c.push(e)})};p.prep.forEach(s=>{s.vi=s.ings.length?s.ings:last;last=s.vi;if(s.dest)put(s.dest,s.vi)});
+p.pasos.forEach((s,i)=>{const f=(FL[id]||[])[i];if(f){s.de=f[0];s.a=f[1]}else{s.de=s.de||[];s.a=s.a||""}if(s.a&&!/^(horno|heladera|freezer)$/i.test(s.a)){const js=[...(s.ings||[])];s.de.forEach(d=>(ci[d]||[]).forEach(j=>js.push(j)));put(s.a,js)}});p.cont=cont;p.contI=ci};
+Object.entries(PARTES).forEach(([id,p])=>normP(id,p));
+// Etapa 2: recetas importadas. El formato lo define PROMPT; addReceta lo pasa a la estructura de la app.
+const PROMPT="Sos un asistente que convierte una receta en video al formato de la app de recetas Smagsbord. Mirá el video completo, imagen y audio, y devolvé SOLO un objeto JSON válido, sin texto antes ni después.\n\nREGLAS GENERALES\n- Escribí en español rioplatense, con voseo (\"picá\", \"mezclá\"), en frases cortas y claras.\n- Usá solo lo que el video dice o muestra. No inventes ingredientes ni pasos. Si una cantidad no se dice, estimala por lo que se ve y anotalo en \"dudas\".\n- Pasá todo a sistema métrico (g, kg, ml, l, °C). Las cucharadas y tazas pueden quedar como \"cda\", \"cdita\" y \"taza\".\n- PARTES: separá en partes solo lo que se cocina en paralelo, en recipientes distintos, y después se junta en el plato. Churrasco con puré de papas: dos partes. Fideos con salsa: dos partes. Albóndigas con arroz: dos partes (el arroz, y las albóndigas con su salsa). Si todo se cocina junto en el mismo recipiente, es una sola parte: un risotto, o un pollo que se termina dentro de su salsa.\n- Un mismo ingrediente que se usa en dos partes figura en las dos, con la cantidad que le toca a cada una.\n- REGLA MÁS IMPORTANTE: ninguna cantidad, medida ni peso puede quedar escrito a mano en un texto. La app convierte las unidades y ajusta todo según las porciones, así que las cantidades solo existen en la lista \"ingredientes\" y en los textos se nombran con {n}. Está mal: \"agregá 2 cucharadas de queso\". Está bien: \"agregá {14}\".\n\nFORMATO\n{\n  \"nombre\": \"título corto del plato, sin el nombre del canal\",\n  \"descripcion\": \"una frase\",\n  \"porciones\": 4,\n  \"canal\": \"nombre del canal\",\n  \"dudas\": [\"frases cortas con lo que estimaste o no quedó claro\"],\n  \"partes\": [\n    {\n      \"nombre\": \"nombre de la parte\",\n      \"categoria\": \"principal | acomp | ensalada | salsa | dulce | otro\",\n      \"nutricion\": {\"kcal\": 0, \"proteinas\": 0, \"carbohidratos\": 0, \"grasas\": 0},\n      \"herramientas\": [\"Cuchillo\", \"Tabla\"],\n      \"ingredientes\": [\n        {\"cantidad\": 2, \"unidad\": \"diente\", \"nombre\": \"ajo\", \"tipo\": \"unidad\", \"gramos\": 10, \"g_por_ml\": 0}\n      ],\n      \"preparacion\": [\n        {\"texto\": \"Pelá {0} y picalo bien chiquito.\", \"tecnica\": \"picar\", \"ingredientes\": [0], \"recipiente\": \"Bol chico\", \"video_desde\": 35, \"video_hasta\": 52}\n      ],\n      \"coccion\": [\n        {\"texto\": \"Calentá el aceite de la taza en la sartén y dorá el ajo del bol chico.\", \"detalle\": \"Hasta que tome color, sin quemarse.\", \"tecnica\": \"dorar\", \"minutos\": 2, \"desde\": [\"Taza\", \"Bol chico\"], \"hacia\": \"Sartén\", \"video_desde\": 60, \"video_hasta\": 85}\n      ]\n    }\n  ]\n}\n\nINGREDIENTES\n- \"cantidad\": número, o null si es a gusto.\n- \"unidad\": g, kg, ml, l, cda, cdita, taza, diente, rama, hoja, pizca. Si se cuenta por unidades (2 huevos, 1 cebolla), dejá \"\".\n- \"nombre\": en minúscula y sin la cantidad (\"cebolla\", \"aceite de oliva\").\n- \"tipo\": \"liquido\" (aceite, leche, vino, caldo, crema, miel), \"polvo\" (lo seco que se puede medir con cuchara o taza: harina, azúcar, sal, especias, queso rallado, arroz), \"solido\" (lo que se pesa: carne, manteca, verduras por peso) o \"unidad\" (lo que se cuenta: huevos, dientes de ajo, cebollas).\n- \"gramos\": peso total aproximado de esa cantidad, en gramos. Siempre, también para los líquidos y para lo que se cuenta por unidades.\n- \"g_por_ml\": cuántos gramos pesa un mililitro de ese ingrediente (agua 1, aceite 0.92, miel 1.4, harina 0.55, azúcar 0.85, sal 1.2). Para \"solido\" y \"unidad\" poné 0.\n- \"nutricion\": estimación por porción de esa parte, en kcal y gramos.\n- \"herramientas\": utensilios (cuchillo, tabla, rallador, batidor). Los recipientes no van acá.\n\nPREPARACION: todo lo que se hace con cada ingrediente ANTES de empezar a cocinar o mezclar: sacar de la heladera, lavar, pelar, cortar, picar, rallar, exprimir, pesar, medir.\n- Un paso por ingrediente y por acción.\n- En \"texto\" nombrá cada ingrediente con {n}, donde n es su posición en la lista \"ingredientes\" de esa parte, empezando en 0. La app lo reemplaza por la cantidad y el nombre.\n- \"ingredientes\": los mismos números que usaste en el texto.\n- Decí cómo se corta: forma y tamaño.\n- Para medir líquidos usá la técnica \"verter\". \"pesar\" es solo para sólidos en balanza.\n- \"recipiente\": dónde queda ese ingrediente ya preparado. Usá estos nombres: Bol chico, Bol mediano, Bol grande, Plato, Platito, Taza, Taza medidora, Vasito, Tabla. Elegí el tamaño para las porciones originales de la receta: la app lo agranda sola cuando se cocina para más gente. Los ingredientes que después se agregan juntos en el mismo momento comparten recipiente; los que se agregan en momentos distintos van separados. Usá la menor cantidad de recipientes posible. Si queda en su envase, dejá \"\".\n\nCOCCION: los pasos de cocinar, mezclar y armar, en orden.\n- Una acción principal por paso.\n- En \"texto\" decí de qué recipiente sale cada cosa (\"el ajo del bol chico\") y poné siempre la temperatura del horno o el nivel del fuego.\n- Cuando un ingrediente se agrega directo de su envase (aceite, sal, especias, manteca), nombralo con {n} igual que en la preparación. Si en ese paso se usa solo una parte, escribí la fracción dentro de las llaves, después de dos puntos: {7:0.5} es la mitad del ingrediente 7, {2:0.25} un cuarto del ingrediente 2. Las fracciones de un mismo ingrediente tienen que sumar 1 entre todos los pasos.\n- \"detalle\": la señal de que está listo o un consejo del video. Si no hay, \"\".\n- \"minutos\": solo cuando hay que esperar (hornear, hervir, dorar, reposar, enfriar). Si no, 0.\n- \"desde\": recipientes de los que salen los ingredientes en ese paso. Puede ser [].\n- \"hacia\": dónde queda todo al terminar el paso. Usá estos nombres: Sartén chica, Sartén, Sartén grande, Ollita, Olla, Olla grande, Fuente para horno, Placa para horno, Molde, Tartera, Bol chico, Bol mediano, Bol grande, Plato, \"Horno\" o \"Heladera\". Si no aplica, \"\".\n\nTECNICA: usá exactamente una de estas palabras:\n__TECS__\n\nTIEMPOS DEL VIDEO\n- \"video_desde\" y \"video_hasta\": segundos desde el inicio del video donde se ve esa acción. Si no se ve, 0 y 0.\n\nAntes de responder, revisá que cada {n} apunte a un ingrediente que existe, que cada recipiente de \"desde\" haya aparecido antes en \"preparacion\" o en un \"hacia\" anterior, y que el JSON sea válido.\n\nVideo: (pegá acá el enlace de YouTube)".replace("__TECS__",Object.keys(TKN).join(", "));
+function addReceta(raw,idf,pre){const tx=v=>String(v==null?"":v).trim();if(!raw||!Array.isArray(raw.partes)||!raw.partes.length)throw new Error("falta la lista \"partes\".");
+const id=idf||("i"+Date.now().toString(36)),pids=[],nuevas={};
+raw.partes.forEach((x,k)=>{const pid=id+"_"+k;const ings=(x.ingredientes||[]).map(i=>Object.assign(I(typeof i.cantidad==="number"&&i.cantidad>0?i.cantidad:null,tx(i.unidad),tx(i.nombre).toLowerCase()||"ingrediente"),{tipo:tx(i.tipo),dens:+i.g_por_ml||0,g:+i.gramos||0}));
+if(!ings.length)throw new Error(`la parte ${k+1} no tiene ingredientes.`);
+const fix=t=>tx(t).replace(/\{(\d+)([01])\.(\d+)\}/g,"{$1:$2.$3}").replace(/\{(\d+)(?:[*:x][\d.]+)?\}/g,(m,n)=>+n<ings.length?m:"");const tec=t=>TKN[tx(t)]?tx(t):"mezclar";const sec=v=>Math.max(0,Math.round(+v||0));
+const prep=(x.preparacion||[]).map(s=>({t:fix(s.texto),tec:tec(s.tecnica),dest:tx(s.recipiente),xi:(s.ingredientes||[]).filter(n=>Number.isInteger(n)&&n>=0&&n<ings.length),vd:sec(s.video_desde),vh:sec(s.video_hasta)})).filter(s=>s.t);
+const pasos=(x.coccion||[]).map(s=>({t:fix(s.texto),tec:tec(s.tecnica),timer:Math.max(0,Math.round(+s.minutos||0)),sub:fix(s.detalle),de:(Array.isArray(s.desde)?s.desde:[]).map(tx).filter(Boolean),a:tx(s.hacia),vd:sec(s.video_desde),vh:sec(s.video_hasta)})).filter(s=>s.t);
+if(!pasos.length)throw new Error(`la parte ${k+1} no tiene pasos de cocción.`);
+const n=x.nutricion||{},dests=new Set(prep.map(s=>s.dest));const rec=[...new Set(pasos.flatMap(s=>[...s.de,s.a]).filter(c=>c&&!dests.has(c)&&!/^(horno|heladera|freezer)$/i.test(c)))];
+const p={id:pid,receta:id,cat:CATS.some(c=>c[0]===x.categoria)?x.categoria:"otro",nombre:tx(x.nombre)||tx(raw.nombre)||"Receta",n:[n.kcal,n.proteinas,n.carbohidratos,n.grasas].map(v=>Math.round(+v||0)),rec,ut:(Array.isArray(x.herramientas)?x.herramientas:[]).map(tx).filter(Boolean),ings,prep,pasos,pn:[],simple:[]};
+p.pasos.forEach(s=>s.ings=refs(s));p.prep.forEach(s=>s.ings=[...new Set([...refs(s),...s.xi])]);nuevas[pid]=p;pids.push(pid)});
+Object.entries(nuevas).forEach(([pid,p])=>{PARTES[pid]=p;normP(pid,p)});
+RECETAS.push({id,imp:1,pre:pre?1:0,nombre:tx(raw.nombre)||"Receta sin nombre",desc:tx(raw.descripcion),porciones:Math.max(1,Math.round(+raw.porciones||4)),fuente:"YouTube",canal:tx(raw.canal),url:tx(raw.url),dudas:(Array.isArray(raw.dudas)?raw.dudas:[]).map(tx).filter(Boolean),partes:pids});return id}
+function delReceta(id){const r=R(id);if(!r)return;const ps=new Set(r.partes);DB.platos=DB.platos.filter(p=>!p.partes.some(x=>ps.has(x)));const vivos=new Set(DB.platos.map(p=>"c:"+p.id));DB.listas.forEach(l=>l.items=(l.items||[]).filter(k=>k!=="r:"+id&&(k[0]!=="c"||vivos.has(k))));r.partes.forEach(x=>delete PARTES[x]);RECETAS.splice(RECETAS.indexOf(r),1);DB.imp=(DB.imp||[]).filter(x=>x.id!==id)}
+// Prueba real: respuesta de Gemini (segunda versión de la instrucción) para un video de YouTube, tal cual salió.
+const PRE=[{id:"yt1",raw:{"nombre": "Pollo en crema de champiñones", "descripcion": "Pechugas de pollo doradas y terminadas en una salsa cremosa de champiñones, puerro, vino blanco y parmesano.", "porciones": 4, "canal": "Katastrofa La Cocina", "dudas": ["La cantidad de aceite vegetal para dorar el pollo se estimó en una cucharada porque se agrega a ojo.", "La cantidad de manteca se estimó en 20 g en total (dos trozos pequeños).", "El trozo pequeño de puerro se estimó en 50 g.", "El video indica de 1 a 2 dientes de ajo; se tomaron 2 dientes.", "La sal y la pimienta para los champiñones son a gusto; se estimó media cucharadita de sal y un cuarto de cucharadita de pimienta adicionales.", "La cantidad de perejil seco y cebollín seco para terminar el plato no se especifica; se estimó media cucharadita de cada uno."], "partes": [{"nombre": "Pollo en crema de champiñones", "categoria": "principal", "nutricion": {"kcal": 400, "proteinas": 33, "carbohidratos": 7, "grasas": 24}, "herramientas": ["Cuchillo", "Tabla", "Mazo para carne", "Espátula", "Cuchara de madera", "Papel manteca", "Papel film", "Papel aluminio"], "ingredientes": [{"cantidad": 500, "unidad": "g", "nombre": "pechuga de pollo", "tipo": "solido", "gramos": 500, "g_por_ml": 0}, {"cantidad": 1, "unidad": "cda", "nombre": "aceite de oliva", "tipo": "liquido", "gramos": 14, "g_por_ml": 0.92}, {"cantidad": 1, "unidad": "cdita", "nombre": "sal", "tipo": "polvo", "gramos": 6, "g_por_ml": 1.2}, {"cantidad": 0.5, "unidad": "cdita", "nombre": "pimienta negra molida", "tipo": "polvo", "gramos": 1, "g_por_ml": 0.5}, {"cantidad": 0.5, "unidad": "cdita", "nombre": "orégano seco", "tipo": "polvo", "gramos": 1, "g_por_ml": 0.25}, {"cantidad": 0.5, "unidad": "cdita", "nombre": "tomillo seco", "tipo": "polvo", "gramos": 1, "g_por_ml": 0.3}, {"cantidad": 1, "unidad": "cda", "nombre": "aceite vegetal", "tipo": "liquido", "gramos": 14, "g_por_ml": 0.92}, {"cantidad": 20, "unidad": "g", "nombre": "manteca", "tipo": "solido", "gramos": 20, "g_por_ml": 0}, {"cantidad": 350, "unidad": "g", "nombre": "champiñones", "tipo": "solido", "gramos": 350, "g_por_ml": 0}, {"cantidad": 50, "unidad": "g", "nombre": "puerro", "tipo": "solido", "gramos": 50, "g_por_ml": 0}, {"cantidad": 2, "unidad": "diente", "nombre": "ajo", "tipo": "unidad", "gramos": 10, "g_por_ml": 0}, {"cantidad": 80, "unidad": "ml", "nombre": "vino blanco", "tipo": "liquido", "gramos": 80, "g_por_ml": 1}, {"cantidad": 120, "unidad": "ml", "nombre": "caldo de verduras o de pollo", "tipo": "liquido", "gramos": 120, "g_por_ml": 1}, {"cantidad": 180, "unidad": "ml", "nombre": "crema de leche para cocinar", "tipo": "liquido", "gramos": 180, "g_por_ml": 1}, {"cantidad": 2, "unidad": "cda", "nombre": "queso parmesano rallado", "tipo": "polvo", "gramos": 16, "g_por_ml": 0.45}, {"cantidad": 0.5, "unidad": "cdita", "nombre": "perejil seco", "tipo": "polvo", "gramos": 1, "g_por_ml": 0.25}, {"cantidad": 0.5, "unidad": "cdita", "nombre": "cebollín seco", "tipo": "polvo", "gramos": 1, "g_por_ml": 0.25}], "preparacion": [{"texto": "Cortá {0} a lo largo para separar las mitades y fileteá cada una a lo largo para obtener piezas parejas.", "tecnica": "cortar", "ingredientes": [0], "recipiente": "Tabla", "video_desde": 45, "video_hasta": 105}, {"texto": "Cubrí los filetes de {0} con papel manteca o film y golpealos suavemente de ambos lados con un mazo para tiernizarlos hasta dejarlos finos y parejos.", "tecnica": "machacar", "ingredientes": [0], "recipiente": "Bol mediano", "video_desde": 106, "video_hasta": 150}, {"texto": "Lavá {8} y secalos muy bien.", "tecnica": "lavar", "ingredientes": [8], "recipiente": "Tabla", "video_desde": 0, "video_hasta": 0}, {"texto": "Cortá {8} en cuartos.", "tecnica": "cortar", "ingredientes": [8], "recipiente": "Bol grande", "video_desde": 0, "video_hasta": 0}, {"texto": "Picá {9} bien finito.", "tecnica": "picar", "ingredientes": [9], "recipiente": "Bol chico", "video_desde": 0, "video_hasta": 0}, {"texto": "Pelá {10} y picalos bien finitos.", "tecnica": "picar", "ingredientes": [10], "recipiente": "Bol chico", "video_desde": 0, "video_hasta": 0}, {"texto": "Medí {11}.", "tecnica": "verter", "ingredientes": [11], "recipiente": "Vasito", "video_desde": 0, "video_hasta": 0}, {"texto": "Medí {12}.", "tecnica": "verter", "ingredientes": [12], "recipiente": "Taza", "video_desde": 0, "video_hasta": 0}, {"texto": "Medí {13}.", "tecnica": "verter", "ingredientes": [13], "recipiente": "Taza medidora", "video_desde": 0, "video_hasta": 0}], "coccion": [{"texto": "Condimentá el pollo del bol mediano con {1}, {2:0.5}, {3:0.5}, {4} y {5}, y masajeá bien todas las piezas.", "detalle": "Las hierbas son opcionales; podés usar solo sal y pimienta.", "tecnica": "condimentar", "minutos": 0, "desde": ["Bol mediano"], "hacia": "Bol mediano", "video_desde": 151, "video_hasta": 235}, {"texto": "Tapá el bol mediano con papel film y dejá marinar el pollo a temperatura ambiente.", "detalle": "También podés dejarlo marinando desde la noche anterior en la heladera.", "tecnica": "marinar", "minutos": 30, "desde": ["Bol mediano"], "hacia": "Bol mediano", "video_desde": 235, "video_hasta": 252}, {"texto": "Calentá {6} y derretí {7:0.5} en la sartén a fuego medio-alto.", "detalle": "La manteca ayuda a que las pechugas queden más doraditas.", "tecnica": "derretir", "minutos": 0, "desde": [], "hacia": "Sartén", "video_desde": 173, "video_hasta": 188}, {"texto": "Colocá las pechugas del bol mediano en la sartén y doralas de un lado a fuego medio-alto.", "detalle": "No las des vuelta hasta que estén bien doradas de ese lado.", "tecnica": "dorar", "minutos": 4, "desde": ["Bol mediano"], "hacia": "Sartén", "video_desde": 188, "video_hasta": 204}, {"texto": "Dales la vuelta a las pechugas en la sartén y cocinalas del otro lado a fuego medio-alto.", "detalle": "Deben quedar doradas por fuera y cocidas por dentro, con una temperatura interna de 74 a 75 °C.", "tecnica": "darvuelta", "minutos": 4, "desde": [], "hacia": "Sartén", "video_desde": 204, "video_hasta": 220}, {"texto": "Pasá las pechugas de la sartén a un plato y tapalas con papel aluminio para mantenerlas calientes y jugosas.", "detalle": "", "tecnica": "tapar", "minutos": 0, "desde": ["Sartén"], "hacia": "Plato", "video_desde": 221, "video_hasta": 237}, {"texto": "Agregá los champiñones del bol grande a la misma sartén sin sumar más aceite y saltealos a fuego fuerte.", "detalle": "Hasta que reduzcan su tamaño y suelten su aroma.", "tecnica": "saltear", "minutos": 5, "desde": ["Bol grande"], "hacia": "Sartén", "video_desde": 241, "video_hasta": 268}, {"texto": "Sumá {7:0.5} y el puerro con el ajo del bol chico a la sartén, y salteá a fuego medio-alto.", "detalle": "Hasta que el puerro esté tierno y transparente.", "tecnica": "saltear", "minutos": 2, "desde": ["Bol chico"], "hacia": "Sartén", "video_desde": 269, "video_hasta": 290}, {"texto": "Condimentá los champiñones en la sartén con {2:0.5} y {3:0.5}, y mezclá bien.", "detalle": "", "tecnica": "condimentar", "minutos": 0, "desde": [], "hacia": "Sartén", "video_desde": 291, "video_hasta": 302}, {"texto": "Verté el vino blanco del vasito en la sartén y cociná a fuego fuerte hasta que reduzca.", "detalle": "Para que se evapore el alcohol.", "tecnica": "verter", "minutos": 4, "desde": ["Vasito"], "hacia": "Sartén", "video_desde": 303, "video_hasta": 318}, {"texto": "Incorporá el caldo de la taza en la sartén y cociná a fuego medio-alto.", "detalle": "", "tecnica": "verter", "minutos": 2, "desde": ["Taza"], "hacia": "Sartén", "video_desde": 319, "video_hasta": 336}, {"texto": "Agregá la crema de la taza medidora en la sartén y mezclá bien a fuego medio-alto.", "detalle": "Si preferís usar menos crema, podés combinarla con un poco de leche.", "tecnica": "verter", "minutos": 0, "desde": ["Taza medidora"], "hacia": "Sartén", "video_desde": 337, "video_hasta": 359}, {"texto": "Sumá {14} a la sartén, bajá a fuego bajo y cociná revolviendo hasta que la crema espese apenas.", "detalle": "No dejes que espese demasiado porque al enfriarse toma más cuerpo.", "tecnica": "mezclar", "minutos": 4, "desde": [], "hacia": "Sartén", "video_desde": 360, "video_hasta": 375}, {"texto": "Volvé a colocar las pechugas con todos sus jugos del plato en la sartén, bañalas con la crema y cociná a fuego bajo solo hasta calentar.", "detalle": "", "tecnica": "mezclar", "minutos": 2, "desde": ["Plato"], "hacia": "Sartén", "video_desde": 376, "video_hasta": 400}, {"texto": "Espolvoreá {15} y {16} por encima, apagá el fuego y serví.", "detalle": "También podés terminar el plato con perejil fresco picado.", "tecnica": "servir", "minutos": 0, "desde": ["Sartén"], "hacia": "Plato", "video_desde": 400, "video_hasta": 425}]}], "url": "https://www.youtube.com/watch?v=8EJLsVTG3Ec"}}];
+PRE.forEach(x=>{try{addReceta(x.raw,x.id,1)}catch(_){}});
+(DB.imp||[]).forEach(x=>{try{addReceta(x.raw,x.id)}catch(_){}});
+const ytId=u=>{const m=(u||"").match(/(?:v=|youtu\.be\/|shorts\/|embed\/)([\w-]{11})/);return m?m[1]:""};
+const mmss=s=>Math.floor(s/60)+":"+String(s%60).padStart(2,"0");
+function vlink(pid,s){const r=R(PARTES[pid].receta),v=r&&ytId(r.url);if(!v||!s.vh)return"";return`<a class="btn ghost" href="https://www.youtube.com/watch?v=${v}&t=${s.vd}s" target="_blank" rel="noopener">${IC.next}Ver este paso en el video · ${mmss(s.vd)}</a>`}
+function importar(){const imp=RECETAS.filter(r=>r.imp);return`<main class="main"><div class="head"><h1>Agregar receta</h1></div>
+<p style="max-width:700px">Prueba de la etapa 2. Por ahora la receta se interpreta en Google AI Studio y la respuesta se pega acá. Más adelante este paso lo va a hacer la app sola.</p>
+<section class="box"><span class="h">1 · Copiá la instrucción</span><span class="sm">Es el texto que le explica a Gemini cómo tiene que devolver la receta.</span><div class="row"><button class="btn pri" data-a="cpprompt">Copiar instrucción</button><button class="btn ghost" data-a="verprompt">${ST.vp?"Ocultar el texto":"Ver el texto"}</button></div>${ST.vp?`<textarea readonly rows="12" id="ptxt" aria-label="Instrucción para Gemini">${esc(PROMPT)}</textarea>`:""}</section>
+<section class="box"><span class="h">2 · Pegala en Google AI Studio con el enlace del video</span><span>Abrí <a href="https://aistudio.google.com/prompts/new_chat" target="_blank" rel="noopener">aistudio.google.com</a>, pegá la instrucción, poné el enlace de YouTube al final y enviá. Después copiá toda la respuesta.</span></section>
+<section class="box"><span class="h">3 · Pegá acá la respuesta</span><label class="lbl" for="iurl">Enlace del video</label><input id="iurl" type="url" placeholder="https://www.youtube.com/watch?v=…" value="${esc(ST.iurl||"")}"><label class="lbl" for="ijson">Respuesta de Gemini</label><textarea id="ijson" rows="8" placeholder="{ &quot;nombre&quot;: … }">${esc(ST.ijson||"")}</textarea>${ST.ierr?`<div class="note" role="alert"><span>${esc(ST.ierr)}</span></div>`:""}<div class="row"><button class="btn pri" data-a="doimp">Importar receta</button></div></section>
+${imp.length?`<section class="box" style="gap:0"><span class="h" style="margin-bottom:8px">Recetas importadas</span>${imp.map(r=>`<div class="lrow"><div><b>${esc(r.nombre)}</b><span class="sm">${r.partes.length} ${r.partes.length>1?"partes":"parte"}${r.canal?" · "+esc(r.canal):""}</span></div><button class="btn ghost" data-a="open" data-v="r:${r.id}">Abrir</button>${r.pre?"":`<button class="btn ghost" data-a="delrec" data-v="${r.id}">Borrar</button>`}</div>`).join("")}</section>`:""}</main>`}
+
+const rcKey=n=>{const m=RCM.find(e=>e[0].test(n.toLowerCase()));return m?m[1]:"util"};
+const dcSvg=n=>`<svg class="dc" viewBox="0 0 48 48" aria-hidden="true">${RCS[rcKey(n)]}</svg>`;
+const pnEm=es=>`<div class="pn"><div class="es n${Math.min(es.length,4)}">${es.slice(0,4).map(e=>`<span>${e}</span>`).join("")}</div></div>`;
+const pnCont=(n,es)=>`<div class="pn"><div class="mini">${es.slice(0,3).join("")}</div>${dcSvg(n)}</div>`;
+const pnDrop=(n,es)=>n?`<div class="pn to">${es.slice(0,3).map((e,i)=>`<span class="de" style="animation-delay:${i*.45}s">${e}</span>`).join("")}${dcSvg(n)}</div>`:`<div class="pn to"><div class="es n1"><span>👋</span></div></div>`;
+const T_KN='<svg class="tl kn" viewBox="0 0 24 42"><rect x="7" y="1.5" width="10" height="15" rx="3" fill="var(--papaya)"/><path d="M7 16.5h10v14c0 6-5 9-10 10z" fill="var(--surf)"/></svg>';
+const T_GR='<svg class="tl gr" viewBox="0 0 52 70"><path d="M8 4h36l4 62H4z" fill="var(--surf)"/><path d="M16 18h6M30 18h6M16 30h6M30 30h6M16 42h6M30 42h6M16 54h6M30 54h6"/></svg>';
+const T_CLK='<svg class="tl clk" viewBox="0 0 40 40"><circle cx="20" cy="20" r="16" fill="var(--surf)"/><path class="hd" d="M20 20V9"/><path d="M20 20h7"/></svg>';
+const T_SP=`<svg class="tl sp" viewBox="0 0 48 48">${RCS.cuchara}</svg>`;
+const T_SC='<svg class="tl sc" viewBox="0 0 70 30"><path d="M8 3h54M14 3l4 8h34l4-8"/><rect x="10" y="11" width="50" height="17" rx="4" fill="var(--surf)"/><path class="nd" d="M35 21v-7" stroke="var(--papaya)"/></svg>';
+const T_ZG='<svg class="tl zg" viewBox="0 0 40 20"><path d="M2 10l7-6 6 10 7-10 6 10 8-6"/></svg>';
+const dps=c=>[1,2,3].map(i=>`<i class="dp ${c} d${i}"></i>`).join("");
+const AG={picar:"knife",cortar:"knife",pelar:"peel",rallar:"grate",exprimir:"squeeze",lavar:"wash",condimentar:"shake",reposar:"clock",marinar:"stir",mezclar:"stir",verter:"pour",pesar:"weigh",cascar:"crack"};
+function pnAct(tec,es,line){const g=line||!es.length?"":AG[tec];if(!g)return`<div class="pn ln">${tk(tec,96)}</div>`;const e=es[0],ae=`<span class="ae">${e}</span>`,bits=`<span class="bits"><i>${e}</i><i>${e}</i><i>${e}</i></span>`;
+const h={knife:ae+T_KN+bits,peel:ae+T_KN+'<i class="curl"></i>',grate:T_GR+ae+bits,squeeze:ae+dps("y"),wash:dps("w")+ae,shake:ae+'<span class="shk">🧂</span>'+dps("g"),clock:ae+T_CLK,stir:ae+T_SP,pour:ae+dps("p"),weigh:ae+T_SC,crack:ae+T_ZG+dps("y")}[g];
+return`<div class="pn a-${g}" role="img" aria-label="Animación: ${esc(TKN[tec]||tec)}">${h}</div>`}
+const fig=(pn,cap)=>`<figure class="fg">${pn}<figcaption>${cap}</figcaption></figure>`;
+const AR=`<span class="ar" aria-hidden="true">${IC.next}</span>`;
+function stripPrep(pid,k,pf,cls){const p=PARTES[pid],s=p.prep[k],es=s.vi.map(j=>emoC(p.ings[j].n));
+const cap=s.ings.length?s.ings.map(j=>`<b>${qtyTxt(p.ings[j],pf)}</b> ${esc(p.ings[j].n)}`).join("<br>"):esc(s.vi.map(j=>p.ings[j].n).join(", "));
+return`<div class="strip ${cls||""}">${es.length?fig(pnEm(es),cap)+AR:""}${fig(pnAct(s.tec,es),`<b>${esc(TKN[s.tec]||"")}</b>`)}${AR}${fig(pnDrop(s.dest,es),`<b>${s.dest?esc(rnm(p,s.dest,pf)):"A mano"}</b>`)}</div>`}
+function stripPaso(pid,i,pf,cls){const p=PARTES[pid],s=p.pasos[i],es=[];s.de.forEach(d=>(p.cont[d]||[]).forEach(e=>{if(!es.includes(e))es.push(e)}));
+const de=s.de.filter(d=>d!==s.a);return`<div class="strip ${cls||""}">${de.map(d=>fig(pnCont(d,p.cont[d]||[]),`<b>${esc(rnm(p,d,pf))}</b>`)).join("")}${de.length?AR:""}${fig(pnAct(s.tec,[],1),`<b>${esc(TKN[s.tec]||"")}</b>`)}${s.a?AR+fig(pnDrop(s.a,es),`<b>${esc(rnm(p,s.a,pf))}</b>`):""}</div>`}
+const tile=(i,f)=>`<div class="til">${emo(i.n,1)}<b>${qtyTxt(i,f)}</b><span>${esc(i.n)}</span></div>`;
+function timerBox(key){const C=ST.co,open=C.topen===key;
+if(!tmin(key))return"";
+const t=tget(key),l=tleft(t);const adj=(d,txt,lab)=>`<button class="tadj" data-a="tadj" data-v="${key}|${d}" aria-label="${lab}">${txt}</button>`;
+return`<div style="display:flex;flex-direction:column;gap:10px"><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button class="btn" data-a="ttog" data-v="${key}" style="min-height:64px;font-size:20px;padding:0 22px;font-variant-numeric:tabular-nums" ${l<=0&&!t.done?"disabled":""}>${IC.clock}<span data-tl="${key}">${tlabel(t,key)}</span></button>
+<button class="step ${open?"on":""}" style="width:64px;height:64px" data-a="topen" data-v="${key}" aria-label="Control manual del temporizador" aria-expanded="${open}">${IC.adj}</button></div>
+${open?`<div class="tbox"><span class="lbl">Control manual${tmin(key)?" · sugerido "+durT(tmin(key)):""}</span><div class="tadjs">${adj(-600,"− 10 min","Restar 10 minutos")}${adj(-300,"− 5 min","Restar 5 minutos")}${adj(-60,"− 1 min","Restar 1 minuto")}${adj(-30,"− 30 s","Restar 30 segundos")}${adj(600,"+ 10 min","Sumar 10 minutos")}${adj(300,"+ 5 min","Sumar 5 minutos")}${adj(60,"+ 1 min","Sumar 1 minuto")}${adj(30,"+ 30 s","Sumar 30 segundos")}</div>
+<div class="trow2"><button class="btn" data-a="ttog" data-v="${key}" ${l<=0&&!t.done?"disabled":""}>${t.run?"Pausar":t.started&&!t.done?"Continuar":"Iniciar"}</button><button class="btn" data-a="trst" data-v="${key}">Reiniciar</button></div></div>`:""}</div>`}
+function timerStrip(cur){const C=ST.co;const ks=Object.keys(timers).filter(k=>k!==cur&&(timers[k].run||(timers[k].started&&!timers[k].done))&&C.partes.includes(k.split(":")[0]));if(!ks.length)return"";
+return`<div class="tstrip copad">${ks.map(k=>{const[pid,i]=k.split(":");return`<button class="chip" data-a="tgo" data-v="${k}">${IC.clock}${esc(pnom(PARTES[pid]))} · paso ${+i+1} · <b data-ts="${k}" style="font-variant-numeric:tabular-nums">${ttxt(timers[k])}</b>${timers[k].run?"":" (en pausa)"}</button>`}).join("")}</div>`}
+const lastHist=key=>{const h=DB.hist[key];return h&&h.length?h[h.length-1]:null};
+const fdate=t=>new Date(t).toLocaleDateString("es-AR",{day:"numeric",month:"long",year:"numeric"});
+function coHead(title){const C=ST.co;const st=[["reunir","1 · Reunir"],["prep","2 · Preparar"],["steps","3 · Cocinar"]];
+return`<header><button class="step" style="width:56px;height:56px;border-color:var(--linea)" data-a="coexit" aria-label="Salir del modo cocina">${IC.x}</button><div class="stg">${st.map(x=>`<button class="chip ${C.stage===x[0]?"on":""}" data-a="costage" data-v="${x[0]}" ${C.stage===x[0]?'aria-current="step"':""}>${x[1]}</button>`).join("")}</div>${title||""}${modoSw()}</header>`}
+const modoSw=()=>{const s=ST.co.modo==="simple";return`<button class="msw ${s?"s":""}" role="switch" aria-checked="${s}" aria-label="Modo simple. Apagado es el modo guiado." data-a="comodo"><span>Guiado</span><span>Simple</span><i></i></button>`};
+function aSimple(C){const seq=prepSeq(C);if(C.stage==="steps"){seq.forEach(x=>C.sx["p:"+x.pid+":"+x.k]=1);C.partes.forEach(pid=>{const n=C.done[pid]?1e9:(C.idx[pid]||0);PARTES[pid].pasos.forEach((_,i)=>{if(i<n)C.sx["s:"+pid+":"+i]=1})})}else if(C.stage==="prep")seq.slice(0,C.pi).forEach(x=>C.sx["p:"+x.pid+":"+x.k]=1)}
+function aGuiado(C){const seq=prepSeq(C),fu=seq.findIndex(x=>!C.sx["p:"+x.pid+":"+x.k]);const anyP=C.partes.some(pid=>PARTES[pid].pasos.some((_,i)=>C.sx["s:"+pid+":"+i]));
+if(anyP||(fu===-1&&seq.length)){C.stage="steps";C.partes.forEach(pid=>{const ps=PARTES[pid].pasos,L=ps.length-1;let n=0;while(n<ps.length&&C.sx["s:"+pid+":"+n])n++;if(!n)return;C.seen[pid]=1;if(n===ps.length){C.done[pid]=1;C.idx[pid]=L}else C.idx[pid]=Math.max(C.idx[pid]||0,n)});
+if(C.done[C.cur]){const nx=C.partes.find(x=>!C.done[x]);if(nx){C.cur=nx;C.seen[nx]=1}}}
+else if(fu>0){C.stage="prep";C.pi=Math.max(C.pi,fu)}}
+function simpleView(){const C=ST.co,e=ent(C.key),lh=lastHist(C.key);const sel=C.sv&&C.partes.includes(C.sv)?C.sv:"";const ps=sel?[sel]:C.partes;let tot=0,ok=0;const cnt={};
+C.partes.forEach(pid=>{const p=PARTES[pid];let a=0,b=0;p.prep.forEach((_,k)=>{b++;if(C.sx["p:"+pid+":"+k])a++});p.pasos.forEach((_,i)=>{b++;if(C.sx["s:"+pid+":"+i])a++});cnt[pid]=[a,b];tot+=b;ok+=a});
+const ings=ps.map(pid=>{const p=PARTES[pid],pf=pfac(e,pid);return`<section><span class="h">${C.partes.length>1?esc(pnom(p)):"Ingredientes"}</span>${p.ings.map((i,k)=>{const key="i:"+pid+":"+k,on=!!C.ck[key];return`<button class="si ${on?"on":""}" data-a="sck" data-v="${key}" aria-pressed="${on}">${emo(i.n)}<b>${qtyTxt(i,pf)}</b><span>${esc(i.n)}</span></button>`}).join("")}</section>`}).join("");
+const row=(key,n,strip,txt,extra)=>{const on=!!C.sx[key];return`<div class="prow ${on?"on":""}"><button class="sx" data-a="sx" data-v="${key}" aria-pressed="${on}" aria-label="Proceso ${n}${on?", hecho":""}">${on?IC.check:n}</button>${strip}<div class="ptx"><p data-a="sx" data-v="${key}">${txt}</p>${extra||""}</div></div>`};
+const procs=ps.map(pid=>{const p=PARTES[pid],pf=pfac(e,pid);let n=0;return`<section><h2 class="h" style="font-size:21px;line-height:28px">${esc(pnom(p))}</h2>
+${p.prep.length?`<span class="lbl" style="margin-top:8px">Preparar los ingredientes</span>${p.prep.map((s,k)=>row("p:"+pid+":"+k,++n,stripPrep(pid,k,pf),stepTxt(s.t,p,pf)+rnote(p,[s.dest],pf).map(x=>` <b style="font-weight:600">${esc(x)}</b>`).join(""))).join("")}`:""}
+<span class="lbl" style="margin-top:14px">Cocinar</span>${p.pasos.map((s,i)=>row("s:"+pid+":"+i,++n,stripPaso(pid,i,pf),stepTxt(s.t,p,pf)+(s.sub?` <span style="color:var(--suave)">${stepTxt(s.sub,p,pf)}</span>`:"")+rnote(p,[...s.de,s.a],pf).map(x=>` <b style="font-weight:600">${esc(x)}</b>`).join(""),timerBox(pid+":"+i))).join("")}</section>`}).join("");
+return`<div class="co" role="dialog" aria-label="Modo cocina simple"><header><button class="step" style="width:56px;height:56px;border-color:var(--linea)" data-a="coexit" aria-label="Salir del modo cocina">${IC.x}</button><div style="min-width:0;flex:1"><h1 style="font-size:22px;line-height:28px;font-weight:600">${esc(e.nombre)}</h1><span class="sm">${porc(e)} porciones</span></div>${modoSw()}</header>
+${C.partes.length>1?`<div class="tabs copad" style="padding:12px 24px 0" role="tablist" aria-label="Partes del plato"><button class="tab ${!sel?"on":""}" data-a="sv" data-v="">Todo<span>${ok} de ${tot}</span></button>${C.partes.map(id=>`<button class="tab ${id===sel?"on":""}" data-a="sv" data-v="${id}">${esc(pnom(PARTES[id]))}<span>${cnt[id][0]===cnt[id][1]?"listo":cnt[id][0]+" de "+cnt[id][1]}</span></button>`).join("")}</div>`:""}
+${lh&&lh.nota?`<div class="copad" style="padding:16px 24px 0"><div class="note"><span class="lbl">Tu nota de la última vez</span><span>${esc(lh.nota)}</span></div></div>`:""}
+<div class="sbody"><div class="scol1">${ings}</div><div class="scol2">${procs}</div></div>
+<div class="cofoot"><div style="flex:1;display:flex;align-items:center;font-size:19px;font-weight:600">${ok} de ${tot} hechos</div><button class="nx" data-a="costage" data-v="fin">Terminar la receta${IC.next}</button></div></div>`}
+function recips(C){const m=new Map(),e=ent(C.key);C.partes.forEach(pid=>{const p=PARTES[pid],f=pfac(e,pid);new Set([...p.prep.map(s=>s.dest).filter(Boolean),...(p.rec||[])]).forEach(n=>{const r=rsc(p,n,f);m.set(r.n,(m.get(r.n)||0)+r.c)})});return[...m]}
+function reunir(){const C=ST.co,e=ent(C.key);let tot=0,ok=0;const row=(k,html)=>{tot++;const on=!!C.ck[k];if(on)ok++;return`<button class="ck ${on?"on":""}" data-a="ck" data-v="${k}" aria-pressed="${on}"><i>${on?IC.check:""}</i>${html}</button>`};
+const groups=C.partes.map(pid=>{const p=PARTES[pid],pf=pfac(e,pid);return`<section class="box" style="gap:8px"><span class="h">${C.partes.length>1?esc(pnom(p)):"Ingredientes"}</span>${p.ings.map((i,k)=>row("i:"+pid+":"+k,`${emo(i.n)}<b style="min-width:72px;font-weight:600">${qtyTxt(i,pf)}</b><span>${esc(i.n)}</span>`)).join("")}</section>`}).join("");
+const rc=recips(C),nrec=rc.reduce((a,x)=>a+x[1],0);const recH=rc.map(([n,c])=>row("r:"+n,`${rcIc(n)}<span>${esc(n)}</span>${c>1?`<b style="margin-left:auto;font-weight:600">× ${c}</b>`:""}`)).join("");
+const uts=[...new Set(C.partes.flatMap(pid=>PARTES[pid].ut||[]))].filter(u=>!rc.some(r=>r[0]===u));const utH=uts.map(u=>row("u:"+u,`${rcIc(u)}<span>${esc(u)}</span>`)).join("");
+const esp=C.partes.reduce((a,pid)=>a+PARTES[pid].pasos.reduce((x,s)=>x+s.timer,0),0);const lh=lastHist(C.key);
+return`<div class="co" role="dialog" aria-label="Modo cocina: reunir">${coHead()}
+<div style="padding:16px 24px 0;display:flex;flex-direction:column;gap:6px" class="copad"><h1 style="font-size:24px;line-height:30px;font-weight:600">${esc(e.nombre)}</h1><span class="sm" style="font-size:15px">${porc(e)} porciones${esp?" · unos "+durT(esp)+" de cocción y espera":""} · ${nrec} recipientes</span>
+<p style="font-size:19px;line-height:28px;max-width:900px">Primero juntá todo sobre la mesada. Todavía no cortes ni mezcles nada: eso viene en el paso siguiente.</p>
+${lh&&lh.nota?`<div class="note"><span class="lbl">Tu nota de la última vez</span><span>${esc(lh.nota)}</span></div>`:""}</div>
+<div class="cobody" style="align-items:flex-start"><div style="flex:2 1 420px;min-width:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px">${groups}</div>
+<div style="flex:1 1 260px;display:flex;flex-direction:column;gap:20px"><section class="box" style="gap:8px"><span class="h">Recipientes</span>${recH}</section><section class="box" style="gap:8px"><span class="h">Herramientas</span>${utH}</section></div></div>
+<div class="cofoot"><div id="ckn" style="flex:1;display:flex;align-items:center;font-size:19px;font-weight:600">${ok} de ${tot} listos</div><button class="nx" data-a="costage" data-v="prep"><span id="ckgo">${ok===tot?"Todo listo. Preparar ingredientes":"Preparar ingredientes"}</span>${IC.next}</button></div></div>`}
+const prepSeq=C=>C.partes.flatMap(pid=>PARTES[pid].prep.map((s,k)=>({pid,k,s})));
+function prepView(){const C=ST.co,e=ent(C.key),seq=prepSeq(C),i=Math.min(C.pi,seq.length-1),{pid,k,s}=seq[i],p=PARTES[pid],pf=pfac(e,pid);
+const antes=p.prep.slice(0,k).filter(x=>x.dest&&x.dest===s.dest).flatMap(x=>x.vi.map(j=>p.ings[j].n)).filter(n=>!s.vi.some(j=>p.ings[j].n===n));const ya=[...new Set(antes)];
+return`<div class="co" role="dialog" aria-label="Modo cocina: preparar">${coHead()}
+<div class="segs" aria-hidden="true">${seq.map((_,j)=>`<i class="${j<i?"d":j===i?"n":""}"></i>`).join("")}</div>
+<div class="cobody gcol"><span class="lbl glbl">Preparación ${i+1} de ${seq.length}${C.partes.length>1?" · "+esc(pnom(p)):""}</span>${stripPrep(pid,k,pf,"g")}<p class="t">${stepTxt(s.t,p,pf)}</p>${rnote(p,[s.dest],pf).map(x=>`<p class="s" style="color:var(--tinta);font-weight:600">${esc(x)}</p>`).join("")}${vlink(pid,s)}
+${ya.length?`<p class="s">Va junto con lo que ya pusiste ahí: ${esc(ya.join(", "))}.</p>`:(s.dest&&!p.prep.slice(0,k).some(x=>x.dest===s.dest)?`<p class="s">Recipiente nuevo: todavía está vacío.</p>`:"")}</div>
+<div class="cofoot"><button data-a="pprev" ${i===0?"disabled":""}>${IC.back}Anterior</button><button class="nx" data-a="pnext">${i===seq.length-1?"Todo preparado. A cocinar":"Listo, siguiente"}${IC.next}</button></div></div>`}
+function fin(){const C=ST.co,e=ent(C.key);
+return`<div class="co" role="dialog" aria-label="Receta terminada"><div class="finw"><div style="color:var(--tinta)">${tk("servir",150)}</div><span class="lbl">Receta terminada</span><h1 style="font-size:clamp(34px,6vw,56px);line-height:1.1;font-weight:600;letter-spacing:-.02em">¡A la mesa!</h1>
+<p style="font-size:20px;line-height:30px;max-width:560px">Terminaste <b style="font-weight:600">${esc(e.nombre)}</b>. Gran trabajo.</p>
+<div class="finb"><div class="box"><span class="h">Foto de cómo quedó</span>${C.foto?`<img src="${C.foto}" alt="Foto del plato terminado" style="width:100%;max-height:260px;object-fit:cover;border-radius:12px">`:""}<label class="btn" style="cursor:pointer">${C.foto?"Cambiar la foto":"Subir una foto"}<input id="foto" type="file" accept="image/*" class="sr"></label></div>
+<div class="box"><label class="h" for="nota">Notas para la próxima vez</label><textarea id="nota" class="inp" rows="4" style="padding:12px 14px;min-height:112px;resize:vertical" placeholder="Por ejemplo: más sal, entibiar la manteca antes, diez minutos más de horno.">${esc(C.nota||"")}</textarea></div></div>
+<div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center"><button class="btn pri" style="min-height:64px;font-size:19px;padding:0 28px" data-a="finsave">Guardar y terminar</button><button class="btn ghost" style="min-height:64px" data-a="coexit">Cerrar sin guardar</button></div></div></div>`}
+function cocina(){const C=ST.co;if(C.stage==="fin")return fin();if(C.modo==="simple")return simpleView();if(C.stage==="reunir")return reunir();if(C.stage==="prep")return prepView();const e=ent(C.key),p=PARTES[C.cur],i=C.idx[C.cur]||0,st=p.pasos[i],pf=pfac(e,C.cur),tkey=C.cur+":"+i;
+const prog=id=>{const n=C.idx[id]||0,t=PARTES[id].pasos.length;return C.done[id]?"listo":(n===0&&!C.seen[id]?"sin empezar":`paso ${n+1} de ${t}`)};
+const allLast=i===p.pasos.length-1,ultima=allLast&&C.partes.every(x=>x===C.cur||C.done[x]);
+return`<div class="co" role="dialog" aria-label="Modo cocina: cocinar">${coHead()}
+${C.partes.length>1?`<div class="tabs copad" style="padding:12px 24px 0">${C.partes.map(id=>`<button class="tab ${id===C.cur?"on":""}" data-a="cotab" data-v="${id}">${esc(pnom(PARTES[id]))}<span>${prog(id)}</span></button>`).join("")}</div>`:""}
+${timerStrip(tkey)}<div class="segs" aria-hidden="true">${p.pasos.map((_,k)=>`<i class="${k<i?"d":k===i?"n":""}"></i>`).join("")}</div>
+<div class="cobody gcol"><span class="lbl glbl">Paso ${i+1} de ${p.pasos.length}</span>${stripPaso(C.cur,i,pf,"g")}<p class="t">${stepTxt(st.t,p,pf)}</p>${st.sub?`<p class="s">${stepTxt(st.sub,p,pf)}</p>`:""}${rnote(p,[...st.de,st.a],pf).map(x=>`<p class="s" style="color:var(--tinta);font-weight:600">${esc(x)}</p>`).join("")}
+${timerBox(tkey)}${vlink(C.cur,st)}</div>
+<div class="cofoot"><button data-a="coprev" ${i===0?"disabled":""}>${IC.back}Anterior</button><button class="nx" data-a="conext">${ultima?"Terminar la receta":allLast?"Terminar esta parte":"Siguiente paso"}${IC.next}</button></div></div>`}
+function tick(){let any=false,fin=false;for(const k in timers){const t=timers[k];if(t.run){if(t.end-Date.now()<=0){t.run=false;t.rem=0;t.done=true;fin=true;const[pid,i]=k.split(":");toast("Terminó el tiempo: "+pnom(PARTES[pid])+", paso "+(+i+1));beep()}else any=true}}
+document.querySelectorAll("[data-tl]").forEach(el=>{const t=timers[el.dataset.tl];if(t)el.textContent=tlabel(t,el.dataset.tl)});document.querySelectorAll("[data-ts]").forEach(el=>{const t=timers[el.dataset.ts];if(t)el.textContent=ttxt(t)});
+if(fin)render(true);if(!any){clearInterval(tint);tint=null}}
+let actx;function beep(){if(!DB.sonido)return;try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();[0,.25,.5].forEach(d=>{const o=actx.createOscillator(),g=actx.createGain();o.frequency.value=880;o.connect(g);g.connect(actx.destination);g.gain.setValueAtTime(.2,actx.currentTime+d);g.gain.exponentialRampToValueAtTime(.001,actx.currentTime+d+.2);o.start(actx.currentTime+d);o.stop(actx.currentTime+d+.22)})}catch(e){}}
+const coKey=()=>ST.co?ST.co.modo+"|"+(ST.co.sv||"")+"|"+ST.co.stage+"|"+ST.co.cur+"|"+(ST.co.idx[ST.co.cur]||0)+"|"+ST.co.pi:"";let lastCo="";
+function render(keep){const a=document.getElementById("app");const oc=document.querySelector(".co"),ot=oc?oc.scrollTop:0;const v=ST.view;const body=v==="home"?home():v==="ficha"?ficha():v==="platos"?platos():v==="armar"?armar():v==="config"?config():v==="importar"?importar():listas();
+a.innerHTML=side()+body+(ST.co?cocina():"");if(!keep)window.scrollTo(0,0);const nk=coKey(),nc=document.querySelector(".co");if(nc&&nk===lastCo)nc.scrollTop=ot;lastCo=nk;document.body.style.overflow=ST.co?"hidden":"";const f=document.getElementById(ST.focus||"");if(f){f.focus();if(f.setSelectionRange){const n=f.value.length;try{f.setSelectionRange(n,n)}catch(e){}}}ST.focus=null}
+document.addEventListener("click",ev=>{const b=ev.target.closest("[data-a]");if(!b)return;const a=b.dataset.a,v=b.dataset.v;const e=ST.id&&ent(ST.id);let keep=true;const ij=document.getElementById("ijson");if(ij){ST.ijson=ij.value;ST.iurl=document.getElementById("iurl").value}
+if(a==="nav"){ST.edit=null;ST.newlist=false;ST.lid=null;ST.rs=false;if(v==="config"){ST.view="config";ST.nav="config"}else if(v==="importar"){ST.view="importar";ST.nav="importar";ST.ierr=""}else if(v==="platos"){ST.view="platos";ST.nav="platos"}else if(v==="listas"){ST.view="listas";ST.nav="listas"}else{ST.view="home";ST.nav=v;if(v!=="todas")ST.f=""}keep=false}
+else if(a==="theme"){DB.theme=v;applyTheme();save()}
+else if(a==="pal"){DB.pal=v;applyTheme();save()}
+else if(a==="modo"){DB.modo=v;save()}
+else if(a==="uni"){const[k,x]=v.split("|");DB[k]=x;save()}
+else if(a==="comodo"){const C=ST.co;if(C.modo==="simple"){C.modo="guiado";aGuiado(C)}else{C.modo="simple";aSimple(C)}C.topen=null;b.classList.toggle("s");b.setAttribute("aria-checked",C.modo==="simple");setTimeout(()=>render(true),190);return}
+else if(a==="sck"){ST.co.ck[v]=!ST.co.ck[v]}
+else if(a==="sx"){ST.co.sx[v]=!ST.co.sx[v]}
+else if(a==="sv"){ST.co.sv=v}
+else if(a==="tog"){DB[v]=!DB[v];save()}
+else if(a==="verprompt"){ST.vp=!ST.vp}
+else if(a==="cpprompt"){const fb=()=>{ST.vp=true;render(true);toast("No pude copiar. Seleccioná el texto y copialo a mano.")};try{navigator.clipboard.writeText(PROMPT).then(()=>toast("Instrucción copiada"),fb)}catch(_){fb()}return}
+else if(a==="doimp"){const t=(ST.ijson||"").trim(),i0=t.indexOf("{"),i1=t.lastIndexOf("}");if(i0<0||i1<=i0)ST.ierr="No encontré una receta en el texto pegado. Tiene que empezar con { y terminar con }.";else{try{const raw=JSON.parse(t.slice(i0,i1+1));raw.url=(ST.iurl||"").trim();const id=addReceta(raw);DB.imp=DB.imp||[];DB.imp.push({id,raw});save();ST.ijson="";ST.iurl="";ST.ierr="";ST.view="ficha";ST.id="r:"+id;ST.nav="todas";toast("Receta importada");keep=false}catch(err){ST.ierr="No pude leer la receta: "+err.message}}}
+else if(a==="delrec"){delReceta(v);save();if(ST.view==="ficha"){ST.view="home";ST.nav="todas"}toast("Receta borrada");keep=false}
+else if(a==="reset1"){ST.rs=true}
+else if(a==="reset0"){ST.rs=false}
+else if(a==="reset2"){RECETAS.filter(r=>r.imp&&!r.pre).map(r=>r.id).forEach(delReceta);DB=JSON.parse(JSON.stringify(DEF));try{localStorage.removeItem("smagsbord1")}catch(_){}fijas();ST.rs=false;ST.porc={};applyTheme();toast("Listo. Volvieron las recetas de ejemplo.")}
+else if(a==="f"){ST.f=v}
+else if(a==="open"){ST.view="ficha";ST.id=v;ST.edit=null;ST.newlist=false;keep=false}
+else if(a==="porc"){ST.porc[e.key]=Math.max(1,Math.min(40,porc(e)+ +v))}
+else if(a==="hice"){(DB.hechas[e.id]=DB.hechas[e.id]||[]).push(Date.now());save();toast("Anotado: la hiciste hoy")}
+else if(a==="edit"){ST.edit=v;ST.focus="ren"}
+else if(a==="tlist"){const l=DB.listas.find(x=>x.id===v),k=l.items.indexOf(e.key);if(k<0)l.items.push(e.key);else l.items.splice(k,1);save()}
+else if(a==="newlist"){ST.newlist=true;ST.focus="nl"}
+else if(a==="usar"){ST.armar={partes:[v],cat:"",q:"",custom:null};ST.view="armar";ST.nav="platos";keep=false}
+else if(a==="armar"){ST.armar={partes:[],cat:"",q:"",custom:null};ST.view="armar";keep=false}
+else if(a==="acat"){ST.armar.cat=v}
+else if(a==="aadd"){ST.armar.partes.push(v)}
+else if(a==="adel"){ST.armar.partes=ST.armar.partes.filter(x=>x!==v)}
+else if(a==="asave"){const A=ST.armar;if(A.partes.length<2)return;const id="p"+Date.now();DB.platos.push({id,nombre:(A.custom!=null&&A.custom.trim())||autoName(A.partes),partes:A.partes.slice()});save();ST.view="ficha";ST.id="c:"+id;toast("Plato guardado");keep=false}
+else if(a==="delplato"){DB.platos=DB.platos.filter(p=>p.id!==e.id);DB.listas.forEach(l=>l.items=l.items.filter(k=>k!==e.key));save();ST.view="platos";ST.nav="platos";toast("Plato borrado");keep=false}
+else if(a==="olist"){ST.lid=v;keep=false}
+else if(a==="dellist"){if(esFija(ST.lid))return;DB.listas=DB.listas.filter(l=>l.id!==ST.lid);ST.lid=null;save();toast("Lista borrada")}
+else if(a==="addlist"){const i=document.getElementById("nl2"),n=i.value.trim();if(!n){i.focus();return}DB.listas.push({id:"l"+Date.now(),nombre:n,items:[]});save()}
+else if(a==="cocina"){ST.co={key:e.key,modo:DB.modo==="simple"?"simple":"guiado",sx:{},stage:"reunir",pi:0,foto:"",nota:"",ck:{},partes:e.partes.slice(),cur:e.partes[0],idx:{},seen:{[e.partes[0]]:1},done:{}};try{DB.despierta&&navigator.wakeLock&&navigator.wakeLock.request("screen").then(l=>wl=l).catch(()=>{})}catch(_){}}
+else if(a==="coexit"){ST.co=null;try{wl&&wl.release();wl=null}catch(_){}}
+else if(a==="ck"){const C=ST.co,on=C.ck[v]=!C.ck[v];b.classList.toggle("on",on);b.setAttribute("aria-pressed",on);b.querySelector("i").innerHTML=on?IC.check:"";const all=document.querySelectorAll(".co .ck").length,ok=document.querySelectorAll(".co .ck.on").length;document.getElementById("ckn").textContent=ok+" de "+all+" listos";document.getElementById("ckgo").textContent=ok===all?"Todo listo. Preparar ingredientes":"Preparar ingredientes";return}
+else if(a==="costage"){ST.co.stage=v}
+else if(a==="pprev"){ST.co.pi=Math.max(0,ST.co.pi-1)}
+else if(a==="pnext"){const C=ST.co,n=prepSeq(C).length;if(C.pi<n-1)C.pi++;else{C.stage="steps";toast("Ingredientes listos. Ahora sí, a cocinar.")}}
+else if(a==="finsave"){const C=ST.co,nt=document.getElementById("nota");const rec={t:Date.now(),nota:(nt?nt.value:C.nota||"").trim(),foto:C.foto||""};(DB.hist[C.key]=DB.hist[C.key]||[]).push(rec);if(rec.foto)DB.fotos[C.key]=rec.foto;if(C.key[0]==="r"){const id=C.key.slice(2);(DB.hechas[id]=DB.hechas[id]||[]).push(Date.now())}
+try{localStorage.setItem("smagsbord1",JSON.stringify(DB))}catch(_){rec.foto="";save();toast("La nota se guardó, pero la foto no entró en este dispositivo.")}
+ST.co=null;try{wl&&wl.release();wl=null}catch(_){}toast("Guardado. Buen provecho.")}
+else if(a==="cotab"){ST.co.cur=v;ST.co.seen[v]=1}
+else if(a==="coprev"){const C=ST.co;C.idx[C.cur]=Math.max(0,(C.idx[C.cur]||0)-1);C.done[C.cur]=0}
+else if(a==="conext"){const C=ST.co,p=PARTES[C.cur],i=C.idx[C.cur]||0;if(i<p.pasos.length-1)C.idx[C.cur]=i+1;else{C.done[C.cur]=1;const nx=C.partes.find(x=>!C.done[x]);if(nx){C.cur=nx;C.seen[nx]=1;toast("Parte terminada. Seguimos con la próxima.")}else{C.stage="fin"}}}
+else if(a==="topen"){ST.co.topen=ST.co.topen===v?null:v;tget(v)}
+else if(a==="tadj"){const[k,d]=v.split("|"),t=tget(k),ms=+d*1000;if(t.run){t.end+=ms;if(t.end<=Date.now()){t.run=false;t.rem=0}}else{t.rem=Math.max(0,t.rem+ms);if(!t.started)t.base=t.rem}t.done=false}
+else if(a==="ttog"){const t=tget(v);if(t.done){t.rem=t.base;t.done=false;t.started=false}if(t.run){t.rem=tleft(t);t.run=false}else if(t.rem>0){t.end=Date.now()+t.rem;t.run=true;t.started=true;t.done=false;try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();actx.resume()}catch(_){}if(!tint)tint=setInterval(tick,250)}}
+else if(a==="trst"){const t=tget(v);t.run=false;t.rem=t.base;t.started=false;t.done=false}
+else if(a==="tgo"){const[pid,i]=v.split(":"),C=ST.co;C.stage="steps";C.cur=pid;C.seen[pid]=1;C.idx[pid]=+i}
+render(keep)});
+document.addEventListener("input",ev=>{const t=ev.target;if(t.id==="q"){ST.q=t.value;const tmp=document.createElement("div");tmp.innerHTML=home();document.getElementById("res").innerHTML=tmp.querySelector("#res").innerHTML}
+else if(t.id==="aq"){ST.armar.q=t.value;const tmp=document.createElement("div");tmp.innerHTML=armar();document.getElementById("alist").innerHTML=tmp.querySelector("#alist").innerHTML}
+else if(t.id==="an"){ST.armar.custom=t.value}
+else if(t.id==="nota"&&ST.co){ST.co.nota=t.value}});
+document.addEventListener("change",ev=>{const t=ev.target;if((t.id!=="foto"&&t.id!=="rfoto")||!t.files||!t.files[0])return;const fr=new FileReader();fr.onload=()=>{const im=new Image();im.onload=()=>{const m=800,k=Math.min(1,m/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext("2d").drawImage(im,0,0,c.width,c.height);let d;try{d=c.toDataURL("image/jpeg",.78)}catch(_){d=fr.result}
+if(t.id==="foto"&&ST.co){ST.co.foto=d}else if(t.id==="rfoto"&&ST.id){DB.fotos[ST.id]=d;try{localStorage.setItem("smagsbord1",JSON.stringify(DB))}catch(_){toast("La foto se ve ahora, pero no entró en la memoria de este dispositivo.")}}render(true)};im.onerror=()=>toast("No pude leer esa imagen.");im.src=fr.result};fr.readAsDataURL(t.files[0])});
+function commit(t){if(t.id==="ren"){const pid=t.dataset.pid,v=t.value.trim();if(v&&v!==PARTES[pid].nombre)DB.nombres[pid]=v;else delete DB.nombres[pid];ST.edit=null;save();render(true)}
+else if(t.id==="nl"){const v=t.value.trim();if(v){const e=ent(ST.id);DB.listas.push({id:"l"+Date.now(),nombre:v,items:[e.key]});save()}ST.newlist=false;render(true)}}
+document.addEventListener("keydown",ev=>{const t=ev.target;if(ev.key==="Enter"&&(t.id==="ren"||t.id==="nl"))commit(t);else if(ev.key==="Enter"&&t.id==="nl2")document.querySelector('[data-a="addlist"]').click()});
+document.addEventListener("focusout",ev=>{const t=ev.target;if((t.id==="ren"||t.id==="nl")&&document.body.contains(t))setTimeout(()=>{if(document.body.contains(t)&&document.activeElement!==t)commit(t)},0)});
+applyTheme();render();
+setTimeout(()=>{const s=document.getElementById("splash");s.style.opacity="0";setTimeout(()=>s.remove(),450)},3800);
+</script>
+</body>
+</html>
