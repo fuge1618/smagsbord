@@ -310,6 +310,57 @@ svg.i{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.5;stro
 .vbar .sm{flex-basis:100%}
 .vrow{flex-basis:100%;display:flex;flex-direction:column;gap:10px;max-width:760px}
 @media (max-width:900px),(orientation:portrait){.gcol.hasv{display:flex;flex-direction:column;align-items:stretch;gap:14px}.gcol.hasv .vcol{position:sticky;top:0;z-index:2;background:var(--papel);padding-bottom:8px}.vsz{display:none!important}.vslot{max-height:42vh}}
+/* el video es el cuadro del medio de la secuencia */
+.strip.g.hv{flex-wrap:nowrap;width:100%;max-width:1180px;--z:clamp(76px,11vw,132px);align-items:flex-start}
+.fg.vf{flex:1 1 0;min-width:0;width:auto;max-width:max(240px,calc((100vh - 500px)*1.7778))}
+.fg.vf .vslot{max-height:none}
+.fg.vf figcaption{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%}
+.strip.g.hv.vl>.fg:not(.vf),.strip.g.hv.vl>.ar{display:none}
+.strip.g.hv.vl .vf{max-width:max(280px,calc((100vh - 430px)*1.7778))}
+.trow{display:flex;gap:16px 24px;align-items:center;justify-content:center;flex-wrap:wrap;width:100%;max-width:1120px}
+.ttx{flex:1 1 360px;min-width:0;display:flex;flex-direction:column;gap:8px}
+.trow:has(>div+div) .ttx{text-align:left}
+.gcol:has(.hv) .t{font-size:clamp(20px,2.2vw,27px)}
+.sright{max-height:calc(100vh - 205px);overflow:auto}
+.vic{display:flex;gap:6px}
+.ib{width:44px;height:44px;border-radius:12px;border:1px solid var(--linea);background:var(--surf);display:inline-flex;align-items:center;justify-content:center;color:var(--tinta)}
+.ib.on{background:var(--tinta);color:var(--papel);border-color:var(--tinta)}
+.ib svg{width:20px;height:20px}
+.vopts{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:center;max-width:900px}
+.vopts .chip{min-height:44px;display:inline-flex;align-items:center;gap:6px}
+.vopts .sm{flex-basis:100%;text-align:center}
+/* modo simple: lista a la izquierda, proceso elegido a la derecha */
+.sbody2{flex:1 0 auto;display:grid;grid-template-columns:minmax(340px,42%) minmax(0,1fr);gap:20px;padding:16px 24px 24px;align-items:start}
+.sleft,.sright{background:var(--surf);border:1px solid var(--linea);border-radius:12px;padding:16px 18px;min-width:0}
+.sright{position:sticky;top:12px}
+.sleft section{display:flex;flex-direction:column;gap:4px;margin-top:14px}
+.sseg{display:grid;grid-template-columns:1fr 1fr;background:var(--lino);border-radius:12px;padding:3px;gap:3px}
+.sseg button{height:44px;border:0;border-radius:10px;background:transparent;font-size:15px;font-weight:600;color:var(--suave)}
+.sseg button.on{background:var(--tinta);color:var(--papel)}
+.prow{flex-wrap:wrap;gap:10px;padding:8px 0}
+.prow .sx{width:44px;height:44px;font-size:17px}
+.pbt{flex:1;min-width:0;display:flex;align-items:center;gap:10px;text-align:left;background:transparent;border:1px solid transparent;border-radius:12px;padding:6px 8px;min-height:60px}
+.prow.act .pbt{background:var(--lino);border-color:var(--linea)}
+.pbt .strip{--z:44px;gap:3px;flex-wrap:nowrap;flex:none}
+.pbt .strip figcaption,.pbt .strip .mini{display:none}
+.pbt .strip .ar svg{width:10px;height:10px}
+.pbt .strip .pn{border-radius:8px}
+.pbt .strip *{animation-play-state:paused!important}
+.ptx2{flex:1;min-width:0;font-size:16px;line-height:22px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ptx2 .q{font-weight:600}
+.prow.on .ptx2{color:var(--suave);text-decoration:line-through}
+.prow.on .pbt .strip{opacity:.35}
+.pmin{flex:none;font-size:13px;font-weight:600;color:var(--suave);display:inline-flex;align-items:center;gap:4px}
+.pmin svg{width:14px;height:14px}
+.sdet{display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px}
+.sdet .t{font-size:clamp(19px,2vw,26px);line-height:1.3;font-weight:600;letter-spacing:-.01em}
+.sdet .s{font-size:17px;line-height:25px;color:var(--suave)}
+.sdet .strip.g{--z:clamp(80px,10vw,150px)}
+.sdet .strip.g.hv{--z:clamp(64px,7vw,104px)}
+.sdet .btn.big{min-height:56px;font-size:18px;padding:0 28px}
+.sdetin{flex-basis:100%;background:var(--lino);border-radius:12px;padding:16px 12px}
+@media (max-width:899px){.sbody2{grid-template-columns:1fr;padding-left:16px;padding-right:16px}.sright{display:none}}
+@media (max-width:700px){.strip.g.hv{flex-wrap:wrap;justify-content:center}.strip.g.hv .vf{order:-1;flex:1 1 100%;max-width:none}.strip.g.hv .ar.a1{display:none}.ib[data-a="vsize"]{display:none}}
 @keyframes sp-up{0%{opacity:0;transform:translateY(14px)}100%{opacity:1;transform:none}}
 @keyframes sp-fade{0%{opacity:0}100%{opacity:1}}
 .tk-rock{animation:tk-rock .9s ease-in-out infinite}
@@ -478,7 +529,7 @@ const save=()=>{try{localStorage.setItem("smagsbord1",JSON.stringify(DB))}catch(
 let ST={view:"home",nav:"todas",q:"",f:"",porc:{},edit:null,armar:null,co:null,newlist:false};
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const ic=d=>`<svg class="i" viewBox="0 0 24 24" aria-hidden="true">${d}</svg>`;
-const IC={search:ic('<circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>'),back:ic('<path d="M15 5l-7 7 7 7"/>'),pen:ic('<path d="M4 20h4L19 9l-4-4L4 16v4z"/>'),plus:ic('<path d="M12 5v14M5 12h14"/>'),minus:ic('<path d="M5 12h14"/>'),check:ic('<path d="M5 12l5 5 9-10"/>'),x:ic('<path d="M6 6l12 12M18 6L6 18"/>'),clock:ic('<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>'),next:ic('<path d="M9 5l7 7-7 7"/>'),gear:ic('<circle cx="12" cy="12" r="3"/><path d="M12 3v2.5M12 18.5V21M3 12h2.5M18.5 12H21M5.6 5.6l1.8 1.8M16.6 16.6l1.8 1.8M5.6 18.4l1.8-1.8M16.6 7.4l1.8-1.8"/>'),play:ic('<path d="M8 5l11 7-11 7z"/>'),adj:ic('<path d="M4 7h9M19 7h1M4 17h3M13 17h7"/><circle cx="16" cy="7" r="2.5"/><circle cx="10" cy="17" r="2.5"/>'),sun:ic('<circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4L7 17M17 7l1.4-1.4"/>')};
+const IC={search:ic('<circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>'),back:ic('<path d="M15 5l-7 7 7 7"/>'),pen:ic('<path d="M4 20h4L19 9l-4-4L4 16v4z"/>'),plus:ic('<path d="M12 5v14M5 12h14"/>'),minus:ic('<path d="M5 12h14"/>'),check:ic('<path d="M5 12l5 5 9-10"/>'),x:ic('<path d="M6 6l12 12M18 6L6 18"/>'),clock:ic('<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>'),next:ic('<path d="M9 5l7 7-7 7"/>'),gear:ic('<circle cx="12" cy="12" r="3"/><path d="M12 3v2.5M12 18.5V21M3 12h2.5M18.5 12H21M5.6 5.6l1.8 1.8M16.6 16.6l1.8 1.8M5.6 18.4l1.8-1.8M16.6 7.4l1.8-1.8"/>'),play:ic('<path d="M8 5l11 7-11 7z"/>'),son:ic('<path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/>'),mute:ic('<path d="M4 9v6h4l5 4V5L8 9z"/><path d="M17 9.5l4 5M21 9.5l-4 5"/>'),exp:ic('<path d="M9 4H4v5M15 20h5v-5M4 4l6 6M20 20l-6-6"/>'),dots:ic('<path d="M5 12h.1M12 12h.1M19 12h.1" stroke-width="3"/>'),adj:ic('<path d="M4 7h9M19 7h1M4 17h3M13 17h7"/><circle cx="16" cy="7" r="2.5"/><circle cx="10" cy="17" r="2.5"/>'),sun:ic('<circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4L7 17M17 7l1.4-1.4"/>')};
 const logo=h=>`<svg role="img" aria-label="Logo de Smagsbord" width="${Math.round(h*180/146)}" height="${h}" viewBox="0 0 180 146"><g fill="none" stroke-linecap="round" stroke-linejoin="round"><g stroke="currentColor" stroke-width="12.7"><path d="M44 76 V112 Q44 134 66 134 H114 Q136 134 136 112 V76"></path><path d="M44 90 H26"></path><path d="M136 90 H154"></path></g><g data-ac="s" stroke-width="7.85"><path d="M68 58 q-8 -11 0 -22 q8 -11 0 -22"></path><path d="M90 58 q-8 -11 0 -22 q8 -11 0 -22"></path><path d="M112 58 q-8 -11 0 -22 q8 -11 0 -22"></path></g></g></svg>`;
 const FIRMA='<svg role="img" aria-label="fuge1618" width="88" height="16" viewBox="0 62 630 115"><g fill="none" stroke-width="12.7" stroke-linecap="round"><path stroke="currentColor" d="M26.35 143.65 A60.05 60.05 0 0 1 86.40 83.60 H135.64"></path><path stroke="#FF8000" d="M80.39 106.42 H115.22 A37.23 37.23 0 0 1 152.45 143.65"></path></g><path fill="currentColor" d="M219.72 95.41 L207.90 95.41 L207.90 91.16 C207.90 86.86 209.75 84.42 214.55 84.42 C216.64 84.42 218.30 84.86 219.37 85.20 L221.97 75.34 C220.30 74.75 216.69 73.83 212.20 73.83 C202.83 73.83 195.25 79.30 195.25 90.19 L195.25 95.41 L185.25 95.41 L185.25 105.38 L195.25 105.38 L195.25 150.00 L207.90 150.00 L207.90 105.38 L219.72 105.38 L219.72 95.41 Z M248.58 150.69 C256.48 150.69 262.20 146.88 265.47 139.06 L265.58 150.00 L277.64 150.00 L277.64 95.41 L264.89 95.41 L264.89 127.39 C264.89 135.30 260.00 139.89 253.26 139.89 C246.62 139.89 242.58 135.50 242.58 128.17 L242.58 95.41 L229.87 95.41 L229.87 130.12 C229.87 143.27 237.34 150.69 248.58 150.69 Z M314.65 171.58 C329.34 171.58 340.19 164.75 340.19 150.14 L340.19 95.41 L327.73 95.41 L327.73 104.44 L327.05 104.44 C325.09 100.58 320.95 94.72 311.28 94.72 C298.69 94.72 288.72 104.64 288.72 122.56 C288.72 140.33 298.64 149.17 311.19 149.17 C320.61 149.17 324.61 144.19 326.56 140.23 L327.64 140.23 L327.64 150.53 C327.64 158.34 322.47 161.92 314.59 161.92 C306.64 161.92 303.26 158.16 301.56 155.08 L290.83 158.94 C293.56 166.16 301.51 171.58 314.65 171.58 Z M314.75 139.16 C306.25 139.16 301.70 132.52 301.70 122.45 C301.70 112.55 306.15 105.17 314.75 105.17 C323.14 105.17 327.69 112.11 327.69 122.45 C327.69 132.91 323.05 139.16 314.75 139.16 Z M377.78 151.12 C389.94 151.12 398.44 145.31 401.08 136.47 L389.40 134.08 C387.69 138.72 383.50 141.16 377.92 141.16 C369.78 141.16 364.25 135.98 363.92 126.27 L401.90 126.27 L401.90 122.27 C401.90 103.12 390.28 94.72 376.95 94.72 C361.33 94.72 351.26 106.25 351.26 123.05 C351.26 140.14 361.33 151.12 377.78 151.12 Z M363.97 117.62 C364.55 110.34 369.23 104.69 377.00 104.69 C384.56 104.69 388.81 109.81 389.55 117.62 L363.97 117.62 Z M437.69 77.25 L423.23 77.25 L407.26 88.67 L407.26 101.08 L424.25 88.86 L424.75 88.86 L424.75 150.00 L437.69 150.00 L437.69 77.25 Z M477.72 150.98 C493.39 150.98 503.89 140.28 503.89 125.97 C503.89 112.16 494.08 102.25 481.33 102.25 C473.51 102.25 466.69 106.00 463.22 112.30 L462.67 112.30 C462.67 96.88 468.34 87.55 478.50 87.55 C484.80 87.55 489.05 91.27 490.40 96.83 L503.20 96.83 C501.64 85.02 492.08 76.27 478.50 76.27 C461.06 76.27 449.98 90.88 449.98 115.72 C449.98 142.38 463.84 150.98 477.72 150.98 Z M477.67 140.38 C469.90 140.38 464.14 133.94 464.14 126.27 C464.14 118.70 470.09 112.25 477.81 112.25 C485.58 112.25 491.25 118.36 491.25 126.22 C491.25 134.17 485.39 140.38 477.67 140.38 Z M543.94 77.25 L529.48 77.25 L513.51 88.67 L513.51 101.08 L530.50 88.86 L531.00 88.86 L531.00 150.00 L543.94 150.00 L543.94 77.25 Z M583.19 150.98 C598.90 150.98 610.19 142.33 610.19 130.52 C610.19 121.44 603.45 113.81 595.00 112.36 L595.00 111.91 C602.37 110.25 607.50 103.61 607.50 95.75 C607.50 84.56 597.15 76.27 583.19 76.27 C569.12 76.27 558.87 84.56 558.87 95.75 C558.87 103.61 563.90 110.25 571.42 111.91 L571.42 112.36 C562.78 113.81 556.23 121.44 556.23 130.52 C556.23 142.33 567.36 150.98 583.19 150.98 Z M583.19 140.92 C574.94 140.92 569.61 136.33 569.61 129.59 C569.61 122.61 575.33 117.62 583.19 117.62 C590.95 117.62 596.72 122.61 596.72 129.59 C596.72 136.38 591.34 140.92 583.19 140.92 Z M583.19 107.77 C576.40 107.77 571.61 103.38 571.61 97.02 C571.61 90.72 576.25 86.52 583.19 86.52 C590.01 86.52 594.76 90.72 594.76 97.02 C594.76 103.38 589.87 107.77 583.19 107.77 Z"></path></svg>';
 const tk=(n,s)=>`<svg class="tk" role="img" aria-label="Animación: ${esc(TKN[n]||n)}" width="${s}" height="${s}" viewBox="0 0 120 120">${TK[n]||TK.mezclar}</svg>`;
@@ -600,7 +651,7 @@ return`<main class="main" style="max-width:920px"><div class="head"><h1>Configur
 <section class="cfg"><h2>Modo cocina</h2><div style="display:flex;flex-direction:column;gap:8px"><span class="lbl">Modo por defecto</span><div class="row">${[["guiado","Guiado"],["simple","Simple"]].map(t=>`<button class="chip ${(DB.modo||"guiado")===t[0]?"on":""}" data-a="modo" data-v="${t[0]}" aria-pressed="${(DB.modo||"guiado")===t[0]}">${t[1]}</button>`).join("")}</div><span class="sm">${(DB.modo||"guiado")==="simple"?"Simple: los ingredientes y los pasos en una sola pantalla, para ir tachando.":"Guiado: de a un paso por vez. Primero reunís todo, después preparás los ingredientes y al final cocinás."} Dentro del modo cocina se puede cambiar con el interruptor de arriba.</span></div><div>${sw(DB.despierta,"despierta","Mantener la pantalla encendida","Evita que la tablet se apague mientras cocinás.")}${sw(DB.sonido,"sonido","Sonido del temporizador","Suena tres veces cuando termina el tiempo.")}</div></section>
 <section class="cfg"><h2>Datos de este dispositivo</h2><p class="sm" style="font-size:15px;line-height:22px">En este prototipo, las fotos, las notas, los platos armados y las listas se guardan solo en este navegador.</p>
 <div class="row">${ST.rs?`<span style="font-weight:600">¿Borrar todo lo guardado acá? No se puede deshacer.</span><button class="btn pri" data-a="reset2">Sí, borrar</button><button class="btn ghost" data-a="reset0">Cancelar</button>`:`<button class="btn" data-a="reset1">Borrar lo guardado y volver a los ejemplos</button>`}</div></section>
-<section class="cfg"><h2>Acerca de</h2><div style="display:flex;align-items:center;gap:14px">${logo(44)}<div><b style="font-size:20px;font-weight:600;display:block">Smagsbord</b><span class="sm" style="display:flex;align-items:center;gap:8px;font-size:14px">Recetas de familia · by ${FIRMA}</span></div></div><span class="sm">Prototipo de la etapa 1, con recetas de ejemplo.</span><span class="sm">Fotos de ejemplo de Wikimedia Commons: ${CRED.map(c=>`<a href="${c[3]}" target="_blank" rel="noopener">${c[0]}</a> (${esc(c[1])}, ${c[2]})`).join(" · ")}.</span></section></main>`}
+<section class="cfg"><h2>Acerca de</h2><div style="display:flex;align-items:center;gap:14px">${logo(44)}<div><b style="font-size:20px;font-weight:600;display:block">Smagsbord</b><span class="sm" style="display:flex;align-items:center;gap:8px;font-size:14px">Recetas de familia · by ${FIRMA}</span></div></div><span class="sm">Versión 18/11 23:48. Recetas de ejemplo más las que se importen.</span><span class="sm">Fotos de ejemplo de Wikimedia Commons: ${CRED.map(c=>`<a href="${c[3]}" target="_blank" rel="noopener">${c[0]}</a> (${esc(c[1])}, ${c[2]})`).join(" · ")}.</span></section></main>`}
 // modo cocina
 let timers={},tint=null,wl=null;
 const fmtT=s=>{s=Math.max(0,Math.ceil(s));const h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;return(h?h+":"+String(m).padStart(2,"0"):m)+":"+String(x).padStart(2,"0")};
@@ -666,12 +717,12 @@ Object.assign(w.style,{display:"block",left:r.left+"px",top:r.top+"px",width:r.w
 const[v,d,h]=slot.dataset.v.split("|"),g={v,d:+d,h:+h};if(ytSeg&&ytSeg.v===g.v&&ytSeg.d===g.d&&ytSeg.h===g.h)return;ytSeg=g;ytErr="";
 ytLoad(()=>{if(!ytP)ytP=new YT.Player("vply",{videoId:g.v,playerVars:{start:g.d,autoplay:1,mute:DB.vson?0:1,controls:1,rel:0,playsinline:1},events:{onReady:()=>{ytOk=true;ytGo()},onStateChange:e=>{if(e.data===0)ytGo()},onError:e=>{ytErr=[101,150,153].includes(e.data)?"El dueño de este video no permite verlo dentro de otras páginas. Abrilo en YouTube.":"YouTube no pudo reproducir este video.";render(true)}}});else ytGo()});
 if(!ytInt)ytInt=setInterval(()=>{if(!ytSeg||!ytOk||!ytP.getCurrentTime)return;try{const t=ytP.getCurrentTime();if(t>=ytSeg.h||t<ytSeg.d-1.5)ytP.seekTo(ytSeg.d,true)}catch(_){}},250)}
-function vbar(g){const C=ST.co,adj=(i,dl,t)=>`<button class="chip" data-a="vadj" data-v="${g.key}|${i}|${dl}">${t}</button>`;
-return`<div class="vbar"><button class="chip" data-a="vclose">${IC.x}Cerrar video</button><button class="chip vsz" data-a="vsize">${DB.vsize==="l"?"Achicar":"Agrandar"}</button><button class="chip" data-a="vson" aria-pressed="${!!DB.vson}">${DB.vson?"Con sonido":"Sin sonido"}</button><button class="chip ${C.vaj?"on":""}" data-a="vaj" aria-expanded="${!!C.vaj}">${IC.adj}Ajustar tramo</button>
-${C.vaj?`<span class="sm">El tramo va de ${mmss(g.d)} a ${mmss(g.h)} y se repite. Si arranca tarde o corta antes, corregilo: queda guardado para este paso.</span>${adj(0,-2,"Empieza 2 s antes")}${adj(0,2,"Empieza 2 s después")}${adj(1,-2,"Termina 2 s antes")}${adj(1,2,"Termina 2 s después")}`:""}
-${ytErr?`<span class="sm" role="alert" style="color:var(--tinta);font-weight:600">${esc(ytErr)}</span>`:""}<a class="chip" href="https://www.youtube.com/watch?v=${g.v}&t=${g.d}s" target="_blank" rel="noopener">Abrir en YouTube</a></div>`}
-function gbody(g,lbl,strip,inner){const C=ST.co;if(g&&C.vid)return`<div class="cobody gcol hasv ${DB.vsize==="l"?"vl":""}"><div class="vcol"><div class="vslot" id="vslot" data-v="${g.v}|${g.d}|${g.h}"></div>${vbar(g)}</div><div class="tcol">${lbl}${inner}</div></div>`;
-return`<div class="cobody gcol">${lbl}${strip}${inner}${g?`<button class="btn ghost" data-a="vopen">${IC.play}Ver este paso en el video · ${mmss(g.d)}</button>`:""}</div>`}
+function vfig(g,tec){const C=ST.co,big=DB.vsize==="l";return`<figure class="fg vf"><div class="vslot" id="vslot" data-v="${g.v}|${g.d}|${g.h}"></div><figcaption><b>${esc(TKN[tec]||"")}</b><span class="vic"><button class="ib" data-a="vson" aria-pressed="${!!DB.vson}" aria-label="${DB.vson?"Quitar el sonido del video":"Activar el sonido del video"}">${DB.vson?IC.son:IC.mute}</button><button class="ib ${big?"on":""}" data-a="vsize" aria-pressed="${big}" aria-label="${big?"Achicar el video":"Agrandar el video"}">${IC.exp}</button><button class="ib ${C.vaj?"on":""}" data-a="vaj" aria-expanded="${!!C.vaj}" aria-label="Más opciones del video">${IC.dots}</button></span></figcaption></figure>`}
+// Opciones del video, debajo de la secuencia. g es el tramo del paso, exista o no el video abierto.
+function vextra(g){if(!g)return"";const C=ST.co;if(C.vid===false)return`<div class="vopts"><button class="chip" data-a="vopen">${IC.play}Ver el video de este paso</button></div>`;
+const adj=(i,dl,t)=>`<button class="chip" data-a="vadj" data-v="${g.key}|${i}|${dl}">${t}</button>`;
+return(ytErr?`<div class="vopts"><span class="sm" role="alert" style="color:var(--tinta);font-weight:600">${esc(ytErr)}</span><a class="chip" href="https://www.youtube.com/watch?v=${g.v}&t=${g.d}s" target="_blank" rel="noopener">Abrir en YouTube</a></div>`:"")+(C.vaj?`<div class="vopts"><span class="sm">El video repite de ${mmss(g.d)} a ${mmss(g.h)}. Si arranca tarde o corta antes, corregilo: queda guardado para este paso.</span>${adj(0,-2,"Empieza 2 s antes")}${adj(0,2,"Empieza 2 s después")}${adj(1,-2,"Termina 2 s antes")}${adj(1,2,"Termina 2 s después")}<button class="chip" data-a="vclose">Ver el dibujo en lugar del video</button><a class="chip" href="https://www.youtube.com/watch?v=${g.v}&t=${g.d}s" target="_blank" rel="noopener">Abrir en YouTube</a></div>`:"")}
+function gbody(g,lbl,strip,inner){return`<div class="cobody gcol">${lbl}${strip}${vextra(g)}${inner}</div>`}
 function vlink(pid,s){const r=R(PARTES[pid].receta),v=r&&ytId(r.url);if(!v||!s.vh)return"";return`<a class="btn ghost" href="https://www.youtube.com/watch?v=${v}&t=${s.vd}s" target="_blank" rel="noopener">${IC.next}Ver este paso en el video · ${mmss(s.vd)}</a>`}
 function importar(){const imp=RECETAS.filter(r=>r.imp);return`<main class="main"><div class="head"><h1>Agregar receta</h1></div>
 <p style="max-width:700px">Prueba de la etapa 2. Por ahora la receta se interpreta en Google AI Studio y la respuesta se pega acá. Más adelante este paso lo va a hacer la app sola.</p>
@@ -697,12 +748,13 @@ function pnAct(tec,es,line){const g=line||!es.length?"":AG[tec];if(!g)return`<di
 const h={knife:ae+T_KN+bits,peel:ae+T_KN+'<i class="curl"></i>',grate:T_GR+ae+bits,squeeze:ae+dps("y"),wash:dps("w")+ae,shake:ae+'<span class="shk">🧂</span>'+dps("g"),clock:ae+T_CLK,stir:ae+T_SP,pour:ae+dps("p"),weigh:ae+T_SC,crack:ae+T_ZG+dps("y")}[g];
 return`<div class="pn a-${g}" role="img" aria-label="Animación: ${esc(TKN[tec]||tec)}">${h}</div>`}
 const fig=(pn,cap)=>`<figure class="fg">${pn}<figcaption>${cap}</figcaption></figure>`;
-const AR=`<span class="ar" aria-hidden="true">${IC.next}</span>`;
+const AR=`<span class="ar" aria-hidden="true">${IC.next}</span>`,AR1=`<span class="ar a1" aria-hidden="true">${IC.next}</span>`;
 function stripPrep(pid,k,pf,cls){const p=PARTES[pid],s=p.prep[k],es=s.vi.map(j=>emoC(p.ings[j].n));
 const cap=s.ings.length?s.ings.map(j=>`<b>${qtyTxt(p.ings[j],pf)}</b> ${esc(p.ings[j].n)}`).join("<br>"):esc(s.vi.map(j=>p.ings[j].n).join(", "));
-return`<div class="strip ${cls||""}">${es.length?fig(pnEm(es),cap)+AR:""}${fig(pnAct(s.tec,es),`<b>${esc(TKN[s.tec]||"")}</b>`)}${AR}${fig(pnDrop(s.dest,es),`<b>${s.dest?esc(rnm(p,s.dest,pf)):"A mano"}</b>`)}</div>`}
+const g=cls==="g"&&ST.co&&ST.co.vid!==false?vseg(pid,"prep",k):null;
+return`<div class="strip ${cls||""} ${g?"hv"+(DB.vsize==="l"?" vl":""):""}">${es.length?fig(pnEm(es),cap)+AR1:""}${g?vfig(g,s.tec):fig(pnAct(s.tec,es),`<b>${esc(TKN[s.tec]||"")}</b>`)}${AR}${fig(pnDrop(s.dest,es),`<b>${s.dest?esc(rnm(p,s.dest,pf)):"A mano"}</b>`)}</div>`}
 function stripPaso(pid,i,pf,cls){const p=PARTES[pid],s=p.pasos[i],es=[];s.de.forEach(d=>(p.cont[d]||[]).forEach(e=>{if(!es.includes(e))es.push(e)}));
-const de=s.de.filter(d=>d!==s.a);return`<div class="strip ${cls||""}">${de.map(d=>fig(pnCont(d,p.cont[d]||[]),`<b>${esc(rnm(p,d,pf))}</b>`)).join("")}${de.length?AR:""}${fig(pnAct(s.tec,[],1),`<b>${esc(TKN[s.tec]||"")}</b>`)}${s.a?AR+fig(pnDrop(s.a,es),`<b>${esc(rnm(p,s.a,pf))}</b>`):""}</div>`}
+const de=s.de.filter(d=>d!==s.a),g=cls==="g"&&ST.co&&ST.co.vid!==false?vseg(pid,"pasos",i):null;return`<div class="strip ${cls||""} ${g?"hv"+(DB.vsize==="l"?" vl":""):""}">${de.map(d=>fig(pnCont(d,p.cont[d]||[]),`<b>${esc(rnm(p,d,pf))}</b>`)).join("")}${de.length?AR1:""}${g?vfig(g,s.tec):fig(pnAct(s.tec,[],1),`<b>${esc(TKN[s.tec]||"")}</b>`)}${s.a?AR+fig(pnDrop(s.a,es),`<b>${esc(rnm(p,s.a,pf))}</b>`):""}</div>`}
 const tile=(i,f)=>`<div class="til">${emo(i.n,1)}<b>${qtyTxt(i,f)}</b><span>${esc(i.n)}</span></div>`;
 function timerBox(key){const C=ST.co,open=C.topen===key;
 if(!tmin(key))return"";
@@ -726,14 +778,17 @@ else if(fu>0){C.stage="prep";C.pi=Math.max(C.pi,fu)}}
 function simpleView(){const C=ST.co,e=ent(C.key),lh=lastHist(C.key);const sel=C.sv&&C.partes.includes(C.sv)?C.sv:"";const ps=sel?[sel]:C.partes;let tot=0,ok=0;const cnt={};
 C.partes.forEach(pid=>{const p=PARTES[pid];let a=0,b=0;p.prep.forEach((_,k)=>{b++;if(C.sx["p:"+pid+":"+k])a++});p.pasos.forEach((_,i)=>{b++;if(C.sx["s:"+pid+":"+i])a++});cnt[pid]=[a,b];tot+=b;ok+=a});
 const ings=ps.map(pid=>{const p=PARTES[pid],pf=pfac(e,pid);return`<section><span class="h">${C.partes.length>1?esc(pnom(p)):"Ingredientes"}</span>${p.ings.map((i,k)=>{const key="i:"+pid+":"+k,on=!!C.ck[key];return`<button class="si ${on?"on":""}" data-a="sck" data-v="${key}" aria-pressed="${on}">${emo(i.n)}<b>${qtyTxt(i,pf)}</b><span>${esc(i.n)}</span></button>`}).join("")}</section>`}).join("");
-const row=(key,n,strip,txt,extra,g)=>{const on=!!C.sx[key];return`<div class="prow ${on?"on":""}"><button class="sx" data-a="sx" data-v="${key}" aria-pressed="${on}" aria-label="Proceso ${n}${on?", hecho":""}">${on?IC.check:n}</button>${strip}<div class="ptx"><p data-a="sx" data-v="${key}">${txt}</p>${extra||""}${g&&C.vrow!==g.key?`<div><button class="chip" style="min-height:44px;display:inline-flex;align-items:center;gap:6px" data-a="vrow" data-v="${g.key}">${IC.play}Video · ${mmss(g.d)}</button></div>`:""}</div>${g&&C.vrow===g.key?`<div class="vrow"><div class="vslot" id="vslot" data-v="${g.v}|${g.d}|${g.h}"></div>${vbar(g)}</div>`:""}</div>`};
-const procs=ps.map(pid=>{const p=PARTES[pid],pf=pfac(e,pid);let n=0;return`<section><h2 class="h" style="font-size:21px;line-height:28px">${esc(pnom(p))}</h2>
-${p.prep.length?`<span class="lbl" style="margin-top:8px">Preparar los ingredientes</span>${p.prep.map((s,k)=>row("p:"+pid+":"+k,++n,stripPrep(pid,k,pf),stepTxt(s.t,p,pf)+rnote(p,[s.dest],pf).map(x=>` <b style="font-weight:600">${esc(x)}</b>`).join(""),"",vseg(pid,"prep",k))).join("")}`:""}
-<span class="lbl" style="margin-top:14px">Cocinar</span>${p.pasos.map((s,i)=>row("s:"+pid+":"+i,++n,stripPaso(pid,i,pf),stepTxt(s.t,p,pf)+(s.sub?` <span style="color:var(--suave)">${stepTxt(s.sub,p,pf)}</span>`:"")+rnote(p,[...s.de,s.a],pf).map(x=>` <b style="font-weight:600">${esc(x)}</b>`).join(""),timerBox(pid+":"+i),vseg(pid,"pasos",i))).join("")}</section>`}).join("");
+const items=[];ps.forEach(pid=>{const p=PARTES[pid];let n=0;p.prep.forEach((x,k)=>items.push({key:"p:"+pid+":"+k,pid,kind:"prep",i:k,s:x,n:++n}));p.pasos.forEach((x,k)=>items.push({key:"s:"+pid+":"+k,pid,kind:"pasos",i:k,s:x,n:++n}))});
+const cur=items.find(x=>x.key===C.sel)||items.find(x=>!C.sx[x.key])||items[0];C.sel=cur.key;const wide=innerWidth>=900,ing=C.spane==="ing";
+const det=it=>{const p=PARTES[it.pid],pf=pfac(e,it.pid),x=it.s,tk2=it.pid+":"+it.i,on=!!C.sx[it.key],pas=it.kind==="pasos";
+return`<div class="sdet">${pas?timerStrip(tk2):""}<span class="lbl glbl">${C.partes.length>1?esc(pnom(p))+" · ":""}${pas?"Cocinar":"Preparar"} · ${it.n}</span>${pas?stripPaso(it.pid,it.i,pf,"g"):stripPrep(it.pid,it.i,pf,"g")}${vextra(vseg(it.pid,it.kind,it.i))}<div class="trow"><div class="ttx"><p class="t">${stepTxt(x.t,p,pf)}</p>${x.sub?`<p class="s">${stepTxt(x.sub,p,pf)}</p>`:""}${rnote(p,pas?[...x.de,x.a]:[x.dest],pf).map(y=>`<p class="s" style="color:var(--tinta);font-weight:600">${esc(y)}</p>`).join("")}</div>${pas?timerBox(tk2):""}</div><button class="btn ${on?"ghost":"pri"} big" data-a="sdone" data-v="${it.key}">${on?"Marcar como pendiente":"Listo, siguiente"}</button></div>`};
+const row=it=>{const p=PARTES[it.pid],pf=pfac(e,it.pid),on=!!C.sx[it.key],act=it.key===cur.key&&!ing;
+return`<div class="prow ${on?"on":""} ${act?"act":""}"><button class="sx" data-a="sx" data-v="${it.key}" aria-pressed="${on}" aria-label="Proceso ${it.n}${on?", hecho":""}">${on?IC.check:it.n}</button><button class="pbt" data-a="ssel" data-v="${it.key}" ${act?'aria-current="true"':""}>${it.kind==="pasos"?stripPaso(it.pid,it.i,pf,"xs"):stripPrep(it.pid,it.i,pf,"xs")}<span class="ptx2">${stepTxt(it.s.t,p,pf)}</span>${it.kind==="pasos"&&it.s.timer?`<span class="pmin">${IC.clock}${it.s.timer} min</span>`:""}</button>${act&&!wide?`<div class="sdetin">${det(it)}</div>`:""}</div>`};
+const lista=ps.map(pid=>{const p=PARTES[pid],its=items.filter(x=>x.pid===pid),a=its.filter(x=>x.kind==="prep"),b=its.filter(x=>x.kind==="pasos");return`<section>${C.partes.length>1&&!sel?`<h2 class="h" style="font-size:19px;line-height:26px">${esc(pnom(p))}</h2>`:""}${a.length?`<span class="lbl" style="margin-top:4px">Preparar los ingredientes</span>${a.map(row).join("")}`:""}<span class="lbl" style="margin-top:10px">Cocinar</span>${b.map(row).join("")}</section>`}).join("");
 return`<div class="co" role="dialog" aria-label="Modo cocina simple"><header><button class="step" style="width:56px;height:56px;border-color:var(--linea)" data-a="coexit" aria-label="Salir del modo cocina">${IC.x}</button><div style="min-width:0;flex:1"><h1 style="font-size:22px;line-height:28px;font-weight:600">${esc(e.nombre)}</h1><span class="sm">${porc(e)} porciones</span></div>${modoSw()}</header>
 ${C.partes.length>1?`<div class="tabs copad" style="padding:12px 24px 0" role="tablist" aria-label="Partes del plato"><button class="tab ${!sel?"on":""}" data-a="sv" data-v="">Todo<span>${ok} de ${tot}</span></button>${C.partes.map(id=>`<button class="tab ${id===sel?"on":""}" data-a="sv" data-v="${id}">${esc(pnom(PARTES[id]))}<span>${cnt[id][0]===cnt[id][1]?"listo":cnt[id][0]+" de "+cnt[id][1]}</span></button>`).join("")}</div>`:""}
 ${lh&&lh.nota?`<div class="copad" style="padding:16px 24px 0"><div class="note"><span class="lbl">Tu nota de la última vez</span><span>${esc(lh.nota)}</span></div></div>`:""}
-<div class="sbody"><div class="scol1">${ings}</div><div class="scol2">${procs}</div></div>
+<div class="sbody2"><div class="sleft"><div class="sseg" role="tablist"><button class="${ing?"":"on"}" data-a="spane" data-v="proc" aria-pressed="${!ing}">Procesos</button><button class="${ing?"on":""}" data-a="spane" data-v="ing" aria-pressed="${ing}">Ingredientes</button></div>${ing?ings:lista}</div>${wide?`<div class="sright">${det(cur)}</div>`:""}</div>
 <div class="cofoot"><div style="flex:1;display:flex;align-items:center;font-size:19px;font-weight:600">${ok} de ${tot} hechos</div><button class="nx" data-a="costage" data-v="fin">Terminar la receta${IC.next}</button></div></div>`}
 function recips(C){const m=new Map(),e=ent(C.key);C.partes.forEach(pid=>{const p=PARTES[pid],f=pfac(e,pid);new Set([...p.prep.map(s=>s.dest).filter(Boolean),...(p.rec||[])]).forEach(n=>{const r=rsc(p,n,f);m.set(r.n,(m.get(r.n)||0)+r.c)})});return[...m]}
 function reunir(){const C=ST.co,e=ent(C.key);let tot=0,ok=0;const row=(k,html)=>{tot++;const on=!!C.ck[k];if(on)ok++;return`<button class="ck ${on?"on":""}" data-a="ck" data-v="${k}" aria-pressed="${on}"><i>${on?IC.check:""}</i>${html}</button>`};
@@ -767,7 +822,7 @@ const allLast=i===p.pasos.length-1,ultima=allLast&&C.partes.every(x=>x===C.cur||
 return`<div class="co" role="dialog" aria-label="Modo cocina: cocinar">${coHead()}
 ${C.partes.length>1?`<div class="tabs copad" style="padding:12px 24px 0">${C.partes.map(id=>`<button class="tab ${id===C.cur?"on":""}" data-a="cotab" data-v="${id}">${esc(pnom(PARTES[id]))}<span>${prog(id)}</span></button>`).join("")}</div>`:""}
 ${timerStrip(tkey)}<div class="segs" aria-hidden="true">${p.pasos.map((_,k)=>`<i class="${k<i?"d":k===i?"n":""}"></i>`).join("")}</div>
-${gbody(vseg(C.cur,"pasos",i),`<span class="lbl glbl">Paso ${i+1} de ${p.pasos.length}</span>`,stripPaso(C.cur,i,pf,"g"),`<p class="t">${stepTxt(st.t,p,pf)}</p>${st.sub?`<p class="s">${stepTxt(st.sub,p,pf)}</p>`:""}${rnote(p,[...st.de,st.a],pf).map(x=>`<p class="s" style="color:var(--tinta);font-weight:600">${esc(x)}</p>`).join("")}${timerBox(tkey)}`)}
+${gbody(vseg(C.cur,"pasos",i),`<span class="lbl glbl">Paso ${i+1} de ${p.pasos.length}</span>`,stripPaso(C.cur,i,pf,"g"),`<div class="trow"><div class="ttx"><p class="t">${stepTxt(st.t,p,pf)}</p>${st.sub?`<p class="s">${stepTxt(st.sub,p,pf)}</p>`:""}${rnote(p,[...st.de,st.a],pf).map(x=>`<p class="s" style="color:var(--tinta);font-weight:600">${esc(x)}</p>`).join("")}</div>${timerBox(tkey)}</div>`)}
 <div class="cofoot"><button data-a="coprev" ${i===0?"disabled":""}>${IC.back}Anterior</button><button class="nx" data-a="conext">${ultima?"Terminar la receta":allLast?"Terminar esta parte":"Siguiente paso"}${IC.next}</button></div></div>`}
 function tick(){let any=false,fin=false;for(const k in timers){const t=timers[k];if(t.run){if(t.end-Date.now()<=0){t.run=false;t.rem=0;t.done=true;fin=true;const[pid,i]=k.split(":");toast("Terminó el tiempo: "+pnom(PARTES[pid])+", paso "+(+i+1));beep()}else any=true}}
 document.querySelectorAll("[data-tl]").forEach(el=>{const t=timers[el.dataset.tl];if(t)el.textContent=tlabel(t,el.dataset.tl)});document.querySelectorAll("[data-ts]").forEach(el=>{const t=timers[el.dataset.ts];if(t)el.textContent=ttxt(t)});
@@ -785,7 +840,10 @@ else if(a==="uni"){const[k,x]=v.split("|");DB[k]=x;save()}
 else if(a==="comodo"){const C=ST.co;if(C.modo==="simple"){C.modo="guiado";aGuiado(C)}else{C.modo="simple";aSimple(C)}C.topen=null;b.classList.toggle("s");b.setAttribute("aria-checked",C.modo==="simple");setTimeout(()=>render(true),190);return}
 else if(a==="sck"){ST.co.ck[v]=!ST.co.ck[v]}
 else if(a==="sx"){ST.co.sx[v]=!ST.co.sx[v]}
-else if(a==="sv"){ST.co.sv=v}
+else if(a==="sv"){ST.co.sv=v;ST.co.sel=null}
+else if(a==="ssel"){ST.co.sel=v}
+else if(a==="spane"){ST.co.spane=v}
+else if(a==="sdone"){const C=ST.co;C.sx[v]=!C.sx[v];if(C.sx[v]){const ks=[];(C.sv&&C.partes.includes(C.sv)?[C.sv]:C.partes).forEach(pid=>{PARTES[pid].prep.forEach((_,k)=>ks.push("p:"+pid+":"+k));PARTES[pid].pasos.forEach((_,k)=>ks.push("s:"+pid+":"+k))});const i0=ks.indexOf(v);const nx=ks.slice(i0+1).find(k=>!C.sx[k])||ks.find(k=>!C.sx[k]);if(nx)C.sel=nx}}
 else if(a==="tog"){DB[v]=!DB[v];save()}
 else if(a==="verprompt"){ST.vp=!ST.vp}
 else if(a==="cpprompt"){const fb=()=>{ST.vp=true;render(true);toast("No pude copiar. Seleccioná el texto y copialo a mano.")};try{navigator.clipboard.writeText(PROMPT).then(()=>toast("Instrucción copiada"),fb)}catch(_){fb()}return}
@@ -793,7 +851,7 @@ else if(a==="doimp"){const t=(ST.ijson||"").trim(),i0=t.indexOf("{"),i1=t.lastIn
 else if(a==="delrec"){delReceta(v);save();if(ST.view==="ficha"){ST.view="home";ST.nav="todas"}toast("Receta borrada");keep=false}
 else if(a==="vopen"){ST.co.vid=true}
 else if(a==="vrow"){ST.co.vrow=v}
-else if(a==="vclose"){ST.co.vid=false;ST.co.vrow=null;ST.co.vaj=false}
+else if(a==="vclose"){ST.co.vid=false;ST.co.vaj=false}
 else if(a==="vsize"){DB.vsize=DB.vsize==="l"?"m":"l";save()}
 else if(a==="vson"){DB.vson=!DB.vson;save();try{if(ytP&&ytOk){DB.vson?ytP.unMute():ytP.mute()}}catch(_){}}
 else if(a==="vaj"){ST.co.vaj=!ST.co.vaj}
@@ -836,7 +894,7 @@ else if(a==="ttog"){const t=tget(v);if(t.done){t.rem=t.base;t.done=false;t.start
 else if(a==="trst"){const t=tget(v);t.run=false;t.rem=t.base;t.started=false;t.done=false}
 else if(a==="tgo"){const[pid,i]=v.split(":"),C=ST.co;C.stage="steps";C.cur=pid;C.seen[pid]=1;C.idx[pid]=+i}
 render(keep)});
-addEventListener("resize",()=>syncV());document.addEventListener("scroll",()=>syncV(),true);
+let lastW=innerWidth>=900;addEventListener("resize",()=>{const w=innerWidth>=900;if(w!==lastW&&ST.co&&ST.co.modo==="simple"){lastW=w;render(true)}lastW=w;syncV()});document.addEventListener("scroll",()=>syncV(),true);
 document.addEventListener("input",ev=>{const t=ev.target;if(t.id==="q"){ST.q=t.value;const tmp=document.createElement("div");tmp.innerHTML=home();document.getElementById("res").innerHTML=tmp.querySelector("#res").innerHTML}
 else if(t.id==="aq"){ST.armar.q=t.value;const tmp=document.createElement("div");tmp.innerHTML=armar();document.getElementById("alist").innerHTML=tmp.querySelector("#alist").innerHTML}
 else if(t.id==="an"){ST.armar.custom=t.value}
