@@ -653,7 +653,7 @@ ${DB.gkey?`<div class="lrow"><div><b>Clave guardada</b><span class="sm">Termina 
 <section class="cfg"><h2>Modo cocina</h2><div style="display:flex;flex-direction:column;gap:8px"><span class="lbl">Modo por defecto</span><div class="row">${[["guiado","Guiado"],["simple","Simple"]].map(t=>`<button class="chip ${(DB.modo||"guiado")===t[0]?"on":""}" data-a="modo" data-v="${t[0]}" aria-pressed="${(DB.modo||"guiado")===t[0]}">${t[1]}</button>`).join("")}</div><span class="sm">${(DB.modo||"guiado")==="simple"?"Simple: los ingredientes y los pasos en una sola pantalla, para ir tachando.":"Guiado: de a un paso por vez. Primero reunís todo, después preparás los ingredientes y al final cocinás."} Dentro del modo cocina se puede cambiar con el interruptor de arriba.</span></div><div>${sw(DB.despierta,"despierta","Mantener la pantalla encendida","Evita que la tablet se apague mientras cocinás.")}${sw(DB.sonido,"sonido","Sonido del temporizador","Suena tres veces cuando termina el tiempo.")}</div></section>
 <section class="cfg"><h2>Datos de este dispositivo</h2><p class="sm" style="font-size:15px;line-height:22px">En este prototipo, las fotos, las notas, los platos armados y las listas se guardan solo en este navegador.</p>
 <div class="row">${ST.rs?`<span style="font-weight:600">¿Borrar todo lo guardado acá? No se puede deshacer.</span><button class="btn pri" data-a="reset2">Sí, borrar</button><button class="btn ghost" data-a="reset0">Cancelar</button>`:`<button class="btn" data-a="reset1">Borrar lo guardado y volver a los ejemplos</button>`}</div></section>
-<section class="cfg"><h2>Acerca de</h2><div style="display:flex;align-items:center;gap:14px">${logo(44)}<div><b style="font-size:20px;font-weight:600;display:block">Smagsbord</b><span class="sm" style="display:flex;align-items:center;gap:8px;font-size:14px">Recetas de familia · by ${FIRMA}</span></div></div><span class="sm">Versión 22/11 02:23. Recetas de ejemplo más las que se importen.</span><span class="sm">Fotos de ejemplo de Wikimedia Commons: ${CRED.map(c=>`<a href="${c[3]}" target="_blank" rel="noopener">${c[0]}</a> (${esc(c[1])}, ${c[2]})`).join(" · ")}.</span></section></main>`}
+<section class="cfg"><h2>Acerca de</h2><div style="display:flex;align-items:center;gap:14px">${logo(44)}<div><b style="font-size:20px;font-weight:600;display:block">Smagsbord</b><span class="sm" style="display:flex;align-items:center;gap:8px;font-size:14px">Recetas de familia · by ${FIRMA}</span></div></div><span class="sm">Versión 22/11 09:13. Recetas de ejemplo más las que se importen.</span><span class="sm">Fotos de ejemplo de Wikimedia Commons: ${CRED.map(c=>`<a href="${c[3]}" target="_blank" rel="noopener">${c[0]}</a> (${esc(c[1])}, ${c[2]})`).join(" · ")}.</span></section></main>`}
 // modo cocina
 let timers={},tint=null,wl=null;
 const fmtT=s=>{s=Math.max(0,Math.ceil(s));const h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;return(h?h+":"+String(m).padStart(2,"0"):m)+":"+String(x).padStart(2,"0")};
@@ -734,15 +734,19 @@ function textoDe(o){if(!o)return"";if(typeof o.output_text==="string"&&o.output_
 // Dos caminos hacia Gemini. Primero generateContent con la clave en la dirección, que es el que los navegadores
 // pueden llamar directo; si la red lo corta, se prueba la API de interacciones.
 const GMODELS=["gemini-3.8-flash","gemini-3.6-flash","gemini-flash-latest","gemini-3-flash-preview","gemini-3.5-flash-lite"],GPOT=["gemini-4-argon","gemini-3.1-pro-preview"];
-async function gPost(url,body,headers){const ac=new AbortController(),tm=setTimeout(()=>ac.abort(),300000);try{const r=await fetch(url,{method:"POST",headers:Object.assign({"Content-Type":"application/json"},headers||{}),body:JSON.stringify(body),signal:ac.signal});const j=await r.json().catch(()=>({}));return{r,j}}catch(e){if(e.name==="AbortError")throw new Error("Gemini tardó más de 5 minutos y corté la espera.");const x=new Error("red");x.red=true;throw x}finally{clearTimeout(tm)}}
+async function gPost(url,body,headers){const t0=Date.now(),ac=new AbortController(),tm=setTimeout(()=>ac.abort(),300000);try{const r=await fetch(url,{method:"POST",headers:Object.assign({"Content-Type":"application/json"},headers||{}),body:JSON.stringify(body),signal:ac.signal});const j=await r.json().catch(()=>({}));return{r,j}}catch(e){if(e.name==="AbortError")throw new Error("Gemini tardó más de 5 minutos y corté la espera.");const x=new Error("red");x.red=true;x.seg=Math.round((Date.now()-t0)/1000);throw x}finally{clearTimeout(tm)}}
 async function pedirGemini(partes,usarWeb){const ms=DB.gmodel?[DB.gmodel]:(DB.gniv==="pot"?GPOT.concat(GMODELS):GMODELS),B="https://generativelanguage.googleapis.com/v1beta/",k=encodeURIComponent(DB.gkey);let ult="",red=0;
 const gc={contents:[{role:"user",parts:partes.map(x=>x.type==="text"?{text:x.text}:x.uri?{file_data:{file_uri:x.uri}}:{inline_data:{mime_type:x.mime_type,data:x.data}})}]};if(usarWeb)gc.tools=[{url_context:{}}];
 const caminos=[m=>gPost(B+"models/"+m+":generateContent?key="+k,gc),m=>gPost(B+"interactions?key="+k,Object.assign({model:m,input:partes},usarWeb?{tools:[{type:"url_context"}]}:{}))];
-let sat=0,lim=0;const espera=t=>new Promise(r=>setTimeout(r,t));
-for(let c=0;c<caminos.length;c++){let cortado=false;
+let sat=0,lim=0,rseg=[];const espera=t=>new Promise(r=>setTimeout(r,t));
+let wl=null;try{if(navigator.wakeLock)wl=await navigator.wakeLock.request("screen")}catch(e){}
+try{
+for(let c=0;c<caminos.length;c++){let otro=false,redc=0;
 for(const m of ms){let seguir=true;
 for(let intento=0;intento<2&&seguir;intento++){seguir=false;let o;
-try{o=await caminos[c](m)}catch(e){if(e.red){red++;cortado=true;break}throw e}
+try{o=await caminos[c](m)}catch(e){if(!e.red)throw e;red++;redc++;rseg.push(e.seg);
+if(c>0||redc>=4)break;
+if(intento===0){ST.imsg="Se cortó la conexión con Gemini. Reintentando…";render(true);await espera(3000);seguir=true}continue}
 const{r,j}=o;
 if(r.ok){const t=textoDe(j);if(t){ST.gusado=m;return t}const br=j.promptFeedback&&j.promptFeedback.blockReason;if(br)throw new Error("Gemini no quiso procesar esa fuente ("+br+").");ult="respuesta sin texto";break}
 const em=(j.error&&(j.error.message||j.error.status))||("error "+r.status);ult=em;
@@ -751,12 +755,16 @@ if(r.status===403&&!/api key/i.test(em)&&ms.indexOf(m)<ms.length-1){lim++;break}
 if(r.status===401||r.status===403||/api key/i.test(em))throw new Error("Gemini rechazó la clave. Revisala en Configuración. ("+em+")");
 if(r.status>=500||/overloaded|high demand|unavailable|try again later/i.test(em)){sat++;if(intento===0){ST.imsg="Gemini está con mucha demanda. Reintentando…";render(true);await espera(4000);seguir=true}continue}
 if(r.status===429){lim++;break}
-if(!(r.status===404||(r.status===400&&/model|not found|not supported/i.test(em))))throw new Error("Gemini devolvió un error: "+em)}
-if(cortado)break}
-if(!cortado)break}
+if(r.status===404||(r.status===400&&/model|not found|not supported/i.test(em))){otro=true;continue}
+throw new Error("Gemini devolvió un error: "+em)}
+if(c>0&&redc)break;if(redc>=4)break}
+if(!(otro&&!sat&&!lim&&!redc))break}
+}finally{try{wl&&wl.release()}catch(e){}}
+if(red){const mx=Math.max.apply(null,rseg),det=" (Intentos: "+red+", cortes a los "+rseg.join(", ")+" s"+(navigator.onLine===false?", sin internet":"")+".)";
+throw new Error((mx<5?"No llegué a conectarme con Gemini: el pedido se cortó apenas salió. Puede ser la conexión, o algo en el dispositivo que bloquea a Google, como un bloqueador de anuncios o un DNS privado.":"La conexión con Gemini se cortó mientras procesaba. Dejá la app abierta y en pantalla hasta que termine, y probá de nuevo; con Wi-Fi suele andar mejor.")+det)}
 if(sat)throw new Error("Gemini está saturado en este momento: probé con varios modelos y ninguno pudo atender. Suele durar unos minutos. Probá de nuevo en un rato.");
 if(lim)throw new Error("Se alcanzó el límite gratuito de Gemini por ahora. Probá de nuevo en un rato. ("+ult+")");
-throw new Error(red>=2?"No pude conectarme con Gemini por ninguno de los dos caminos. Revisá la conexión.":"Ninguno de los modelos de Gemini que conozco respondió: "+ult)}
+throw new Error("Ninguno de los modelos de Gemini que conozco respondió: "+ult)}
 async function cargarAuto(){if(impBusy)return;const txt=(ST.itxt||"").trim(),url=(txt.match(/https?:\/\/\S+/)||[""])[0].replace(/[)\].,;]+$/,""),yt=ytId(url);
 if(!DB.gkey){ST.ierr="Falta la clave de Gemini. Cargala en Configuración, en «Carga de recetas».";render(true);return}
 if(!txt&&!impFiles.length){ST.ierr="Pegá un enlace o un texto, o elegí fotos o un video.";render(true);return}
