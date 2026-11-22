@@ -1,0 +1,19 @@
+# Servidor de Smagsbord: arma las recetas con Gemini aunque la app esté cerrada.
+name = "smagsbord-api"
+main = "src/index.js"
+compatibility_date = "2026-01-01"
+
+[[durable_objects.bindings]]
+name = "COCINA"
+class_name = "Cocina"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["Cocina"]
+
+[observability]
+enabled = true
+
+# Secretos que se cargan en Cloudflare, nunca en este archivo:
+#   GEMINI_KEY  clave de Gemini
+#   CODIGO      código de la familia, el mismo que se escribe en la app

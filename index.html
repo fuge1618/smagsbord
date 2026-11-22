@@ -648,12 +648,13 @@ return`<main class="main" style="max-width:920px"><div class="head"><h1>Configur
 <div style="display:flex;flex-direction:column;gap:8px"><span class="lbl">Tema</span><div class="row">${[["auto","Automático"],["light","Claro"],["dark","Oscuro"]].map(t=>`<button class="chip ${DB.theme===t[0]?"on":""}" data-a="theme" data-v="${t[0]}" aria-pressed="${DB.theme===t[0]}">${t[1]}</button>`).join("")}</div><span class="sm">En automático sigue el modo claro u oscuro del dispositivo.</span></div>
 <div style="display:flex;flex-direction:column;gap:8px"><span class="lbl">Paleta de colores</span><div class="pgr">${Object.entries(PALS).map(([k,pl])=>{const v=pl[dk?"d":"l"],on=(DB.pal===k)||(!PALS[DB.pal]&&k==="firma");return`<button class="pc ${on?"on":""}" data-a="pal" data-v="${k}" aria-pressed="${on}" style="background:${v[0]};color:${v[2]};border-color:${on?v[2]:v[4]}"><span class="pcs"><i style="background:${v[1]}"></i><i style="background:${v[2]}"></i><i style="background:${v[6]}"></i></span><b>${pl.n}</b>${on?`<span style="font-size:13px;color:${v[3]}">En uso</span>`:""}</button>`}).join("")}</div></div></section>
 <section class="cfg"><h2>Carga de recetas</h2><span class="sm">La app usa Gemini, de Google, para convertir un video, una foto o un texto en receta. Hace falta una clave gratuita: se crea en <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a> con una cuenta de Google.</span>
-${DB.gkey?`<div class="lrow"><div><b>Clave guardada</b><span class="sm">Termina en ${esc(DB.gkey.slice(-4))}. Queda solo en este dispositivo.</span></div><button class="btn ghost" data-a="gkdel">Borrar la clave</button></div>`:`<label class="lbl" for="gkey">Clave de Gemini</label><div class="row" style="flex-wrap:nowrap"><input id="gkey" type="password" autocomplete="off" placeholder="Pegá acá la clave" style="flex:1;min-width:0;font:inherit;padding:12px 14px;border:1px solid var(--linea);border-radius:10px;background:var(--papel);color:var(--tinta)"><button class="btn pri" data-a="gksave">Guardar</button></div><span class="sm">Queda guardada solo en este dispositivo. Cualquiera que lo use puede cargar recetas con ella.</span>`}<div style="display:flex;flex-direction:column;gap:8px"><span class="lbl">Modelo</span><div class="row">${[["rap","Rápido"],["pot","Potente"]].map(o=>`<button class="chip ${(DB.gniv||"rap")===o[0]?"on":""}" data-a="uni" data-v="gniv|${o[0]}" aria-pressed="${(DB.gniv||"rap")===o[0]}">${o[1]}</button>`).join("")}</div><span class="sm">Rápido alcanza para casi todas las recetas y es gratis. Potente prueba primero los modelos más capaces de Google, que pueden pedir una cuenta con cobro habilitado y cuestan más por receta. Si no están disponibles, la app sigue con los rápidos.</span></div></section>
+${DB.gkey?`<div class="lrow"><div><b>Clave guardada</b><span class="sm">Termina en ${esc(DB.gkey.slice(-4))}. Queda solo en este dispositivo.</span></div><button class="btn ghost" data-a="gkdel">Borrar la clave</button></div>`:`<label class="lbl" for="gkey">Clave de Gemini</label><div class="row" style="flex-wrap:nowrap"><input id="gkey" type="password" autocomplete="off" placeholder="Pegá acá la clave" style="flex:1;min-width:0;font:inherit;padding:12px 14px;border:1px solid var(--linea);border-radius:10px;background:var(--papel);color:var(--tinta)"><button class="btn pri" data-a="gksave">Guardar</button></div><span class="sm">Queda guardada solo en este dispositivo. Cualquiera que lo use puede cargar recetas con ella.</span>`}<div style="display:flex;flex-direction:column;gap:8px;border-top:1px solid var(--linea);padding-top:14px"><span class="lbl">Servidor de la familia</span>${srvOn()?`<div class="lrow"><div><b>Conectado</b><span class="sm">${esc(DB.srv.replace(/^https?:\/\//,""))}. Las recetas de enlaces y textos se arman en el servidor, aunque cierres la app.</span></div><button class="btn ghost" data-a="srvdel">Desconectar</button></div>`:`<span class="sm">Opcional. Con el servidor, la app deja el pedido y la receta se arma sola aunque cierres la app o se apague la pantalla. No hace falta la clave de Gemini en este dispositivo.</span><label class="lbl" for="srvu">Dirección del servidor</label><input id="srvu" type="url" autocomplete="off" placeholder="https://…" style="font:inherit;padding:12px 14px;border:1px solid var(--linea);border-radius:10px;background:var(--papel);color:var(--tinta)"><label class="lbl" for="srvc">Código de la familia</label><input id="srvc" type="password" autocomplete="off" style="font:inherit;padding:12px 14px;border:1px solid var(--linea);border-radius:10px;background:var(--papel);color:var(--tinta)"><div class="row"><button class="btn pri" data-a="srvsave">Conectar</button></div>`}</div>
+<div style="display:flex;flex-direction:column;gap:8px"><span class="lbl">Modelo</span><div class="row">${[["rap","Rápido"],["pot","Potente"]].map(o=>`<button class="chip ${(DB.gniv||"rap")===o[0]?"on":""}" data-a="uni" data-v="gniv|${o[0]}" aria-pressed="${(DB.gniv||"rap")===o[0]}">${o[1]}</button>`).join("")}</div><span class="sm">Rápido alcanza para casi todas las recetas y es gratis. Potente prueba primero los modelos más capaces de Google, que pueden pedir una cuenta con cobro habilitado y cuestan más por receta. Si no están disponibles, la app sigue con los rápidos.</span></div></section>
 <section class="cfg"><h2>Unidades</h2>${[["uliq","Líquidos",[["ml","Mililitros"],["g","Gramos"],["cuch","Tazas y cucharadas"],["orig","Como en la receta"]],"ml"],["usec","Secos que se miden: harina, azúcar, especias",[["g","Gramos"],["cuch","Tazas y cucharadas"],["orig","Como en la receta"]],"orig"]].map(u=>`<div style="display:flex;flex-direction:column;gap:8px"><span class="lbl">${u[1]}</span><div class="row">${u[2].map(o=>`<button class="chip ${(DB[u[0]]||u[3])===o[0]?"on":""}" data-a="uni" data-v="${u[0]}|${o[0]}" aria-pressed="${(DB[u[0]]||u[3])===o[0]}">${o[1]}</button>`).join("")}</div></div>`).join("")}<span class="sm">${(()=>{const a=I(2,"cda","aceite de oliva"),b=I(200,"g","harina");return`Ejemplo: 2 cdas de aceite se muestran como <b>${qtyTxt(a,1)}</b>, y 200 g de harina como <b>${qtyTxt(b,1)}</b>.`})()} Menos de 5 g se muestra siempre en cucharaditas, porque una balanza de cocina no lo mide. La carne, las verduras y lo que se cuenta por unidades quedan como están. Las conversiones son aproximadas: dependen del peso de cada ingrediente.</span></section>
 <section class="cfg"><h2>Modo cocina</h2><div style="display:flex;flex-direction:column;gap:8px"><span class="lbl">Modo por defecto</span><div class="row">${[["guiado","Guiado"],["simple","Simple"]].map(t=>`<button class="chip ${(DB.modo||"guiado")===t[0]?"on":""}" data-a="modo" data-v="${t[0]}" aria-pressed="${(DB.modo||"guiado")===t[0]}">${t[1]}</button>`).join("")}</div><span class="sm">${(DB.modo||"guiado")==="simple"?"Simple: los ingredientes y los pasos en una sola pantalla, para ir tachando.":"Guiado: de a un paso por vez. Primero reunís todo, después preparás los ingredientes y al final cocinás."} Dentro del modo cocina se puede cambiar con el interruptor de arriba.</span></div><div>${sw(DB.despierta,"despierta","Mantener la pantalla encendida","Evita que la tablet se apague mientras cocinás.")}${sw(DB.sonido,"sonido","Sonido del temporizador","Suena tres veces cuando termina el tiempo.")}</div></section>
 <section class="cfg"><h2>Datos de este dispositivo</h2><p class="sm" style="font-size:15px;line-height:22px">En este prototipo, las fotos, las notas, los platos armados y las listas se guardan solo en este navegador.</p>
 <div class="row">${ST.rs?`<span style="font-weight:600">¿Borrar todo lo guardado acá? No se puede deshacer.</span><button class="btn pri" data-a="reset2">Sí, borrar</button><button class="btn ghost" data-a="reset0">Cancelar</button>`:`<button class="btn" data-a="reset1">Borrar lo guardado y volver a los ejemplos</button>`}</div></section>
-<section class="cfg"><h2>Acerca de</h2><div style="display:flex;align-items:center;gap:14px">${logo(44)}<div><b style="font-size:20px;font-weight:600;display:block">Smagsbord</b><span class="sm" style="display:flex;align-items:center;gap:8px;font-size:14px">Recetas de familia · by ${FIRMA}</span></div></div><span class="sm">Versión 22/11 09:13. Recetas de ejemplo más las que se importen.</span><span class="sm">Fotos de ejemplo de Wikimedia Commons: ${CRED.map(c=>`<a href="${c[3]}" target="_blank" rel="noopener">${c[0]}</a> (${esc(c[1])}, ${c[2]})`).join(" · ")}.</span></section></main>`}
+<section class="cfg"><h2>Acerca de</h2><div style="display:flex;align-items:center;gap:14px">${logo(44)}<div><b style="font-size:20px;font-weight:600;display:block">Smagsbord</b><span class="sm" style="display:flex;align-items:center;gap:8px;font-size:14px">Recetas de familia · by ${FIRMA}</span></div></div><span class="sm">Versión 22/11 13:13. Recetas de ejemplo más las que se importen.</span><span class="sm">Fotos de ejemplo de Wikimedia Commons: ${CRED.map(c=>`<a href="${c[3]}" target="_blank" rel="noopener">${c[0]}</a> (${esc(c[1])}, ${c[2]})`).join(" · ")}.</span></section></main>`}
 // modo cocina
 let timers={},tint=null,wl=null;
 const fmtT=s=>{s=Math.max(0,Math.ceil(s));const h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;return(h?h+":"+String(m).padStart(2,"0"):m)+":"+String(x).padStart(2,"0")};
@@ -735,16 +736,34 @@ function textoDe(o){if(!o)return"";if(typeof o.output_text==="string"&&o.output_
 // pueden llamar directo; si la red lo corta, se prueba la API de interacciones.
 const GMODELS=["gemini-3.8-flash","gemini-3.6-flash","gemini-flash-latest","gemini-3-flash-preview","gemini-3.5-flash-lite"],GPOT=["gemini-4-argon","gemini-3.1-pro-preview"];
 async function gPost(url,body,headers){const t0=Date.now(),ac=new AbortController(),tm=setTimeout(()=>ac.abort(),300000);try{const r=await fetch(url,{method:"POST",headers:Object.assign({"Content-Type":"application/json"},headers||{}),body:JSON.stringify(body),signal:ac.signal});const j=await r.json().catch(()=>({}));return{r,j}}catch(e){if(e.name==="AbortError")throw new Error("Gemini tardó más de 5 minutos y corté la espera.");const x=new Error("red");x.red=true;x.seg=Math.round((Date.now()-t0)/1000);throw x}finally{clearTimeout(tm)}}
+// Pedido con respuesta por partes: Gemini va mandando el texto a medida que lo escribe, así la conexión no queda muda y el teléfono no la corta.
+async function gStream(url,body,alLlegar){const t0=Date.now(),ac=new AbortController();let tm=setTimeout(()=>ac.abort(),300000);
+const caida=()=>{const x=new Error("red");x.red=true;x.seg=Math.round((Date.now()-t0)/1000);return x};
+try{const r=await fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body),signal:ac.signal});
+const ct=r.headers.get("content-type")||"";
+if(!r.ok||!r.body||ct.includes("json")){const j=await r.json().catch(()=>({}));return{r,j:Array.isArray(j)?(j[0]||{}):j}}
+const rd=r.body.getReader(),dec=new TextDecoder();let buf="",txt="",pf=null,fin="",aviso=false;
+const linea=l=>{l=l.trim();if(!l.startsWith("data:"))return;let o;try{o=JSON.parse(l.slice(5))}catch(_){return}
+if(o.error)throw Object.assign(new Error(o.error.message||"error"),{api:o.error});
+if(o.promptFeedback)pf=o.promptFeedback;const c=o.candidates&&o.candidates[0];if(!c)return;if(c.finishReason)fin=c.finishReason;
+((c.content&&c.content.parts)||[]).forEach(p=>{if(typeof p.text==="string"&&!p.thought)txt+=p.text});
+if(txt&&!aviso){aviso=true;alLlegar&&alLlegar()}};
+for(;;){const{done,value}=await rd.read();if(done)break;clearTimeout(tm);tm=setTimeout(()=>ac.abort(),300000);buf+=dec.decode(value,{stream:true});let i;while((i=buf.indexOf("\n"))>=0){linea(buf.slice(0,i));buf=buf.slice(i+1)}}
+linea(buf);
+return{r,j:{candidates:[{content:{parts:[{text:txt}]},finishReason:fin}],promptFeedback:pf||undefined}}}
+catch(e){if(e.api)return{r:{ok:false,status:e.api.code||500},j:{error:e.api}};if(e.name==="AbortError")throw new Error("Gemini tardó más de 5 minutos y corté la espera.");throw caida()}
+finally{clearTimeout(tm)}}
 async function pedirGemini(partes,usarWeb){const ms=DB.gmodel?[DB.gmodel]:(DB.gniv==="pot"?GPOT.concat(GMODELS):GMODELS),B="https://generativelanguage.googleapis.com/v1beta/",k=encodeURIComponent(DB.gkey);let ult="",red=0;
 const gc={contents:[{role:"user",parts:partes.map(x=>x.type==="text"?{text:x.text}:x.uri?{file_data:{file_uri:x.uri}}:{inline_data:{mime_type:x.mime_type,data:x.data}})}]};if(usarWeb)gc.tools=[{url_context:{}}];
-const caminos=[m=>gPost(B+"models/"+m+":generateContent?key="+k,gc),m=>gPost(B+"interactions?key="+k,Object.assign({model:m,input:partes},usarWeb?{tools:[{type:"url_context"}]}:{}))];
+const escribe=()=>{ST.imsg="Gemini está escribiendo la receta…";render(true)};
+const caminos=[(m,n)=>n?gPost(B+"models/"+m+":generateContent?key="+k,gc):gStream(B+"models/"+m+":streamGenerateContent?alt=sse&key="+k,gc,escribe),m=>gPost(B+"interactions?key="+k,Object.assign({model:m,input:partes},usarWeb?{tools:[{type:"url_context"}]}:{}))];
 let sat=0,lim=0,rseg=[];const espera=t=>new Promise(r=>setTimeout(r,t));
 let wl=null;try{if(navigator.wakeLock)wl=await navigator.wakeLock.request("screen")}catch(e){}
 try{
 for(let c=0;c<caminos.length;c++){let otro=false,redc=0;
 for(const m of ms){let seguir=true;
 for(let intento=0;intento<2&&seguir;intento++){seguir=false;let o;
-try{o=await caminos[c](m)}catch(e){if(!e.red)throw e;red++;redc++;rseg.push(e.seg);
+try{o=await caminos[c](m,intento)}catch(e){if(!e.red)throw e;red++;redc++;rseg.push(e.seg);
 if(c>0||redc>=4)break;
 if(intento===0){ST.imsg="Se cortó la conexión con Gemini. Reintentando…";render(true);await espera(3000);seguir=true}continue}
 const{r,j}=o;
@@ -765,26 +784,55 @@ throw new Error((mx<5?"No llegué a conectarme con Gemini: el pedido se cortó a
 if(sat)throw new Error("Gemini está saturado en este momento: probé con varios modelos y ninguno pudo atender. Suele durar unos minutos. Probá de nuevo en un rato.");
 if(lim)throw new Error("Se alcanzó el límite gratuito de Gemini por ahora. Probá de nuevo en un rato. ("+ult+")");
 throw new Error("Ninguno de los modelos de Gemini que conozco respondió: "+ult)}
+function recibir(out,yt,url,foto){const i0=out.indexOf("{"),i1=out.lastIndexOf("}");if(i0<0||i1<=i0)throw new Error("Gemini no devolvió una receta. Respondió: "+out.slice(0,200));
+let raw;try{raw=JSON.parse(out.slice(i0,i1+1))}catch(_){throw new Error("La respuesta de Gemini vino cortada o mal formada. Probá de nuevo.")}
+raw.url=yt?"https://www.youtube.com/watch?v="+yt:(url||"");const id=addReceta(raw);DB.imp=DB.imp||[];DB.imp.push({id,raw});if(foto)DB.fotos["r:"+id]=foto;
+try{localStorage.setItem("smagsbord1",JSON.stringify(DB))}catch(_){delete DB.fotos["r:"+id];save()}return id}
+// Servidor de la familia: la app deja el pedido y se puede cerrar; el servidor arma la receta y la app la pasa a buscar.
+const srvOn=()=>!!(DB.srv&&DB.cod);
+async function srvFetch(ruta,cuerpo){const ac=new AbortController(),tm=setTimeout(()=>ac.abort(),20000);
+try{const r=await fetch(DB.srv+ruta,{method:cuerpo?"POST":"GET",headers:Object.assign({"X-Codigo":DB.cod},cuerpo?{"Content-Type":"application/json"}:{}),body:cuerpo?JSON.stringify(cuerpo):undefined,signal:ac.signal});
+const j=await r.json().catch(()=>({}));return{r,j}}catch(e){const x=new Error("No pude conectarme con el servidor de la familia. Revisá la conexión.");x.red=true;throw x}finally{clearTimeout(tm)}}
+let pendT=null,pendBusy=false;
+function pendGo(){if(pendT||!(DB.pend||[]).length)return;pendT=setInterval(pendTick,4000);pendTick()}
+async function pendTick(){if(pendBusy)return;const ps=DB.pend||[];if(!ps.length||!srvOn()){clearInterval(pendT);pendT=null;return}if(document.hidden)return;pendBusy=true;let cambio=false;
+try{for(const p of ps.slice()){let o;try{o=await srvFetch("/recetas/"+p.id)}catch(_){break}const{r,j}=o;
+const quitar=()=>{DB.pend=DB.pend.filter(x=>x.id!==p.id);cambio=true};
+if(r.status===401){ST.ierr="El servidor no aceptó el código de la familia. Revisalo en Configuración.";cambio=true;break}
+if(r.status===404){quitar();continue}if(!r.ok)continue;
+if(j.estado==="lista"){quitar();try{const id=recibir(j.salida,p.yt,p.url,"");save();const aca=ST.view==="importar";toast("Receta agregada: "+R(id).nombre);if(aca){ST.itxt="";ST.view="ficha";ST.id="r:"+id;ST.nav="todas"}}catch(e){ST.ierr=e.message;save()}}
+else if(j.estado==="error"){quitar();save();ST.ierr=j.error||"El servidor no pudo armar la receta.";if(ST.view!=="importar")toast("No se pudo armar una receta. Mirá el detalle en Agregar receta.")}}}
+finally{pendBusy=false}
+if(cambio){if(ST.view==="importar"||ST.view==="ficha")render(ST.view==="importar")}else if(ST.view==="importar"&&(DB.pend||[]).length){const e=document.getElementById("pendt");if(e)e.textContent=pendTxt()}}
+const haceTxt=t=>{const m=Math.round((Date.now()-t)/60000);return m<1?"recién":m===1?"hace 1 minuto":"hace "+m+" minutos"};
+const pendTxt=()=>(DB.pend||[]).map(p=>p.src+" · pedida "+haceTxt(p.t)).join("\n");
+async function cargarSrv(txt,url,yt){impBusy=true;ST.ierr="";ST.imsg="Enviando el pedido al servidor…";render(true);
+try{const resto=yt?txt.replace(url,"").trim():url?txt.replace(url,"").trim():txt;
+const{r,j}=await srvFetch("/recetas",{prompt:PROMPT,yt,url:yt?"":url,texto:resto,nivel:DB.gniv==="pot"?"pot":"rap"});
+if(r.status===401)throw new Error("El servidor no aceptó el código de la familia. Revisalo en Configuración.");
+if(!r.ok||!j.id)throw new Error(j.error||"El servidor no aceptó el pedido (error "+r.status+").");
+DB.pend=DB.pend||[];DB.pend.push({id:j.id,t:Date.now(),yt,url:yt?"":url,src:yt?"Video de YouTube":url?"Página web":"Texto: "+txt.slice(0,40)});save();
+impBusy=false;ST.imsg="";ST.itxt="";render(true);pendGo()}
+catch(e){impBusy=false;ST.imsg="";ST.ierr=e.message||String(e);render(true)}}
 async function cargarAuto(){if(impBusy)return;const txt=(ST.itxt||"").trim(),url=(txt.match(/https?:\/\/\S+/)||[""])[0].replace(/[)\].,;]+$/,""),yt=ytId(url);
-if(!DB.gkey){ST.ierr="Falta la clave de Gemini. Cargala en Configuración, en «Carga de recetas».";render(true);return}
+if(srvOn()&&!impFiles.length&&txt){cargarSrv(txt,url,yt);return}
+if(!DB.gkey){ST.ierr=srvOn()?"Las fotos y los videos guardados todavía se leen desde este dispositivo y necesitan la clave de Gemini. Cargala en Configuración.":"Falta la clave de Gemini. Cargala en Configuración, en «Carga de recetas».";render(true);return}
 if(!txt&&!impFiles.length){ST.ierr="Pegá un enlace o un texto, o elegí fotos o un video.";render(true);return}
 impBusy=true;ST.ierr="";ST.imsg=yt?"Gemini está mirando el video. Puede tardar uno o dos minutos.":impFiles.length?"Gemini está leyendo los archivos.":"Gemini está leyendo la receta.";render(true);
 try{const partes=[{type:"text",text:PROMPT}];let foto="";
 if(yt)partes.push({type:"video",uri:"https://www.youtube.com/watch?v="+yt});
 for(const f of impFiles){if(f.type.startsWith("image/")){const d=await achicar(f,1800);partes.push({type:"image",data:d.split(",")[1],mime_type:"image/jpeg"});if(!foto&&impFiles.length===1)foto=await achicar(f,900)}else if(f.type.startsWith("video/")){if(f.size>60*1024*1024)throw new Error("El video pesa más de 60 MB. Probá con uno más corto o más liviano.");partes.push({type:"video",data:await b64(f),mime_type:f.type||"video/mp4"})}else throw new Error("No sé leer el archivo "+f.name+". Sirven fotos y videos.")}
 const resto=yt?txt.replace(url,"").trim():txt;if(resto)partes.push({type:"text",text:(url&&!yt?"La receta está en esta página: ":"Texto que acompaña a la receta: ")+resto});
-const out=await pedirGemini(partes,!!url&&!yt),i0=out.indexOf("{"),i1=out.lastIndexOf("}");if(i0<0||i1<=i0)throw new Error("Gemini no devolvió una receta. Respondió: "+out.slice(0,200));
-let raw;try{raw=JSON.parse(out.slice(i0,i1+1))}catch(_){throw new Error("La respuesta de Gemini vino cortada o mal formada. Probá de nuevo.")}
-raw.url=yt?"https://www.youtube.com/watch?v="+yt:url;const id=addReceta(raw);DB.imp=DB.imp||[];DB.imp.push({id,raw});if(foto)DB.fotos["r:"+id]=foto;
-try{localStorage.setItem("smagsbord1",JSON.stringify(DB))}catch(_){delete DB.fotos["r:"+id];save()}
+const out=await pedirGemini(partes,!!url&&!yt);
+const id=recibir(out,yt,url,foto);
 impFiles=[];ST.itxt="";ST.imsg="";ST.view="ficha";ST.id="r:"+id;ST.nav="todas";impBusy=false;render();toast("Receta agregada")}
 catch(e){impBusy=false;ST.imsg="";ST.ierr=e.message||String(e);render(true)}}
-function importar(){const imp=RECETAS.filter(r=>r.imp),ok=!!DB.gkey;return`<main class="main"><div class="head"><h1>Agregar receta</h1></div>
+function importar(){const imp=RECETAS.filter(r=>r.imp),ok=!!DB.gkey||srvOn();return`<main class="main"><div class="head"><h1>Agregar receta</h1></div>
 ${ok?"":`<div class="note" role="status"><span>Para que la app arme las recetas sola hace falta una clave gratuita de Gemini. Se carga una sola vez en Configuración, en «Carga de recetas».</span><button class="btn ghost" data-a="nav" data-v="config">Ir a Configuración</button></div>`}
 <section class="box"><span class="h">De dónde sale la receta</span>
 <label class="lbl" for="itxt">Enlace de YouTube, enlace de una página o el texto de la receta</label><textarea id="itxt" rows="3" placeholder="https://www.youtube.com/watch?v=…" ${impBusy?"disabled":""}>${esc(ST.itxt||"")}</textarea>
 <div class="row"><label class="btn ghost" style="cursor:pointer">${IC.plus}Fotos o video<input id="ifile" type="file" accept="image/*,video/*" multiple class="sr" ${impBusy?"disabled":""}></label>${impFiles.length?`<span class="sm">${impFiles.length===1?esc(impFiles[0].name):impFiles.length+" archivos elegidos"}</span><button class="btn ghost" data-a="iclear">Quitar</button>`:`<span class="sm">Fotos de un libro o de una hoja, o un video guardado en el dispositivo.</span>`}</div>
-${ST.ierr?`<div class="note" role="alert"><span>${esc(ST.ierr)}</span></div>`:""}${ST.imsg?`<div class="note" role="status"><span>${esc(ST.imsg)}</span></div>`:""}
+${(DB.pend||[]).length?`<div class="note" role="status"><span><b>${DB.pend.length===1?"Receta en preparación":DB.pend.length+" recetas en preparación"}</b><br><span id="pendt" style="white-space:pre-line">${esc(pendTxt())}</span><br>Podés cerrar la app o seguir usándola: la receta aparece sola cuando está lista. Un video suele tardar uno o dos minutos.</span></div>`:""}${ST.ierr?`<div class="note" role="alert"><span>${esc(ST.ierr)}</span></div>`:""}${ST.imsg?`<div class="note" role="status"><span>${esc(ST.imsg)}</span></div>`:""}
 <div class="row"><button class="btn pri" data-a="iauto" ${impBusy?"disabled":""}>${impBusy?"Trabajando…":"Crear la receta"}</button></div>
 <span class="sm">Los reels de Instagram y TikTok no se pueden leer desde el enlace: hay que guardar el video en el dispositivo y elegirlo acá. La lectura de páginas web todavía es experimental.</span></section>
 <section class="box"><button class="btn ghost" style="align-self:flex-start" data-a="imanual" aria-expanded="${!!ST.iman}">${ST.iman?"Ocultar la carga manual":"Carga manual, sin clave"}</button>
@@ -910,6 +958,9 @@ else if(a==="iclear"){impFiles=[]}
 else if(a==="imanual"){ST.iman=!ST.iman}
 else if(a==="gksave"){const k=(document.getElementById("gkey").value||"").trim();if(k.length<20){toast("Esa clave parece incompleta.");return}DB.gkey=k;save();toast("Clave guardada")}
 else if(a==="gkdel"){delete DB.gkey;save()}
+else if(a==="srvdel"){delete DB.srv;delete DB.cod;save()}
+else if(a==="srvsave"){let u=(document.getElementById("srvu").value||"").trim().replace(/\/+$/,"");const c=(document.getElementById("srvc").value||"").trim();if(u&&!/^https?:\/\//.test(u))u="https://"+u;if(!u||!c){toast("Faltan la dirección o el código.");return}
+toast("Probando la conexión…");DB.srv=u;DB.cod=c;srvFetch("/hola").then(({r,j})=>{if(r.ok&&j.ok){save();toast("Servidor conectado");pendGo()}else{delete DB.srv;delete DB.cod;toast(r.status===401?"El código no coincide.":(j.error||"El servidor respondió con un error."))}render(true)}).catch(e=>{delete DB.srv;delete DB.cod;toast("No pude conectarme con esa dirección.");render(true)});return}
 else if(a==="cpprompt"){const fb=()=>{ST.vp=true;render(true);toast("No pude copiar. Seleccioná el texto y copialo a mano.")};try{navigator.clipboard.writeText(PROMPT).then(()=>toast("Instrucción copiada"),fb)}catch(_){fb()}return}
 else if(a==="doimp"){const t=(ST.ijson||"").trim(),i0=t.indexOf("{"),i1=t.lastIndexOf("}");if(i0<0||i1<=i0)ST.ierr="No encontré una receta en el texto pegado. Tiene que empezar con { y terminar con }.";else{try{const raw=JSON.parse(t.slice(i0,i1+1));raw.url=(ST.iurl||"").trim();const id=addReceta(raw);DB.imp=DB.imp||[];DB.imp.push({id,raw});save();ST.ijson="";ST.iurl="";ST.ierr="";ST.view="ficha";ST.id="r:"+id;ST.nav="todas";toast("Receta importada");keep=false}catch(err){ST.ierr="No pude leer la receta: "+err.message}}}
 else if(a==="delrec"){delReceta(v);save();if(ST.view==="ficha"){ST.view="home";ST.nav="todas"}toast("Receta borrada");keep=false}
@@ -922,7 +973,7 @@ else if(a==="vaj"){ST.co.vaj=!ST.co.vaj}
 else if(a==="vadj"){const[k,i,dl]=v.split("|");DB.vadj=DB.vadj||{};const x=DB.vadj[k]=DB.vadj[k]||[0,0];x[+i]+=+dl;save()}
 else if(a==="reset1"){ST.rs=true}
 else if(a==="reset0"){ST.rs=false}
-else if(a==="reset2"){RECETAS.filter(r=>r.imp&&!r.pre).map(r=>r.id).forEach(delReceta);const gk=DB.gkey;DB=JSON.parse(JSON.stringify(DEF));try{localStorage.removeItem("smagsbord1")}catch(_){}if(gk){DB.gkey=gk;save()}fijas();ST.rs=false;ST.porc={};applyTheme();toast("Listo. Volvieron las recetas de ejemplo.")}
+else if(a==="reset2"){RECETAS.filter(r=>r.imp&&!r.pre).map(r=>r.id).forEach(delReceta);const gk=DB.gkey,sv=DB.srv,cd=DB.cod;DB=JSON.parse(JSON.stringify(DEF));try{localStorage.removeItem("smagsbord1")}catch(_){}if(gk)DB.gkey=gk;if(sv&&cd){DB.srv=sv;DB.cod=cd}if(gk||sv)save();fijas();ST.rs=false;ST.porc={};applyTheme();toast("Listo. Volvieron las recetas de ejemplo.")}
 else if(a==="f"){ST.f=v}
 else if(a==="open"){ST.view="ficha";ST.id=v;ST.edit=null;ST.newlist=false;keep=false}
 else if(a==="porc"){ST.porc[e.key]=Math.max(1,Math.min(40,porc(e)+ +v))}
@@ -969,7 +1020,8 @@ function commit(t){if(t.id==="ren"){const pid=t.dataset.pid,v=t.value.trim();if(
 else if(t.id==="nl"){const v=t.value.trim();if(v){const e=ent(ST.id);DB.listas.push({id:"l"+Date.now(),nombre:v,items:[e.key]});save()}ST.newlist=false;render(true)}}
 document.addEventListener("keydown",ev=>{const t=ev.target;if(ev.key==="Enter"&&(t.id==="ren"||t.id==="nl"))commit(t);else if(ev.key==="Enter"&&t.id==="nl2")document.querySelector('[data-a="addlist"]').click()});
 document.addEventListener("focusout",ev=>{const t=ev.target;if((t.id==="ren"||t.id==="nl")&&document.body.contains(t))setTimeout(()=>{if(document.body.contains(t)&&document.activeElement!==t)commit(t)},0)});
-applyTheme();render();
+applyTheme();render();pendGo();
+document.addEventListener("visibilitychange",()=>{if(!document.hidden&&(DB.pend||[]).length){if(pendT)pendTick();else pendGo()}});
 setTimeout(()=>{const s=document.getElementById("splash");s.style.opacity="0";setTimeout(()=>s.remove(),450)},3800);
 </script>
 </body>
