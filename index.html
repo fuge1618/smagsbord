@@ -356,6 +356,35 @@ svg.i{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.5;stro
 .lrw.on{color:var(--suave);text-decoration:line-through}.lrw.on .q,.lps.on i{color:inherit}
 .lfin{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:13px;color:var(--suave);margin-top:14px;padding-top:12px;border-top:1px solid var(--linea)}
 @media (max-width:899px){.libro,.libro.cf{grid-template-columns:minmax(0,1fr);margin:10px 12px 16px;width:calc(100% - 24px)}.lder{display:none}.ltel{display:block;width:calc(100% + 40px);margin:-20px -20px 18px;aspect-ratio:16/10;object-fit:cover}.lpag{padding:20px 20px 18px}.lnom{font-size:23px;line-height:28px}.lcue{grid-template-columns:minmax(0,1fr);gap:16px}.ling{columns:2 130px;column-gap:18px}.ling li{break-inside:avoid}}
+/* modo guiado: una doble página por paso */
+.libro.gl{position:relative;perspective:2200px}
+.libro.gl.cf{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.gizq{display:flex;flex-direction:column;gap:10px;min-height:calc(100vh - 232px)}
+.gizq>.ltit{margin:0}
+.gnum{font-size:86px;line-height:80px;font-weight:700;color:color-mix(in srgb,var(--papaya) 68%,#000);margin:2px 0 6px}
+.gt{font-size:27px;line-height:36px;font-weight:500;margin:0}
+.gs{font-size:16px;line-height:23px;color:var(--suave);margin:0}
+.gizq .lbox{margin-top:10px}.gli{font-size:16px;line-height:22px;padding:3px 0}.gli b{font-weight:600}
+.gdon{margin:6px 0 0;font-size:14px;line-height:20px;color:var(--suave)}.ling+.gdon{padding-top:6px;border-top:1px solid var(--linea)}
+.gder{position:relative;border-left:1px solid var(--linea);background:var(--lino);display:flex;flex-direction:column;justify-content:center;gap:10px;min-height:320px;min-width:0}
+.gder .lfoto{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.gder.gv{padding:18px}.gder.gv .vslot{max-height:none}
+.gvc{display:flex;gap:8px;justify-content:flex-end}
+.gvb{position:absolute;left:14px;right:14px;bottom:14px}
+.gsin{padding:24px;text-align:center;font-size:20px;line-height:28px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--suave)}
+.lcue2{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.co .gpie{align-items:center;padding:10px 24px 14px}
+.co .gpie button{min-height:56px;font-size:17px;padding:0 22px;flex:none}
+.co .gpie .gant{background:transparent;border-color:var(--linea)}.co .gpie .nx{min-width:190px}
+.gfol{flex:1;min-width:0;text-align:center;display:flex;flex-direction:column;gap:1px;font-size:15px}.gfol b{font-weight:600}.gfol span{font-size:13px;color:var(--suave);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ghoja{position:absolute;top:0;bottom:0;left:50%;width:50%;background:var(--surf);border-left:1px solid var(--linea);box-shadow:0 0 24px rgba(0,0,0,.14);z-index:4;pointer-events:none;backface-visibility:hidden;transform-origin:left center;animation:gfn .42s ease-in-out forwards}
+.ghoja.p{left:0;transform-origin:right center;animation-name:gfp;border-left:0;border-right:1px solid var(--linea)}
+@keyframes gfn{from{transform:rotateY(0)}to{transform:rotateY(-180deg)}}@keyframes gfp{from{transform:rotateY(0)}to{transform:rotateY(180deg)}}
+@media (prefers-reduced-motion:reduce){.ghoja{display:none}}
+.lli{display:flex;align-items:baseline;gap:2px}.lli .lps{flex:1;min-width:0}
+.lnum{flex:none;min-width:30px;padding:6px 4px;background:none;border:0;border-radius:6px;font:inherit;font-weight:700;font-size:19px;line-height:22px;text-align:left;cursor:pointer;color:color-mix(in srgb,var(--papaya) 85%,#000)}
+.lli:has(.lps.on) .lnum{color:var(--suave)}
+@media (max-width:899px){.libro.gl{align-content:start}.libro.gl.cf{grid-template-columns:minmax(0,1fr)}.gder{order:-1;border-left:0;border-bottom:1px solid var(--linea);min-height:0;aspect-ratio:16/10}.gder.gv{aspect-ratio:auto;padding:10px}.ghoja,.ghoja.p{left:0;width:100%}.gizq{min-height:0}.gnum{font-size:60px;line-height:58px}.gt{font-size:22px;line-height:30px}.lcue2{grid-template-columns:minmax(0,1fr)}.co .gpie{padding:8px 12px 12px;gap:8px}.co .gpie button{padding:0 14px}.co .gpie .gant span{display:none}.co .gpie .nx{min-width:0}}
 /* modo simple: lista a la izquierda, proceso elegido a la derecha */
 .sbody2{flex:1 0 auto;display:grid;grid-template-columns:minmax(340px,42%) minmax(0,1fr);gap:20px;padding:16px 24px 24px;align-items:start}
 .sleft,.sright{background:var(--surf);border:1px solid var(--linea);border-radius:12px;padding:16px 18px;min-width:0}
@@ -686,7 +715,7 @@ ${DB.gkey?`<div class="lrow"><div><b>Clave guardada</b><span class="sm">Termina 
 <section class="cfg"><h2>Modo cocina</h2><div style="display:flex;flex-direction:column;gap:8px"><span class="lbl">Modo por defecto</span><div class="row">${[["guiado","Guiado"],["simple","Simple"]].map(t=>`<button class="chip ${(DB.modo||"guiado")===t[0]?"on":""}" data-a="modo" data-v="${t[0]}" aria-pressed="${(DB.modo||"guiado")===t[0]}">${t[1]}</button>`).join("")}</div><span class="sm">${(DB.modo||"guiado")==="simple"?"Simple: los ingredientes y los pasos en una sola pantalla, para ir tachando.":"Guiado: de a un paso por vez. Primero reunís todo, después preparás los ingredientes y al final cocinás."} Dentro del modo cocina se puede cambiar con el interruptor de arriba.</span></div><div>${sw(DB.despierta,"despierta","Mantener la pantalla encendida","Evita que la tablet se apague mientras cocinás.")}${sw(DB.sonido,"sonido","Sonido del temporizador","Suena tres veces cuando termina el tiempo.")}</div></section>
 <section class="cfg"><h2>Datos de este dispositivo</h2><p class="sm" style="font-size:15px;line-height:22px">En este prototipo, las fotos, las notas, los platos armados y las listas se guardan solo en este navegador.</p>
 <div class="row">${ST.rs?`<span style="font-weight:600">¿Borrar todo lo guardado acá? No se puede deshacer.</span><button class="btn pri" data-a="reset2">Sí, borrar</button><button class="btn ghost" data-a="reset0">Cancelar</button>`:`<button class="btn" data-a="reset1">Borrar lo guardado y volver a los ejemplos</button>`}</div></section>
-<section class="cfg"><h2>Acerca de</h2><div style="display:flex;align-items:center;gap:14px">${logo(44)}<div><b style="font-size:20px;font-weight:600;display:block">Smagsbord</b><span class="sm" style="display:flex;align-items:center;gap:8px;font-size:14px">Recetas de familia · by ${FIRMA}</span></div></div><span class="sm">Versión 23/11 00:04. Recetas de ejemplo más las que se importen.</span><span class="sm">Fotos de ejemplo de Wikimedia Commons: ${CRED.map(c=>`<a href="${c[3]}" target="_blank" rel="noopener">${c[0]}</a> (${esc(c[1])}, ${c[2]})`).join(" · ")}.</span></section></main>`}
+<section class="cfg"><h2>Acerca de</h2><div style="display:flex;align-items:center;gap:14px">${logo(44)}<div><b style="font-size:20px;font-weight:600;display:block">Smagsbord</b><span class="sm" style="display:flex;align-items:center;gap:8px;font-size:14px">Recetas de familia · by ${FIRMA}</span></div></div><span class="sm">Versión 23/11 00:13. Recetas de ejemplo más las que se importen.</span><span class="sm">Fotos de ejemplo de Wikimedia Commons: ${CRED.map(c=>`<a href="${c[3]}" target="_blank" rel="noopener">${c[0]}</a> (${esc(c[1])}, ${c[2]})`).join(" · ")}.</span></section></main>`}
 // modo cocina
 let timers={},tint=null,wl=null;
 const fmtT=s=>{s=Math.max(0,Math.ceil(s));const h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;return(h?h+":"+String(m).padStart(2,"0"):m)+":"+String(x).padStart(2,"0")};
@@ -756,7 +785,7 @@ function vfig(g,tec){const C=ST.co,big=DB.vsize==="l";return`<figure class="fg v
 // Opciones del video, debajo de la secuencia. g es el tramo del paso, exista o no el video abierto.
 function vextra(g){if(!g)return"";const C=ST.co;if(C.vid===false)return`<div class="vopts"><button class="chip" data-a="vopen">${IC.play}Ver el video de este paso</button></div>`;
 const adj=(i,dl,t)=>`<button class="chip" data-a="vadj" data-v="${g.key}|${i}|${dl}">${t}</button>`;
-return(ytErr?`<div class="vopts"><span class="sm" role="alert" style="color:var(--tinta);font-weight:600">${esc(ytErr)}</span><a class="chip" href="https://www.youtube.com/watch?v=${g.v}&t=${g.d}s" target="_blank" rel="noopener">Abrir en YouTube</a></div>`:"")+(C.vaj?`<div class="vopts"><span class="sm">El video repite de ${mmss(g.d)} a ${mmss(g.h)}. Si arranca tarde o corta antes, corregilo: queda guardado para este paso.</span>${adj(0,-2,"Empieza 2 s antes")}${adj(0,2,"Empieza 2 s después")}${adj(1,-2,"Termina 2 s antes")}${adj(1,2,"Termina 2 s después")}<button class="chip" data-a="vclose">Ver el dibujo en lugar del video</button><a class="chip" href="https://www.youtube.com/watch?v=${g.v}&t=${g.d}s" target="_blank" rel="noopener">Abrir en YouTube</a></div>`:"")}
+return(ytErr?`<div class="vopts"><span class="sm" role="alert" style="color:var(--tinta);font-weight:600">${esc(ytErr)}</span><a class="chip" href="https://www.youtube.com/watch?v=${g.v}&t=${g.d}s" target="_blank" rel="noopener">Abrir en YouTube</a></div>`:"")+(C.vaj?`<div class="vopts"><span class="sm">El video repite de ${mmss(g.d)} a ${mmss(g.h)}. Si arranca tarde o corta antes, corregilo: queda guardado para este paso.</span>${adj(0,-2,"Empieza 2 s antes")}${adj(0,2,"Empieza 2 s después")}${adj(1,-2,"Termina 2 s antes")}${adj(1,2,"Termina 2 s después")}<button class="chip" data-a="vclose">Ver la foto en lugar del video</button><a class="chip" href="https://www.youtube.com/watch?v=${g.v}&t=${g.d}s" target="_blank" rel="noopener">Abrir en YouTube</a></div>`:"")}
 function gbody(g,lbl,strip,inner){return`<div class="cobody gcol">${lbl}${strip}${vextra(g)}${inner}</div>`}
 function vlink(pid,s){const r=R(PARTES[pid].receta),v=r&&ytId(r.url);if(!v||!s.vh)return"";return`<a class="btn ghost" href="https://www.youtube.com/watch?v=${v}&t=${s.vd}s" target="_blank" rel="noopener">${IC.next}Ver este paso en el video · ${mmss(s.vd)}</a>`}
 // Carga automática: la app le manda a Gemini la fuente (enlace, fotos, video o texto) junto con la instrucción.
@@ -917,7 +946,7 @@ else if(fu>0){C.stage="prep";C.pi=Math.max(C.pi,fu)}}
 function simpleView(){const C=ST.co,e=ent(C.key),lh=lastHist(C.key),multi=C.partes.length>1,ft=fotoDe(e.key);let tot=0,ok=0,nIng=0,min=0;
 // Modo simple: la receta completa en una doble página de libro de cocina. Ingredientes aparte en un recuadro de color, pasos numerados y la foto al lado.
 const ings=C.partes.map(pid=>{const p=PARTES[pid],pf=pfac(e,pid);nIng+=p.ings.length;return`${multi?`<h3 class="lsub">${esc(pnom(p))}</h3>`:""}<ul class="ling">${p.ings.map((i,k)=>{const key="i:"+pid+":"+k,on=!!C.ck[key];return`<li><button class="lrw ${on?"on":""}" data-a="sck" data-v="${key}" aria-pressed="${on}"><b>${qtyTxt(i,pf)}</b> ${esc(i.n)}</button></li>`}).join("")}</ul>`}).join("");
-const pasos=C.partes.map(pid=>{const p=PARTES[pid],pf=pfac(e,pid);let n=0;const fila=(key,x,m)=>{const on=!!C.sx[key];tot++;if(on)ok++;n++;min+=+m||0;return`<li><button class="lrw lps ${on?"on":""}" data-a="sx" data-v="${key}" aria-pressed="${on}"><i>${n}</i><span>${stepTxt(x.t,p,pf)}${x.sub?" "+stepTxt(x.sub,p,pf):""}${m?` <b class="q">${m} min</b>`:""}</span></button></li>`};
+const pasos=C.partes.map(pid=>{const p=PARTES[pid],pf=pfac(e,pid);let n=0;const fila=(key,x,m)=>{const on=!!C.sx[key];tot++;if(on)ok++;n++;min+=+m||0;return`<li class="lli"><button class="lnum" data-a="sgo" data-v="${key}" aria-label="Abrir el paso ${n} en el modo guiado">${n}</button><button class="lrw lps ${on?"on":""}" data-a="sx" data-v="${key}" aria-pressed="${on}"><span>${stepTxt(x.t,p,pf)}${x.sub?" "+stepTxt(x.sub,p,pf):""}${m?` <b class="q">${m} min</b>`:""}</span></button></li>`};
 return`${multi?`<h3 class="lsub">${esc(pnom(p))}</h3>`:""}<ol class="lpas">${p.prep.map((x,k)=>fila("p:"+pid+":"+k,x,0)).join("")}${p.pasos.map((x,k)=>fila("s:"+pid+":"+k,x,x.timer)).join("")}</ol>`}).join("");
 const dato=(a,b)=>`<div><span>${a}</span><b>${b}</b></div>`,et=estim(e);
 return`<div class="co" role="dialog" aria-label="Modo cocina simple"><header><button class="step" style="width:56px;height:56px;border-color:var(--linea)" data-a="coexit" aria-label="Salir del modo cocina">${IC.x}</button><div style="min-width:0;flex:1"></div>${modoSw()}</header>
@@ -931,46 +960,56 @@ ${lh&&lh.nota?`<div class="lnota"><span class="ltit">Tu nota de la última vez</
 <div class="lfin"><span id="lcnt">${ok} de ${tot} pasos tachados</span><button class="btn ghost" data-a="costage" data-v="fin">Terminar la receta</button></div></section></div>
 </div>${ft?`<div class="lder"><img class="lfoto" src="${ft}" alt="Foto de ${esc(e.nombre)}"></div>`:""}</div></div>`}
 function recips(C){const m=new Map(),e=ent(C.key);C.partes.forEach(pid=>{const p=PARTES[pid],f=pfac(e,pid);new Set([...p.prep.map(s=>s.dest).filter(Boolean),...(p.rec||[])]).forEach(n=>{const r=rsc(p,n,f);m.set(r.n,(m.get(r.n)||0)+r.c)})});return[...m]}
-function reunir(){const C=ST.co,e=ent(C.key);let tot=0,ok=0;const row=(k,html)=>{tot++;const on=!!C.ck[k];if(on)ok++;return`<button class="ck ${on?"on":""}" data-a="ck" data-v="${k}" aria-pressed="${on}"><i>${on?IC.check:""}</i>${html}</button>`};
-const groups=C.partes.map(pid=>{const p=PARTES[pid],pf=pfac(e,pid);return`<section class="box" style="gap:8px"><span class="h">${C.partes.length>1?esc(pnom(p)):"Ingredientes"}</span>${p.ings.map((i,k)=>row("i:"+pid+":"+k,`${emo(i.n)}<b style="min-width:72px;font-weight:600">${qtyTxt(i,pf)}</b><span>${esc(i.n)}</span>`)).join("")}</section>`}).join("");
-const rc=recips(C),nrec=rc.reduce((a,x)=>a+x[1],0);const recH=rc.map(([n,c])=>row("r:"+n,`${rcIc(n)}<span>${esc(n)}</span>${c>1?`<b style="margin-left:auto;font-weight:600">× ${c}</b>`:""}`)).join("");
-const uts=[...new Set(C.partes.flatMap(pid=>PARTES[pid].ut||[]))].filter(u=>!rc.some(r=>r[0]===u));const utH=uts.map(u=>row("u:"+u,`${rcIc(u)}<span>${esc(u)}</span>`)).join("");
-const esp=C.partes.reduce((a,pid)=>a+PARTES[pid].pasos.reduce((x,s)=>x+s.timer,0),0);const lh=lastHist(C.key);
-return`<div class="co" role="dialog" aria-label="Modo cocina: reunir">${coHead()}
-<div style="padding:16px 24px 0;display:flex;flex-direction:column;gap:6px" class="copad"><h1 style="font-size:24px;line-height:30px;font-weight:600">${esc(e.nombre)}</h1><span class="sm" style="font-size:15px">${porc(e)} porciones${esp?" · unos "+durT(esp)+" de cocción y espera":""} · ${nrec} recipientes</span>
-<p style="font-size:19px;line-height:28px;max-width:900px">Primero juntá todo sobre la mesada. Todavía no cortes ni mezcles nada: eso viene en el paso siguiente.</p>
-${lh&&lh.nota?`<div class="note"><span class="lbl">Tu nota de la última vez</span><span>${esc(lh.nota)}</span></div>`:""}</div>
-<div class="cobody" style="align-items:flex-start"><div style="flex:2 1 420px;min-width:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px">${groups}</div>
-<div style="flex:1 1 260px;display:flex;flex-direction:column;gap:20px"><section class="box" style="gap:8px"><span class="h">Recipientes</span>${recH}</section><section class="box" style="gap:8px"><span class="h">Herramientas</span>${utH}</section></div></div>
-<div class="cofoot"><div id="ckn" style="flex:1;display:flex;align-items:center;font-size:19px;font-weight:600">${ok} de ${tot} listos</div><button class="nx" data-a="costage" data-v="prep"><span id="ckgo">${ok===tot?"Todo listo. Preparar ingredientes":"Preparar ingredientes"}</span>${IC.next}</button></div></div>`}
+// Modo guiado: el mismo libro del modo simple, visto de cerca. Una doble página por paso: a la izquierda el texto, a la derecha la imagen.
+function gHead(){return`<header><button class="step" style="width:56px;height:56px;border-color:var(--linea)" data-a="coexit" aria-label="Salir del modo cocina">${IC.x}</button><div style="min-width:0;flex:1"></div>${modoSw()}</header>`}
+function gFlip(){const f=ST.flip;ST.flip=null;return f?`<div class="ghoja ${f}" aria-hidden="true"></div>`:""}
+function gNum(C){const seq=prepSeq(C);let n=0,tot=seq.length;C.partes.forEach(pid=>tot+=PARTES[pid].pasos.length);
+if(C.stage==="prep")n=Math.min(C.pi,seq.length-1)+1;else if(C.stage==="steps"){n=seq.length;for(const pid of C.partes){if(pid===C.cur){n+=(C.idx[pid]||0)+1;break}n+=PARTES[pid].pasos.length}}return{n,tot}}
+function gVis(g,e){const C=ST.co,ft=fotoDe(e.key);
+if(g&&C.vid!==false)return`<div class="gder gv"><div class="vslot" id="vslot" data-v="${g.v}|${g.d}|${g.h}"></div><div class="gvc"><button class="ib" data-a="vson" aria-pressed="${!!DB.vson}" aria-label="${DB.vson?"Quitar el sonido del video":"Activar el sonido del video"}">${DB.vson?IC.son:IC.mute}</button><button class="ib ${C.vaj?"on":""}" data-a="vaj" aria-expanded="${!!C.vaj}" aria-label="Más opciones del video">${IC.dots}</button></div>${vextra(g)}</div>`;
+return`<div class="gder">${ft?`<img class="lfoto" src="${ft}" alt="Foto de ${esc(e.nombre)}">`:`<div class="gsin">${esc(e.nombre)}</div>`}${g?`<div class="gvb">${vextra(g)}</div>`:""}</div>`}
+function gPie(prevA,prevDis,nextA,nextTxt,num,parte){return`<div class="cofoot gpie"><button class="gant" data-a="${prevA}" ${prevDis?"disabled":""}>${IC.back}<span>Anterior</span></button><div class="gfol"><b>${num}</b>${parte?`<span>${esc(parte)}</span>`:""}</div><button class="nx" data-a="${nextA}">${nextTxt}${IC.next}</button></div>`}
+function gPaso(o){const filas=o.ings.map(i=>`<li class="gli"><b>${qtyTxt(i,o.pf)}</b> ${esc(i.n)}</li>`).join("");
+return`<div class="co gd" role="dialog" aria-label="Modo cocina guiado">${gHead()}
+<div class="libro cf gl">${gFlip()}<div class="lpag gizq">${o.tkey?timerStrip(o.tkey):""}<span class="ltit">${o.etq}</span><div class="gnum" aria-label="Paso ${o.n} de ${o.tot}">${o.n}</div><p class="gt">${o.txt}</p>${o.sub?`<p class="gs">${o.sub}</p>`:""}${o.notas.map(x=>`<p class="gs">${x}</p>`).join("")}
+${filas||o.donde?`<section class="lbox"><h2 class="ltit">Para este paso</h2>${filas?`<ul class="ling">${filas}</ul>`:""}${o.donde?`<p class="gdon">${o.donde}</p>`:""}</section>`:""}${o.tkey?timerBox(o.tkey):""}</div>${gVis(o.g,o.e)}</div>
+${gPie(o.prevA,false,o.nextA,o.nextTxt,o.n+" / "+o.tot,o.parte)}</div>`}
+function reunir(){const C=ST.co,e=ent(C.key),et=estim(e),lh=lastHist(C.key),multi=C.partes.length>1,ft=fotoDe(e.key),nn=gNum(C);
+const fila=(k,html)=>{const on=!!C.ck[k];return`<li><button class="lrw ${on?"on":""}" data-a="sck" data-v="${k}" aria-pressed="${on}">${html}</button></li>`};
+const ings=C.partes.map(pid=>{const p=PARTES[pid],pf=pfac(e,pid);return`${multi?`<h3 class="lsub">${esc(pnom(p))}</h3>`:""}<ul class="ling">${p.ings.map((i,k)=>fila("i:"+pid+":"+k,`<b>${qtyTxt(i,pf)}</b> ${esc(i.n)}`)).join("")}</ul>`}).join("");
+const rc=recips(C),uts=[...new Set(C.partes.flatMap(pid=>PARTES[pid].ut||[]))].filter(u=>!rc.some(r=>r[0]===u));
+const cosas=rc.map(([n,c])=>fila("r:"+n,`${esc(n)}${c>1?` <b>× ${c}</b>`:""}`)).join("")+uts.map(u=>fila("u:"+u,esc(u))).join("");
+const dato=(a,b)=>`<div><span>${a}</span><b>${b}</b></div>`,dn=["","Fácil","Media","Difícil"][et.dif];
+return`<div class="co gd" role="dialog" aria-label="Modo cocina guiado: antes de empezar">${gHead()}
+<div class="libro ${ft?"cf":""} gl">${gFlip()}<div class="lpag">${ft?`<img class="lfoto ltel" src="${ft}" alt="Foto de ${esc(e.nombre)}">`:""}
+<h1 class="lnom">${esc(e.nombre)}</h1>${e.fuente?`<p class="lde">${esc(e.fuente)}</p>`:""}
+<div class="ldat">${dato("Porciones",porc(e))}${dato("Preparación",hm(et.prep))}${et.coc?dato("Cocción",hm(et.coc)):""}${dato("Dificultad",`<span class="ldif" role="img" aria-label="${dn}">${[1,2,3].map(n=>`<i class="${n<=et.dif?"on":""}"></i>`).join("")}</span>${dn}`)}</div>
+${lh&&lh.nota?`<div class="lnota"><span class="ltit">Tu nota de la última vez</span>${esc(lh.nota)}</div>`:""}
+<p class="gs" style="margin:0 0 14px;font-size:17px;line-height:25px;color:var(--tinta)"><b style="font-weight:600">Antes de empezar,</b> juntá todo sobre la mesada. Tocá cada cosa a medida que la tenés.</p>
+<div class="lcue lcue2"><section class="lbox" aria-label="Ingredientes"><h2 class="ltit">Ingredientes</h2>${ings}</section>${cosas?`<section class="lbox" aria-label="Recipientes y utensilios"><h2 class="ltit">Recipientes y utensilios</h2><ul class="ling">${cosas}</ul></section>`:""}</div>
+</div>${ft?`<div class="lder"><img class="lfoto" src="${ft}" alt="Foto de ${esc(e.nombre)}"></div>`:""}</div>
+${gPie("gnada",true,"gstart","Empezar","Antes de empezar",nn.tot+" pasos")}</div>`}
 const prepSeq=C=>C.partes.flatMap(pid=>PARTES[pid].prep.map((s,k)=>({pid,k,s})));
-function prepView(){const C=ST.co,e=ent(C.key),seq=prepSeq(C),i=Math.min(C.pi,seq.length-1),{pid,k,s}=seq[i],p=PARTES[pid],pf=pfac(e,pid);
+function prepView(){const C=ST.co,e=ent(C.key),seq=prepSeq(C),i=Math.min(C.pi,seq.length-1),{pid,k,s}=seq[i],p=PARTES[pid],pf=pfac(e,pid),nn=gNum(C);
 const antes=p.prep.slice(0,k).filter(x=>x.dest&&x.dest===s.dest).flatMap(x=>x.vi.map(j=>p.ings[j].n)).filter(n=>!s.vi.some(j=>p.ings[j].n===n));const ya=[...new Set(antes)];
-return`<div class="co" role="dialog" aria-label="Modo cocina: preparar">${coHead()}
-<div class="segs" aria-hidden="true">${seq.map((_,j)=>`<i class="${j<i?"d":j===i?"n":""}"></i>`).join("")}</div>
-${gbody(vseg(pid,"prep",k),`<span class="lbl glbl">Preparación ${i+1} de ${seq.length}${C.partes.length>1?" · "+esc(pnom(p)):""}</span>`,stripPrep(pid,k,pf,"g"),`<p class="t">${stepTxt(s.t,p,pf)}</p>${rnote(p,[s.dest],pf).map(x=>`<p class="s" style="color:var(--tinta);font-weight:600">${esc(x)}</p>`).join("")}${ya.length?`<p class="s">Va junto con lo que ya pusiste ahí: ${esc(ya.join(", "))}.</p>`:(s.dest&&!p.prep.slice(0,k).some(x=>x.dest===s.dest)?`<p class="s">Recipiente nuevo: todavía está vacío.</p>`:"")}`)}
-<div class="cofoot"><button data-a="pprev" ${i===0?"disabled":""}>${IC.back}Anterior</button><button class="nx" data-a="pnext">${i===seq.length-1?"Todo preparado. A cocinar":"Listo, siguiente"}${IC.next}</button></div></div>`}
+const notas=rnote(p,[s.dest],pf).map(esc);if(ya.length)notas.push("Va junto con lo que ya pusiste ahí: "+esc(ya.join(", "))+".");
+return gPaso({e,pf,etq:"Preparación"+(C.partes.length>1?" · "+esc(pnom(p)):""),n:nn.n,tot:nn.tot,txt:stepTxt(s.t,p,pf),sub:"",notas,ings:(s.vi||[]).map(j=>p.ings[j]).filter(Boolean),donde:s.dest?"Queda en: "+esc(s.dest):"",tkey:"",g:vseg(pid,"prep",k),prevA:"pprev",nextA:"pnext",nextTxt:"Siguiente",parte:pnom(p)})}
 function fin(){const C=ST.co,e=ent(C.key);
 return`<div class="co" role="dialog" aria-label="Receta terminada"><div class="finw"><div style="color:var(--tinta)">${tk("servir",150)}</div><span class="lbl">Receta terminada</span><h1 style="font-size:clamp(34px,6vw,56px);line-height:1.1;font-weight:600;letter-spacing:-.02em">¡A la mesa!</h1>
 <p style="font-size:20px;line-height:30px;max-width:560px">Terminaste <b style="font-weight:600">${esc(e.nombre)}</b>. Gran trabajo.</p>
 <div class="finb"><div class="box"><span class="h">Foto de cómo quedó</span>${C.foto?`<img src="${C.foto}" alt="Foto del plato terminado" style="width:100%;max-height:260px;object-fit:cover;border-radius:12px">`:""}<label class="btn" style="cursor:pointer">${C.foto?"Cambiar la foto":"Subir una foto"}<input id="foto" type="file" accept="image/*" class="sr"></label></div>
 <div class="box"><label class="h" for="nota">Notas para la próxima vez</label><textarea id="nota" class="inp" rows="4" style="padding:12px 14px;min-height:112px;resize:vertical" placeholder="Por ejemplo: más sal, entibiar la manteca antes, diez minutos más de horno.">${esc(C.nota||"")}</textarea></div></div>
 <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center"><button class="btn pri" style="min-height:64px;font-size:19px;padding:0 28px" data-a="finsave">Guardar y terminar</button><button class="btn ghost" style="min-height:64px" data-a="coexit">Cerrar sin guardar</button></div></div></div>`}
-function cocina(){const C=ST.co;if(C.stage==="fin")return fin();if(C.modo==="simple")return simpleView();if(C.stage==="reunir")return reunir();if(C.stage==="prep")return prepView();const e=ent(C.key),p=PARTES[C.cur],i=C.idx[C.cur]||0,st=p.pasos[i],pf=pfac(e,C.cur),tkey=C.cur+":"+i;
-const prog=id=>{const n=C.idx[id]||0,t=PARTES[id].pasos.length;return C.done[id]?"listo":(n===0&&!C.seen[id]?"sin empezar":`paso ${n+1} de ${t}`)};
-const allLast=i===p.pasos.length-1,ultima=allLast&&C.partes.every(x=>x===C.cur||C.done[x]);
-return`<div class="co" role="dialog" aria-label="Modo cocina: cocinar">${coHead()}
-${C.partes.length>1?`<div class="tabs copad" style="padding:12px 24px 0">${C.partes.map(id=>`<button class="tab ${id===C.cur?"on":""}" data-a="cotab" data-v="${id}">${esc(pnom(PARTES[id]))}<span>${prog(id)}</span></button>`).join("")}</div>`:""}
-${timerStrip(tkey)}<div class="segs" aria-hidden="true">${p.pasos.map((_,k)=>`<i class="${k<i?"d":k===i?"n":""}"></i>`).join("")}</div>
-${gbody(vseg(C.cur,"pasos",i),`<span class="lbl glbl">Paso ${i+1} de ${p.pasos.length}</span>`,stripPaso(C.cur,i,pf,"g"),`<div class="trow"><div class="ttx"><p class="t">${stepTxt(st.t,p,pf)}</p>${st.sub?`<p class="s">${stepTxt(st.sub,p,pf)}</p>`:""}${rnote(p,[...st.de,st.a],pf).map(x=>`<p class="s" style="color:var(--tinta);font-weight:600">${esc(x)}</p>`).join("")}</div>${timerBox(tkey)}</div>`)}
-<div class="cofoot"><button data-a="coprev" ${i===0?"disabled":""}>${IC.back}Anterior</button><button class="nx" data-a="conext">${ultima?"Terminar la receta":allLast?"Terminar esta parte":"Siguiente paso"}${IC.next}</button></div></div>`}
+function cocina(){const C=ST.co;if(C.stage==="fin")return fin();if(C.modo==="simple")return simpleView();if(C.stage==="reunir")return reunir();if(C.stage==="prep"&&prepSeq(C).length)return prepView();const e=ent(C.key),p=PARTES[C.cur],i=C.idx[C.cur]||0,st=p.pasos[i],pf=pfac(e,C.cur),tkey=C.cur+":"+i,nn=gNum(C);
+const allLast=i===p.pasos.length-1,ultima=allLast&&C.partes.every(x=>x===C.cur||C.done[x]);const rec=[...new Set([...st.de,st.a].filter(Boolean))];
+return gPaso({e,pf,etq:"Cocción"+(C.partes.length>1?" · "+esc(pnom(p)):""),n:nn.n,tot:nn.tot,txt:stepTxt(st.t,p,pf),sub:st.sub?stepTxt(st.sub,p,pf):"",notas:rnote(p,[...st.de,st.a],pf).map(esc),ings:(st.ings||[]).map(j=>p.ings[j]).filter(Boolean),donde:rec.length?"Se usa: "+esc(rec.join(", ")):"",tkey,g:vseg(C.cur,"pasos",i),prevA:"coprev",nextA:"conext",nextTxt:ultima?"Terminar":"Siguiente",parte:pnom(p)})}
 function tick(){let any=false,fin=false;for(const k in timers){const t=timers[k];if(t.run){if(t.end-Date.now()<=0){t.run=false;t.rem=0;t.done=true;fin=true;const[pid,i]=k.split(":");toast("Terminó el tiempo: "+pnom(PARTES[pid])+", paso "+(+i+1));beep()}else any=true}}
 document.querySelectorAll("[data-tl]").forEach(el=>{const t=timers[el.dataset.tl];if(t)el.textContent=tlabel(t,el.dataset.tl)});document.querySelectorAll("[data-ts]").forEach(el=>{const t=timers[el.dataset.ts];if(t)el.textContent=ttxt(t)});
 if(fin)render(true);if(!any){clearInterval(tint);tint=null}}
 let actx;function beep(){if(!DB.sonido)return;try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();[0,.25,.5].forEach(d=>{const o=actx.createOscillator(),g=actx.createGain();o.frequency.value=880;o.connect(g);g.connect(actx.destination);g.gain.setValueAtTime(.2,actx.currentTime+d);g.gain.exponentialRampToValueAtTime(.001,actx.currentTime+d+.2);o.start(actx.currentTime+d);o.stop(actx.currentTime+d+.22)})}catch(e){}}
 const coKey=()=>ST.co?ST.co.modo+"|"+(ST.co.sv||"")+"|"+ST.co.stage+"|"+ST.co.cur+"|"+(ST.co.idx[ST.co.cur]||0)+"|"+ST.co.pi:"";let lastCo="";
 function render(keep){const a=document.getElementById("app");const oc=document.querySelector(".co"),ot=oc?oc.scrollTop:0;const v=ST.view;const body=v==="home"?home():v==="ficha"?ficha():v==="platos"?platos():v==="armar"?armar():v==="config"?config():v==="importar"?importar():listas();
-a.innerHTML=side()+body+(ST.co?cocina():"");if(!keep)window.scrollTo(0,0);const nk=coKey(),nc=document.querySelector(".co");if(nc&&nk===lastCo)nc.scrollTop=ot;lastCo=nk;syncV();requestAnimationFrame(syncV);document.body.style.overflow=ST.co?"hidden":"";const f=document.getElementById(ST.focus||"");if(f){f.focus();if(f.setSelectionRange){const n=f.value.length;try{f.setSelectionRange(n,n)}catch(e){}}}ST.focus=null}
+a.innerHTML=side()+body+(ST.co?cocina():"");if(!keep)window.scrollTo(0,0);const nk=coKey(),nc=document.querySelector(".co");if(nc&&nk===lastCo)nc.scrollTop=ot;lastCo=nk;syncV();requestAnimationFrame(syncV);if(document.querySelector(".ghoja")){const w=document.getElementById("vwin");if(w){w.style.visibility="hidden";setTimeout(()=>{w.style.visibility=""},430)}}document.body.style.overflow=ST.co?"hidden":"";const f=document.getElementById(ST.focus||"");if(f){f.focus();if(f.setSelectionRange){const n=f.value.length;try{f.setSelectionRange(n,n)}catch(e){}}}ST.focus=null}
 document.addEventListener("click",ev=>{const b=ev.target.closest("[data-a]");if(!b)return;const a=b.dataset.a,v=b.dataset.v;const e=ST.id&&ent(ST.id);let keep=true;const ij=document.getElementById("ijson");if(ij){ST.ijson=ij.value;ST.iurl=document.getElementById("iurl").value}const it=document.getElementById("itxt");if(it)ST.itxt=it.value;
 if(a==="nav"){ST.edit=null;ST.newlist=false;ST.lid=null;ST.rs=false;if(v==="config"){ST.view="config";ST.nav="config"}else if(v==="importar"){ST.view="importar";ST.nav="importar";ST.ierr=""}else if(v==="platos"){ST.view="platos";ST.nav="platos"}else if(v==="listas"){ST.view="listas";ST.nav="listas"}else{ST.view="home";ST.nav=v;if(v!=="todas")ST.f=""}keep=false}
 else if(a==="theme"){DB.theme=v;applyTheme();save()}
@@ -1028,14 +1067,17 @@ else if(a==="cocina"){ST.co={key:e.key,modo:DB.modo==="simple"?"simple":"guiado"
 else if(a==="coexit"){ST.co=null;try{wl&&wl.release();wl=null}catch(_){}}
 else if(a==="ck"){const C=ST.co,on=C.ck[v]=!C.ck[v];b.classList.toggle("on",on);b.setAttribute("aria-pressed",on);b.querySelector("i").innerHTML=on?IC.check:"";const all=document.querySelectorAll(".co .ck").length,ok=document.querySelectorAll(".co .ck.on").length;document.getElementById("ckn").textContent=ok+" de "+all+" listos";document.getElementById("ckgo").textContent=ok===all?"Todo listo. Preparar ingredientes":"Preparar ingredientes";return}
 else if(a==="costage"){ST.co.stage=v}
-else if(a==="pprev"){ST.co.pi=Math.max(0,ST.co.pi-1)}
-else if(a==="pnext"){const C=ST.co,n=prepSeq(C).length;if(C.pi<n-1)C.pi++;else{C.stage="steps";toast("Ingredientes listos. Ahora sí, a cocinar.")}}
+else if(a==="gnada"){return}
+else if(a==="gstart"){const C=ST.co;C.stage=prepSeq(C).length?"prep":"steps";ST.flip="n"}
+else if(a==="sgo"){const C=ST.co,[k,pid,ix]=v.split(":");C.modo="guiado";C.topen=null;if(k==="p"){C.stage="prep";C.pi=Math.max(0,prepSeq(C).findIndex(x=>x.pid===pid&&x.k===+ix))}else{C.stage="steps";C.cur=pid;C.idx[pid]=+ix;C.seen[pid]=1;const q=C.partes.indexOf(pid);C.partes.forEach((x,n)=>C.done[x]=n<q?1:0)}}
+else if(a==="pprev"){const C=ST.co;if(C.pi<=0)C.stage="reunir";else C.pi--;ST.flip="p"}
+else if(a==="pnext"){const C=ST.co,n=prepSeq(C).length;ST.flip="n";if(C.pi<n-1)C.pi++;else{C.stage="steps"}}
 else if(a==="finsave"){const C=ST.co,nt=document.getElementById("nota");const rec={t:Date.now(),nota:(nt?nt.value:C.nota||"").trim(),foto:C.foto||""};(DB.hist[C.key]=DB.hist[C.key]||[]).push(rec);if(rec.foto)DB.fotos[C.key]=rec.foto;if(C.key[0]==="r"){const id=C.key.slice(2);(DB.hechas[id]=DB.hechas[id]||[]).push(Date.now())}
 try{localStorage.setItem("smagsbord1",JSON.stringify(DB))}catch(_){rec.foto="";save();toast("La nota se guardó, pero la foto no entró en este dispositivo.")}
 ST.co=null;try{wl&&wl.release();wl=null}catch(_){}toast("Guardado. Buen provecho.")}
 else if(a==="cotab"){ST.co.cur=v;ST.co.seen[v]=1}
-else if(a==="coprev"){const C=ST.co;C.idx[C.cur]=Math.max(0,(C.idx[C.cur]||0)-1);C.done[C.cur]=0}
-else if(a==="conext"){const C=ST.co,p=PARTES[C.cur],i=C.idx[C.cur]||0;if(i<p.pasos.length-1)C.idx[C.cur]=i+1;else{C.done[C.cur]=1;const nx=C.partes.find(x=>!C.done[x]);if(nx){C.cur=nx;C.seen[nx]=1;toast("Parte terminada. Seguimos con la próxima.")}else{C.stage="fin"}}}
+else if(a==="coprev"){const C=ST.co,i=C.idx[C.cur]||0;ST.flip="p";C.done[C.cur]=0;if(i>0)C.idx[C.cur]=i-1;else{const q=C.partes.indexOf(C.cur),n=prepSeq(C).length;if(q>0){const pv=C.partes[q-1];C.cur=pv;C.done[pv]=0;C.idx[pv]=PARTES[pv].pasos.length-1}else if(n){C.stage="prep";C.pi=n-1}else C.stage="reunir"}}
+else if(a==="conext"){const C=ST.co,p=PARTES[C.cur],i=C.idx[C.cur]||0;ST.flip="n";if(i<p.pasos.length-1)C.idx[C.cur]=i+1;else{C.done[C.cur]=1;const nx=C.partes.find(x=>!C.done[x]);if(nx){C.cur=nx;C.seen[nx]=1}else{C.stage="fin";ST.flip=null}}}
 else if(a==="topen"){ST.co.topen=ST.co.topen===v?null:v;tget(v)}
 else if(a==="tadj"){const[k,d]=v.split("|"),t=tget(k),ms=+d*1000;if(t.run){t.end+=ms;if(t.end<=Date.now()){t.run=false;t.rem=0}}else{t.rem=Math.max(0,t.rem+ms);if(!t.started)t.base=t.rem}t.done=false}
 else if(a==="ttog"){const t=tget(v);if(t.done){t.rem=t.base;t.done=false;t.started=false}if(t.run){t.rem=tleft(t);t.run=false}else if(t.rem>0){t.end=Date.now()+t.rem;t.run=true;t.started=true;t.done=false;try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();actx.resume()}catch(_){}if(!tint)tint=setInterval(tick,250)}}
@@ -1053,6 +1095,9 @@ function commit(t){if(t.id==="ren"){const pid=t.dataset.pid,v=t.value.trim();if(
 else if(t.id==="nl"){const v=t.value.trim();if(v){const e=ent(ST.id);DB.listas.push({id:"l"+Date.now(),nombre:v,items:[e.key]});save()}ST.newlist=false;render(true)}}
 document.addEventListener("keydown",ev=>{const t=ev.target;if(ev.key==="Enter"&&(t.id==="ren"||t.id==="nl"))commit(t);else if(ev.key==="Enter"&&t.id==="nl2")document.querySelector('[data-a="addlist"]').click()});
 document.addEventListener("focusout",ev=>{const t=ev.target;if((t.id==="ren"||t.id==="nl")&&document.body.contains(t))setTimeout(()=>{if(document.body.contains(t)&&document.activeElement!==t)commit(t)},0)});
+let tsw=null;
+document.addEventListener("touchstart",ev=>{const t=ev.touches[0];tsw=ST.co&&ST.co.modo!=="simple"&&ev.touches.length===1&&!ev.target.closest("input,textarea,.tbox,#vwin")?{x:t.clientX,y:t.clientY,t:Date.now()}:null},{passive:true});
+document.addEventListener("touchend",ev=>{if(!tsw||!ST.co)return;const t=ev.changedTouches[0],dx=t.clientX-tsw.x,dy=t.clientY-tsw.y,ok=Math.abs(dx)>70&&Math.abs(dy)<Math.abs(dx)*.6&&Date.now()-tsw.t<700;tsw=null;if(!ok)return;const b=document.querySelector(dx<0?".gpie .nx":".gpie .gant");if(b&&!b.disabled)b.click()},{passive:true});
 applyTheme();render();pendGo();
 document.addEventListener("visibilitychange",()=>{if(!document.hidden&&(DB.pend||[]).length){if(pendT)pendTick();else pendGo()}});
 setTimeout(()=>{const s=document.getElementById("splash");s.style.opacity="0";setTimeout(()=>s.remove(),450)},3800);
