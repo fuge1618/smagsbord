@@ -329,22 +329,32 @@ svg.i{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.5;stro
 .vopts{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:center;max-width:900px}
 .vopts .chip{min-height:44px;display:inline-flex;align-items:center;gap:6px}
 .vopts .sm{flex-basis:100%;text-align:center}
-/* modo simple: la receta entera y compacta, como en un libro de cocina */
-.libro{flex:1 0 auto;display:flex;flex-direction:column;gap:12px;padding:14px 20px 20px;max-width:1180px;width:100%;margin:0 auto}
-.lbox{background:var(--surf);border:1px solid var(--linea);border-radius:12px;padding:14px 18px 12px}
-.ltit{font-size:12px;line-height:16px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--suave);margin:0 0 6px}
-.lsub{font-size:15px;line-height:20px;font-weight:600;margin:10px 0 2px;break-after:avoid}.ltit+.lsub{margin-top:2px}
-.ling,.lpas{list-style:none;margin:0;padding:0;column-gap:28px}
-.ling{columns:4 190px}.lpas{columns:2 380px}
-.ling li,.lpas li{break-inside:avoid}
-.lrw{display:block;width:100%;background:none;border:0;border-radius:6px;font:inherit;color:var(--tinta);text-align:left;cursor:pointer;font-size:15px;line-height:21px;padding:4px 6px;margin:0 -6px}
+/* modo simple: doble página de libro de cocina */
+.libro{flex:1 0 auto;display:grid;grid-template-columns:minmax(0,1fr);background:var(--surf);border:1px solid var(--linea);border-radius:10px;margin:14px 20px 20px;max-width:1240px;width:calc(100% - 40px);align-self:center;overflow:hidden}
+.libro.cf{grid-template-columns:minmax(0,61fr) minmax(0,39fr)}
+.lpag{padding:30px 34px 26px;min-width:0}
+.lder{position:relative;min-height:420px;border-left:1px solid var(--linea)}
+.lder .lfoto{position:sticky;top:0;width:100%;height:calc(100vh - 124px);min-height:420px;object-fit:cover;display:block}
+.ltel{display:none}
+.lnom{font-size:30px;line-height:36px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin:0}
+.lde{margin:2px 0 0;font-size:18px;line-height:24px;font-style:italic;font-weight:500;color:color-mix(in srgb,var(--papaya) 68%,#000)}
+.ldat{display:flex;flex-wrap:wrap;margin:16px 0 18px;border-top:1px solid var(--linea);border-bottom:1px solid var(--linea)}
+.ldat div{display:flex;flex-direction:column;gap:1px;padding:8px 18px 8px 0;margin-right:18px;border-right:1px solid var(--linea)}.ldat div:last-child{border-right:0}
+.ldat span{font-size:11px;line-height:14px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--suave)}.ldat b{font-size:16px;line-height:20px;font-weight:600}
+.lnota{background:var(--arena);border-radius:8px;padding:10px 14px;margin:0 0 16px;font-size:14px;line-height:20px;display:flex;flex-direction:column;gap:2px}
+.lcue{display:grid;grid-template-columns:minmax(170px,30%) minmax(0,1fr);gap:26px;align-items:start}
+.lbox{background:var(--lino);border-radius:8px;padding:14px 16px 10px}
+.ltit{font-size:11.5px;line-height:16px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:color-mix(in srgb,var(--papaya) 68%,#000);margin:0 0 6px}
+.lsub{font-size:14px;line-height:19px;font-weight:700;margin:12px 0 2px}.ltit+.lsub{margin-top:2px}
+.ling,.lpas{list-style:none;margin:0;padding:0}
+.lrw{display:block;width:100%;background:none;border:0;border-radius:6px;font:inherit;color:var(--tinta);text-align:left;cursor:pointer;font-size:14px;line-height:19px;padding:4px 6px;margin:0 -6px}
 .ling .lrw b{font-weight:600}
-.lps{position:relative;padding:5px 6px 5px 20px;font-size:16px;line-height:23px}
-.lps::before{content:"";position:absolute;left:5px;top:13px;width:7px;height:7px;border-radius:50%;background:var(--papaya)}
-.libro .q{font-weight:500;font-style:italic;box-shadow:none;color:color-mix(in srgb,var(--papaya) 68%,#000)}
-.lrw.on{color:var(--suave);text-decoration:line-through}.lrw.on .q{color:inherit}.lps.on::before{background:var(--linea)}
-.lfin{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:14px;color:var(--suave);padding:2px 2px 0}
-@media (max-width:899px){.libro{padding:10px 12px 16px}.ling{columns:2 140px}.lpas{columns:1}.lbox{padding:12px 14px 10px}}
+.lps{display:flex;gap:10px;align-items:baseline;padding:6px;font-size:15px;line-height:22px}
+.lps i{font-style:normal;font-weight:700;font-size:19px;line-height:22px;min-width:22px;color:color-mix(in srgb,var(--papaya) 85%,#000)}
+.libro .q{font-weight:600;font-style:italic;box-shadow:none;color:color-mix(in srgb,var(--papaya) 68%,#000)}
+.lrw.on{color:var(--suave);text-decoration:line-through}.lrw.on .q,.lps.on i{color:inherit}
+.lfin{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:13px;color:var(--suave);margin-top:14px;padding-top:12px;border-top:1px solid var(--linea)}
+@media (max-width:899px){.libro,.libro.cf{grid-template-columns:minmax(0,1fr);margin:10px 12px 16px;width:calc(100% - 24px)}.lder{display:none}.ltel{display:block;width:calc(100% + 40px);margin:-20px -20px 18px;aspect-ratio:16/10;object-fit:cover}.lpag{padding:20px 20px 18px}.lnom{font-size:23px;line-height:28px}.lcue{grid-template-columns:minmax(0,1fr);gap:16px}.ling{columns:2 130px;column-gap:18px}.ling li{break-inside:avoid}}
 /* modo simple: lista a la izquierda, proceso elegido a la derecha */
 .sbody2{flex:1 0 auto;display:grid;grid-template-columns:minmax(340px,42%) minmax(0,1fr);gap:20px;padding:16px 24px 24px;align-items:start}
 .sleft,.sright{background:var(--surf);border:1px solid var(--linea);border-radius:12px;padding:16px 18px;min-width:0}
@@ -670,7 +680,7 @@ ${DB.gkey?`<div class="lrow"><div><b>Clave guardada</b><span class="sm">Termina 
 <section class="cfg"><h2>Modo cocina</h2><div style="display:flex;flex-direction:column;gap:8px"><span class="lbl">Modo por defecto</span><div class="row">${[["guiado","Guiado"],["simple","Simple"]].map(t=>`<button class="chip ${(DB.modo||"guiado")===t[0]?"on":""}" data-a="modo" data-v="${t[0]}" aria-pressed="${(DB.modo||"guiado")===t[0]}">${t[1]}</button>`).join("")}</div><span class="sm">${(DB.modo||"guiado")==="simple"?"Simple: los ingredientes y los pasos en una sola pantalla, para ir tachando.":"Guiado: de a un paso por vez. Primero reunís todo, después preparás los ingredientes y al final cocinás."} Dentro del modo cocina se puede cambiar con el interruptor de arriba.</span></div><div>${sw(DB.despierta,"despierta","Mantener la pantalla encendida","Evita que la tablet se apague mientras cocinás.")}${sw(DB.sonido,"sonido","Sonido del temporizador","Suena tres veces cuando termina el tiempo.")}</div></section>
 <section class="cfg"><h2>Datos de este dispositivo</h2><p class="sm" style="font-size:15px;line-height:22px">En este prototipo, las fotos, las notas, los platos armados y las listas se guardan solo en este navegador.</p>
 <div class="row">${ST.rs?`<span style="font-weight:600">¿Borrar todo lo guardado acá? No se puede deshacer.</span><button class="btn pri" data-a="reset2">Sí, borrar</button><button class="btn ghost" data-a="reset0">Cancelar</button>`:`<button class="btn" data-a="reset1">Borrar lo guardado y volver a los ejemplos</button>`}</div></section>
-<section class="cfg"><h2>Acerca de</h2><div style="display:flex;align-items:center;gap:14px">${logo(44)}<div><b style="font-size:20px;font-weight:600;display:block">Smagsbord</b><span class="sm" style="display:flex;align-items:center;gap:8px;font-size:14px">Recetas de familia · by ${FIRMA}</span></div></div><span class="sm">Versión 22/11 23:52. Recetas de ejemplo más las que se importen.</span><span class="sm">Fotos de ejemplo de Wikimedia Commons: ${CRED.map(c=>`<a href="${c[3]}" target="_blank" rel="noopener">${c[0]}</a> (${esc(c[1])}, ${c[2]})`).join(" · ")}.</span></section></main>`}
+<section class="cfg"><h2>Acerca de</h2><div style="display:flex;align-items:center;gap:14px">${logo(44)}<div><b style="font-size:20px;font-weight:600;display:block">Smagsbord</b><span class="sm" style="display:flex;align-items:center;gap:8px;font-size:14px">Recetas de familia · by ${FIRMA}</span></div></div><span class="sm">Versión 22/11 23:57. Recetas de ejemplo más las que se importen.</span><span class="sm">Fotos de ejemplo de Wikimedia Commons: ${CRED.map(c=>`<a href="${c[3]}" target="_blank" rel="noopener">${c[0]}</a> (${esc(c[1])}, ${c[2]})`).join(" · ")}.</span></section></main>`}
 // modo cocina
 let timers={},tint=null,wl=null;
 const fmtT=s=>{s=Math.max(0,Math.ceil(s));const h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;return(h?h+":"+String(m).padStart(2,"0"):m)+":"+String(x).padStart(2,"0")};
@@ -898,16 +908,22 @@ function aGuiado(C){const seq=prepSeq(C),fu=seq.findIndex(x=>!C.sx["p:"+x.pid+":
 if(anyP||(fu===-1&&seq.length)){C.stage="steps";C.partes.forEach(pid=>{const ps=PARTES[pid].pasos,L=ps.length-1;let n=0;while(n<ps.length&&C.sx["s:"+pid+":"+n])n++;if(!n)return;C.seen[pid]=1;if(n===ps.length){C.done[pid]=1;C.idx[pid]=L}else C.idx[pid]=Math.max(C.idx[pid]||0,n)});
 if(C.done[C.cur]){const nx=C.partes.find(x=>!C.done[x]);if(nx){C.cur=nx;C.seen[nx]=1}}}
 else if(fu>0){C.stage="prep";C.pi=Math.max(C.pi,fu)}}
-function simpleView(){const C=ST.co,e=ent(C.key),lh=lastHist(C.key),multi=C.partes.length>1;let tot=0,ok=0;
-// Modo simple: la receta completa y compacta, como en un libro de cocina. Un recuadro con los ingredientes y otro con los pasos; se toca un renglón para tacharlo.
-const ings=C.partes.map(pid=>{const p=PARTES[pid],pf=pfac(e,pid);return`${multi?`<h3 class="lsub">${esc(pnom(p))}</h3>`:""}<ul class="ling">${p.ings.map((i,k)=>{const key="i:"+pid+":"+k,on=!!C.ck[key];return`<li><button class="lrw ${on?"on":""}" data-a="sck" data-v="${key}" aria-pressed="${on}"><b>${qtyTxt(i,pf)}</b> ${esc(i.n)}</button></li>`}).join("")}</ul>`}).join("");
-const pasos=C.partes.map(pid=>{const p=PARTES[pid],pf=pfac(e,pid);const fila=(key,x,min)=>{const on=!!C.sx[key];tot++;if(on)ok++;return`<li><button class="lrw lps ${on?"on":""}" data-a="sx" data-v="${key}" aria-pressed="${on}"><span>${stepTxt(x.t,p,pf)}${x.sub?" "+stepTxt(x.sub,p,pf):""}${min?` <b class="q">${min} min</b>`:""}</span></button></li>`};
-return`${multi?`<h3 class="lsub">${esc(pnom(p))}</h3>`:""}<ul class="lpas">${p.prep.map((x,k)=>fila("p:"+pid+":"+k,x,0)).join("")}${p.pasos.map((x,k)=>fila("s:"+pid+":"+k,x,x.timer)).join("")}</ul>`}).join("");
-return`<div class="co" role="dialog" aria-label="Modo cocina simple"><header><button class="step" style="width:56px;height:56px;border-color:var(--linea)" data-a="coexit" aria-label="Salir del modo cocina">${IC.x}</button><div style="min-width:0;flex:1"><h1 style="font-size:22px;line-height:28px;font-weight:600">${esc(e.nombre)}</h1><span class="sm">${porc(e)} porciones</span></div>${modoSw()}</header>
-<div class="libro">${lh&&lh.nota?`<div class="note"><span class="lbl">Tu nota de la última vez</span><span>${esc(lh.nota)}</span></div>`:""}
-<section class="lbox" aria-label="Ingredientes"><h2 class="ltit">Ingredientes</h2>${ings}</section>
-<section class="lbox" aria-label="Preparación"><h2 class="ltit">Preparación</h2>${pasos}</section>
-<div class="lfin"><span id="lcnt">${ok} de ${tot} pasos tachados</span><button class="btn ghost" data-a="costage" data-v="fin">Terminar la receta</button></div></div></div>`}
+function simpleView(){const C=ST.co,e=ent(C.key),lh=lastHist(C.key),multi=C.partes.length>1,ft=fotoDe(e.key);let tot=0,ok=0,nIng=0,min=0;
+// Modo simple: la receta completa en una doble página de libro de cocina. Ingredientes aparte en un recuadro de color, pasos numerados y la foto al lado.
+const ings=C.partes.map(pid=>{const p=PARTES[pid],pf=pfac(e,pid);nIng+=p.ings.length;return`${multi?`<h3 class="lsub">${esc(pnom(p))}</h3>`:""}<ul class="ling">${p.ings.map((i,k)=>{const key="i:"+pid+":"+k,on=!!C.ck[key];return`<li><button class="lrw ${on?"on":""}" data-a="sck" data-v="${key}" aria-pressed="${on}"><b>${qtyTxt(i,pf)}</b> ${esc(i.n)}</button></li>`}).join("")}</ul>`}).join("");
+const pasos=C.partes.map(pid=>{const p=PARTES[pid],pf=pfac(e,pid);let n=0;const fila=(key,x,m)=>{const on=!!C.sx[key];tot++;if(on)ok++;n++;min+=+m||0;return`<li><button class="lrw lps ${on?"on":""}" data-a="sx" data-v="${key}" aria-pressed="${on}"><i>${n}</i><span>${stepTxt(x.t,p,pf)}${x.sub?" "+stepTxt(x.sub,p,pf):""}${m?` <b class="q">${m} min</b>`:""}</span></button></li>`};
+return`${multi?`<h3 class="lsub">${esc(pnom(p))}</h3>`:""}<ol class="lpas">${p.prep.map((x,k)=>fila("p:"+pid+":"+k,x,0)).join("")}${p.pasos.map((x,k)=>fila("s:"+pid+":"+k,x,x.timer)).join("")}</ol>`}).join("");
+const dato=(a,b)=>`<div><span>${a}</span><b>${b}</b></div>`;
+return`<div class="co" role="dialog" aria-label="Modo cocina simple"><header><button class="step" style="width:56px;height:56px;border-color:var(--linea)" data-a="coexit" aria-label="Salir del modo cocina">${IC.x}</button><div style="min-width:0;flex:1"></div>${modoSw()}</header>
+<div class="libro ${ft?"cf":""}"><div class="lpag">
+${ft?`<img class="lfoto ltel" src="${ft}" alt="Foto de ${esc(e.nombre)}">`:""}
+<h1 class="lnom">${esc(e.nombre)}</h1>${e.fuente?`<p class="lde">${esc(e.fuente)}</p>`:""}
+<div class="ldat">${dato("Porciones",porc(e))}${dato("Ingredientes",nIng)}${dato("Pasos",tot)}${min?dato("Al fuego",min+" min"):""}</div>
+${lh&&lh.nota?`<div class="lnota"><span class="ltit">Tu nota de la última vez</span>${esc(lh.nota)}</div>`:""}
+<div class="lcue"><section class="lbox" aria-label="Ingredientes"><h2 class="ltit">Ingredientes</h2>${ings}</section>
+<section class="lmet" aria-label="Preparación"><h2 class="ltit">Paso a paso</h2>${pasos}
+<div class="lfin"><span id="lcnt">${ok} de ${tot} pasos tachados</span><button class="btn ghost" data-a="costage" data-v="fin">Terminar la receta</button></div></section></div>
+</div>${ft?`<div class="lder"><img class="lfoto" src="${ft}" alt="Foto de ${esc(e.nombre)}"></div>`:""}</div></div>`}
 function recips(C){const m=new Map(),e=ent(C.key);C.partes.forEach(pid=>{const p=PARTES[pid],f=pfac(e,pid);new Set([...p.prep.map(s=>s.dest).filter(Boolean),...(p.rec||[])]).forEach(n=>{const r=rsc(p,n,f);m.set(r.n,(m.get(r.n)||0)+r.c)})});return[...m]}
 function reunir(){const C=ST.co,e=ent(C.key);let tot=0,ok=0;const row=(k,html)=>{tot++;const on=!!C.ck[k];if(on)ok++;return`<button class="ck ${on?"on":""}" data-a="ck" data-v="${k}" aria-pressed="${on}"><i>${on?IC.check:""}</i>${html}</button>`};
 const groups=C.partes.map(pid=>{const p=PARTES[pid],pf=pfac(e,pid);return`<section class="box" style="gap:8px"><span class="h">${C.partes.length>1?esc(pnom(p)):"Ingredientes"}</span>${p.ings.map((i,k)=>row("i:"+pid+":"+k,`${emo(i.n)}<b style="min-width:72px;font-weight:600">${qtyTxt(i,pf)}</b><span>${esc(i.n)}</span>`)).join("")}</section>`}).join("");
